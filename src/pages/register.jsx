@@ -1,5 +1,6 @@
 
 import React from "react";
+import { BeaverLogo } from "../icons";
 
 const Register = () => {
   return (
@@ -12,10 +13,8 @@ const Register = () => {
             Create Account
           </h2>
           <div className="flex items-center gap-4">
-            <img
+            <BeaverLogo
               className="w-[62px] h-[62px] rounded-full"
-              src="../beaver-logo.svg"
-              alt="Beaver Logo"
             />
             <h1 className="text-[#ffe066] text-5xl font-semibold font-['IBM Plex Sans Thai'] leading-[64px]">
               Beaver
