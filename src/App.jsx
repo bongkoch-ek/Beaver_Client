@@ -1,10 +1,12 @@
-import React from 'react';
-import AppRoutes from './routes/AppRoutes';
+import { useState } from 'react'
+import { Button } from "@/components/ui/button" 
+import Login from './Login';
 
 function App() {
+
   return (
-    <>
-      <AppRoutes />
+    <> 
+    <Login/>
     </>
   );
 }
