@@ -3,9 +3,43 @@ import { useState } from 'react'
 import { Button } from "@/components/ui/button" 
 // import BeaverLogo from "../../public/beaver-logo.svg"
 // import GoogleLogo from "../../public/google-logo.svg"
-import { BeaverLogo, GoogleLogo } from '../icons'
+import { BeaverLogo, GoogleLogo, OpenPassword } from '../icons'
+// import useUserStore from "../stores/useStore";
 
-const Login = () => {
+
+const Login = () => { 
+  const [showPassword, setShowPassword] = useState(false);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+
+  // const login = useUserStore( state => state.login ) //รอzustand****
+	// const token = useUserStore( state => state.token)
+	const [input, setInput] = useState({
+		username: '',
+		password: ''
+	})
+
+  const hdlLogin = async e => {
+		try {
+			e.preventDefault()
+			// validation
+			if (!(input.username.trim() && input.password.trim())) {
+				return console.log('Please fill all input')
+			}
+
+
+		} catch (err) {
+			console.log(err)
+		}
+	}
+
+  const hdlChange = e => {
+		setInput(prv => ({ ...prv, [e.target.name]: e.target.value }))
+    console.log(e.target.value)
+	}
+
   return (
     <div className="flex flex-col items-center justify-start  min-h-screen bg-gray-100">
       {/* Login Form */}
@@ -20,16 +54,24 @@ const Login = () => {
           </div>
           
         </div>
-        <form>
+        <form onSubmit={hdlLogin}>
           <div className="mb-4">
             <label className="block text-gray-600 mb-1">Username</label>
-            <input type="text" placeholder="Username" className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#FFE066]" />
+            <input type="text" placeholder="Username" 
+            name='username'
+						value={input.username}
+						onChange={hdlChange} className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#FFE066]" />
           </div>
-          <div className="mb-6 ">
+          <div className="mb-6 relative w-full">
             <label className="block text-gray-600 mb-1">Password</label>
-            <input type="password" placeholder="Password" className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#FFE066]" />
+            <input 
+            name='password'
+						value={input.password}
+						onChange={hdlChange}   type={showPassword ? 'text' : 'password'} placeholder="Password" className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#FFE066]" />
+            <OpenPassword onClick={togglePasswordVisibility} className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer w-6 h-6 " />
+            
           </div>
-          <button type="submit" className="w-full  bg-[#FFE066] hover:bg-yellow-400 text-black py-2 rounded font-semibold">
+          <button  type="submit" className="w-full  bg-[#FFE066] hover:bg-yellow-400 text-black py-2 rounded font-semibold">
             Login
           </button> 
           {/* Line */}
