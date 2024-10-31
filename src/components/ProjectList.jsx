@@ -19,7 +19,7 @@ const ProjectList = () => {
         <p className="text-[18px] text-[#767676] pr">29 / 10 / 2567</p>
       </div>
 
-      <div className="bg-white rounded-2xl pt-[20px]">
+      <div className="bg-white rounded-2xl mt-[20px]">
         <div className="flex flex-col w-full gap-1 border rounded-3xl ">
           {projects.map((project, index) => (
             <div>
