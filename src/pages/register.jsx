@@ -1,8 +1,19 @@
-
 import React from "react";
-import { BeaverLogo } from "../icons";
+import { useState } from 'react'
+import { BeaverLogo, HidePasssword } from "../icons";
 
 const Register = () => {
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       {/* Container ด้านนอกของฟอร์ม */}
@@ -77,25 +88,28 @@ const Register = () => {
                 className="w-full px-4 py-2 mt-1 bg-white rounded border border-[#91959a] focus:outline-none"
               />
             </div>
-            <div>
+            <div className="relative w-full">
               <label className="text-[#333333] text-sm font-normal font-['IBM Plex Sans Thai']">
                 Password
               </label>
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 placeholder="Password"
                 className="w-full px-4 py-2 mt-1 bg-white rounded border border-[#91959a] focus:outline-none"
-              />
+                
+              /> 
+              <HidePasssword onClick={togglePasswordVisibility} className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer w-5 h-5 mt-1 " />
             </div>
-            <div>
+            <div className="relative w-full">
               <label className="text-[#333333] text-sm font-normal font-['IBM Plex Sans Thai']">
                 Confirm Password
               </label>
               <input
-                type="password"
+                type={showConfirmPassword ? 'text' : 'password'}
                 placeholder="Please Type your Password Again"
                 className="w-full px-4 py-2 mt-1 bg-white rounded border border-[#91959a] focus:outline-none"
               />
+              <HidePasssword onClick={toggleConfirmPasswordVisibility} className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer w-5 h-5 mt-1 " />
             </div>
           </div>
         </div>
