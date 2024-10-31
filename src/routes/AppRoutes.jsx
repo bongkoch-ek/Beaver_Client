@@ -5,8 +5,9 @@ import Login from "../pages/login";
 import UserLayout from "../layouts/UserLayout";
 import Home from "../pages/Home";
 import ErrorPage from "../pages/ErrorPage";
-import ProjectList from "@/components/ui/Project";
-import ProjectName from "@/components/ui/ProjectName";
+import ProjectPage from "../pages/ProjectPage";
+
+
 
 const router = createBrowserRouter([
   {
@@ -18,9 +19,10 @@ const router = createBrowserRouter([
       { path: "home", element: <Home /> },
       { path: "login", element: <Login /> },
       { path: "register", element: <Register /> },
+      { path: "project", element: <ProjectPage /> },
       { path: "*", element: <ErrorPage /> },
-      { path: "project", element: <ProjectList /> },
-      { path: "projectname", element: <ProjectName /> },
+
+
     ],
   },
 ]);
