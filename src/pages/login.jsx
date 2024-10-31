@@ -1,9 +1,9 @@
 import React from 'react'
 import { useState } from 'react'
 import { Button } from "@/components/ui/button" 
-import BeaverLogo from "../../public/beaver-logo.svg"
-import GoogleLogo from "../../public/google-logo.svg"
-
+// import BeaverLogo from "../../public/beaver-logo.svg"
+// import GoogleLogo from "../../public/google-logo.svg"
+import { BeaverLogo, GoogleLogo } from '../icons'
 
 const Login = () => {
   return (
@@ -15,7 +15,7 @@ const Login = () => {
           <h2 className="text-3xl font-semibold">Welcome</h2>
           </div>
           <div className='flex  items-center justify-center gap-2 mt-3'>
-          <img src={BeaverLogo} alt="Beaver Icon" className="w-16 h-16 rounded-full " />
+          <BeaverLogo className="w-16 h-16 rounded-full " />
           <h3 className="text-[#FFE066] text-5xl font-medium">Beaver</h3>
           </div>
           
@@ -43,7 +43,7 @@ const Login = () => {
           </div>
 
           <button type="button" className="w-full flex items-center justify-center bg-white text-gray-600 border border-gray-300 hover:bg-gray-100 py-2 rounded">
-            <img src= {GoogleLogo} alt="Google logo" className="w-5 h-5 mr-2 text-[#FFE066] font-semibold" />
+            <GoogleLogo className="w-5 h-5 mr-2 text-[#FFE066] font-semibold" />
             Login with Google Account
           </button>
         </form>

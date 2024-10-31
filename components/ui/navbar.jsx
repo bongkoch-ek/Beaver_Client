@@ -1,4 +1,5 @@
 // src/components/Navbar.js
+import { BeaverLogo } from "@/src/icons";
 import React from "react";
 
 const Navbar = () => {
@@ -10,9 +11,8 @@ const Navbar = () => {
           {/* Logo */}
           <div className="flex items-center justify-between w-[350px] ">
             <div className="flex items-center gap-2">
-              <img
-                src="../beaver-logo.svg"
-                alt="Beaver Logo"
+              < BeaverLogo
+                
                 className="w-10 h-10 rounded-full"
               />
               <span className="text-[#FFE066] font-bold text-xl">Beaver</span>
