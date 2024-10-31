@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { Button } from "@/components/ui/button" 
-import Login from './Login';
+import AppRoutes from './routes/AppRoutes';
 
 function App() {
 
   return (
     <> 
-    <Login/>
+    <AppRoutes/>
     </>
   );
 }
