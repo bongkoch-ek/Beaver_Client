@@ -1,12 +1,16 @@
 import { useState } from 'react'
 import { Button } from "@/components/ui/button" 
-import Login from './Login';
+
+import ProjectList from '@/components/ui/Project';
+import Navbar from '@/components/ui/navbar';
 
 function App() {
 
   return (
     <> 
-    <Login/>
+
+    <Navbar />
+    <ProjectList />
     </>
   );
 }
