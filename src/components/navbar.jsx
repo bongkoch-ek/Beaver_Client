@@ -6,6 +6,7 @@ import React, { useState } from "react";
 const Navbar = () => {
 
 const [user,setUser] = useState(false)
+const [isOpen,setIsopen] = useState(false)
 
 
 
@@ -39,7 +40,7 @@ const [user,setUser] = useState(false)
             user ? (
               <div className="relative bg-neutral-900">
                 <button
-                  onClick={toggleDropdown}
+
                   className="flex items-center justify-between gap-2
                           hover:text-yellow-400 hover:scale-105 hover:-translate-y-1 hover:duration-200"
                 >
@@ -49,18 +50,18 @@ const [user,setUser] = useState(false)
                     alt="Profile Icon"
                   />
                   Profile
-                  <IoIosArrowDown />
+
                 </button>
                 {isOpen && (
                   <ul className="absolute right-0 mt-2 w-48 bg-neutral-800 rounded-lg z-10 shadow-lg">
                     <li
-                      onClick={hdlNavigate}
+
                       className="py-2 px-3 cursor-pointer rounded-sm hover:bg-neutral-700 hover:duration-200 active:bg-green-400"
                     >
                       Setting
                     </li>
                     <li
-                      onClick={hdlLogout}
+                      
                       className="py-2 px-3 cursor-pointer rounded-sm hover:bg-neutral-700 hover:duration-200 active:bg-green-400"
                     >
                       LogOut
