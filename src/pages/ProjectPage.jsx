@@ -5,7 +5,7 @@ const ProjectPage = () => {
     
     <div className="bg-gray-100">
 
-    <div className="flex flex-col  min-h-screen p-8 w-[9%] mx-auto bg-gray-100">
+    <div className="flex flex-col  min-h-screen p-8 w-[95%] mx-auto bg-gray-100">
       {/* Header */}
       <div className="flex justify-between items-center ">
         <div className="text-black text-[32px] font-semibold font-['IBM Plex Sans Thai'] leading-[48px]">
