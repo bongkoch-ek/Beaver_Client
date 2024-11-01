@@ -30,8 +30,10 @@ const Login = () => {
       }
       //#endregion
 
-      await actionLogin(input);
-      navigate("/home");
+
+      await actionLogin(input)
+      navigate("/")
+
     } catch (err) {
       console.log(err);
     }

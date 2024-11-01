@@ -6,8 +6,12 @@ import PrimaryButton from "../components/common/PrimaryButton";
 import Input from "../components/common/Input";
 import IconButton from "../components/common/IconButton";
 import SecondaryButton from "../components/common/SecondaryButton";
+import useUserStore from "../stores/userStore";
 
 const Profile = () => {
+  const user = useUserStore((state)=>state.user)
+  console.log(user)
+
   const [editedForm, setEditedForm] = useState({
     bio: "test",
     firstname: "test",
@@ -34,7 +38,6 @@ const Profile = () => {
   };
 
   console.log(editedForm);
-  console.log(isDisabled, "Disabled");
 
   return (
     <div className="bg-[#F5F5F5] min-h-screen py-10">
