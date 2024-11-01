@@ -4,8 +4,8 @@ import { BeaverLogo, HidePasssword } from "../icons";
 
 const Register = () => {
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(true);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(true);
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };

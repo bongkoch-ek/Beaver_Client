@@ -1,85 +1,65 @@
-// CreateProjectModal.jsx
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {Button} from '../../components/ui/button'
+import {Input} from "../../components/ui/input" 
+import {Dialog,DialogPortal,DialogOverlay,DialogTrigger,DialogClose,DialogContent,DialogHeader,DialogFooter,DialogTitle,DialogDescription,} from "../../components/ui/dialog"
+import { Label } from '@/components/ui/label';
 
-function CreateProjectModal() {
-  const [projectName, setProjectName] = useState('');
-  const [image, setImage] = useState(null);   //น่าจะใช้ cloud
-  const navigate = useNavigate();
+const CreateProjectModal = () => {
+  const [isOpen, setIsOpen] = useState(false);
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImage(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  const openModal = () => {
+    console.log("Opening modal...");
+    setIsOpen(true)};
+  const closeModal = () => setIsOpen(false);
 
   const handleCreateProject = () => {
-    // ลิงก์ไปยังหน้า /Project
-    navigate('/project');
+    //Create logic
+    closeModal();
   };
 
   return (
-    <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-md w-full max-w-lg">
-      <div className="relative mb-4 w-full">
-        <div className="border rounded-lg flex items-center justify-center p-4 bg-gray-200 w-36 h-36">
-          {image ? (
-            <img src={image} alt="Uploaded" className="w-full h-full object-cover rounded-lg" />
-          ) : (
-            <div className="text-gray-500">Image Preview</div>
-          )}
-        </div>
-        <label className="flex items-center justify-center cursor-pointer mt-2">
-          <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
-          <span className="bg-white border border-gray-300 rounded px-2 py-1 text-gray-700 text-sm mt-2 flex items-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-5 h-5 mr-1"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
-            Image
-          </span>
-        </label>
-      </div>
-
-      <div className="flex-grow w-full mb-4">
-        <label className="block text-gray-700 mb-2">Project Name</label>
-        <input
-          type="text"
-          placeholder="Type your project"
-          value={projectName}
-          onChange={(e) => setProjectName(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-yellow-500"
-        />
-      </div>
-
-      <button
-        onClick={handleCreateProject}
-        className="flex items-center px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
-      >
+    <div>
+      <Button className="bg-[#ffe066] text-black hover:bg-yellow-400" onClick={openModal}>
         Create New Project
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="w-5 h-5 ml-2"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-        </svg>
-      </button>
+        </Button>
+
+      {/* <Dialog  open={isOpen} onOpenChange={setIsOpen}> */} 
+      <Dialog className="flex justify-center items-center" open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent className=" flex items-center justify-around rounded-lg gap-16 ">
+
+            
+            <div className="flex flex-col gap-6 p-8  items-center justify-center border-2 border-gray-200 rounded-lg">
+              <div className='bg-gray-400 w-[120px] h-[120px] flex justify-center items-center rounded-md'>
+                Pic
+              </div>
+              {/* <Label htmlFor="uploadImage" className="block text-sm font-medium text-gray-700 ">
+                Upload Image
+              </Label> */}
+              <Input type="file" id="uploadImage" className="w-full border border-gray-300 p-2 rounded-md" />
+            </div>
+
+            {/* ซีกขวา: Input Email และปุ่ม Create Project */}
+            <div className="flex flex-col  justify-center items-center">
+              <div className="grid w-full max-w-sm items-center ">
+              <Label htmlFor="email" className=" text-sm font-medium text-[#333333] mb-1 flex">
+                Project Name
+              </Label>
+              <Input id="email" type="email" placeholder="Type your project" className="w-full text-[#C0C0C0] border border-gray-300 p-2 rounded-md " />
+              </div>
+              <div className='flex'>
+              <DialogFooter className="flex justify-center items-center mt-4">
+                <Button onClick={handleCreateProject} className="bg-[#ffe066] text-black px-4 py-2 rounded hover:bg-yellow-400">
+                  Create New Project
+                </Button>
+              </DialogFooter> 
+              </div>
+            </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
-}
+};
 
-export default CreateProjectModal;
+export default CreateProjectModal
+
+

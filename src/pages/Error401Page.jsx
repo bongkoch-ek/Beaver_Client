@@ -1,7 +1,17 @@
 import React from 'react'
 import BeaverErr401 from "../pictures/Beaver401.png"
+import { useNavigate } from 'react-router-dom';
+
+
 
 const Error401Page = () => {
+  const navigate = useNavigate();
+
+  const goToHomepage = () => {
+    navigate('/home');
+  };
+
+
   return (
     <div className="flex items-center justify-center gap-24  bg-gray-100 min-h-screen ">
         <div className="flex justify-center">
@@ -16,7 +26,7 @@ const Error401Page = () => {
           We're sorry, but you are not authorized to access 
           this page or resource.
           </p>
-          <button className="mt-6 px-6 py-2 bg-[#FFE066] text-black rounded-lg hover:bg-yellow-400">
+          <button onClick={goToHomepage} className="mt-6 px-6 py-2 bg-[#FFE066] text-black rounded-lg hover:bg-yellow-400">
           Back to Homepage
           </button>
         </div>

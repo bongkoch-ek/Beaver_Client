@@ -1,6 +1,10 @@
-import React from "react";
+import React,{useState} from "react";
+import {Button} from '../../components/ui/button';
+import CreateProjectModal from "../components/CreateProjectModal";
 
-const ProjectPage = () => {
+
+
+const ProjectPage = () => {  
   return (
     
     <div className="bg-gray-100">
@@ -11,11 +15,12 @@ const ProjectPage = () => {
         <div className="text-black text-[32px] font-semibold font-['IBM Plex Sans Thai'] leading-[48px]">
           Project
         </div>
-        <div className="h-[42px] px-4 py-2 bg-[#ffe066] rounded-lg justify-center items-center gap-2 inline-flex">
-          <button className="text-center text-[#333333] text-base font-semibold font-['IBM Plex Sans Thai'] leading-relaxed">
+        {/* <div className="h-[42px] px-4 py-2 bg-[#ffe066] rounded-lg justify-center items-center gap-2 inline-flex"> */}
+          {/* <button className="text-center text-[#333333] text-base font-semibold font-['IBM Plex Sans Thai'] leading-relaxed">
             Create New Project
-          </button>
-        </div>
+          </button> */}
+          <CreateProjectModal className="h-[42px] px-4 py-2 bg-[#ffe066] rounded-lg justify-center items-center gap-2 inline-flex"/>
+        {/* </div> */}
       </div>
 
       {/* Today Lists Section */}
