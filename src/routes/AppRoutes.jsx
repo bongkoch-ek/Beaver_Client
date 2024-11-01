@@ -12,6 +12,7 @@ import ProjectName from "../pages/Projectpage/ProjectName";
 import ProjectList from "../components/ProjectList";
 import ProjectDetailPage from "../pages/Projectpage/ProjectDetailPage";
 
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -30,6 +31,7 @@ const router = createBrowserRouter([
       { path: "", element: <ProjectPage /> },
       { path: "name", element: <ProjectName /> },
       { path: "detail", element: <ProjectDetailPage /> },
+
     ],
   },
 ]);
