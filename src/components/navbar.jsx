@@ -1,14 +1,13 @@
 // src/components/Navbar.js
 import { BeaverLogo } from "@/src/icons";
 import React, { useState } from "react";
+import useUserStore from "../stores/userStore";
 
 
 const Navbar = () => {
 
-const [user,setUser] = useState(false)
-const [isOpen,setIsopen] = useState(false)
-
-
+  const user = useUserStore(state => state.user)
+  const [isOpen, setIsopen] = useState(false)
 
   return (
     <div className="flex bg-gray-100 p-8">
@@ -19,7 +18,7 @@ const [isOpen,setIsopen] = useState(false)
           <div className="flex items-center justify-between w-[350px] ">
             <div className="flex items-center gap-2">
               < BeaverLogo
-                
+
                 className="w-10 h-10 rounded-full"
               />
               <span className="text-[#FFE066] font-bold text-xl">Beaver</span>
@@ -61,7 +60,7 @@ const [isOpen,setIsopen] = useState(false)
                       Setting
                     </li>
                     <li
-                      
+
                       className="py-2 px-3 cursor-pointer rounded-sm hover:bg-neutral-700 hover:duration-200 active:bg-green-400"
                     >
                       LogOut
@@ -70,17 +69,17 @@ const [isOpen,setIsopen] = useState(false)
                 )}
               </div>
             ) :
-          <div className="flex space-x-8 text-gray-700">
-            <a
-              href="/register"
-              className="hover:underline hover:text-yellow-400"
-            >
-              Register
-            </a>
-            <a href="/login" className="hover:underline hover:text-yellow-400">
-              Login
-            </a>
-          </div>
+              <div className="flex space-x-8 text-gray-700">
+                <a
+                  href="/register"
+                  className="hover:underline hover:text-yellow-400"
+                >
+                  Register
+                </a>
+                <a href="/login" className="hover:underline hover:text-yellow-400">
+                  Login
+                </a>
+              </div>
           }
 
 

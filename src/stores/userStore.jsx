@@ -4,12 +4,12 @@ import { persist, createJSONStorage } from 'zustand/middleware'
 import userService from "../services/UserService";
 
 
-const userStore  = create( persist((set,get) => ({
+const useUserStore  = create( persist((set,get) => ({
     user: "null",
     token: '',
     actionLogin: async (input) => {
         const result = await userService.actionLogin(input)
-        set({token : result.data.token, user: result.data.user})
+        set({token : result.data.token, user: result.data.payload})
         return result.data
     },
     actionLogout: () =>{
