@@ -7,31 +7,29 @@ import Home from "../pages/Home";
 import ErrorPage from "../pages/ErrorPage";
 import ProjectPage from "../pages/ProjectPage";
 import Error401Page from "../pages/Error401Page";
-
-
+import Profile from "../pages/Profile";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <>
-    <UserLayout /> 
-    </>,
+    element: (
+      <>
+        <UserLayout />
+      </>
+    ),
     children: [
       { path: "home", element: <Home /> },
       { path: "login", element: <Login /> },
       { path: "register", element: <Register /> },
+      { path: "profile", element: <Profile /> },
       { path: "project", element: <ProjectPage /> },
       { path: "*", element: <ErrorPage /> },
-
-
     ],
   },
 ]);
 
 const AppRoutes = () => {
-  return (
-    <RouterProvider router={router} />
-  );
+  return <RouterProvider router={router} />;
 };
 
 export default AppRoutes;
