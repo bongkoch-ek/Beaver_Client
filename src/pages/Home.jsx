@@ -1,5 +1,6 @@
 import React from "react";
-import { BeaverLogo } from "../icons";
+// import { Beaver, BeaverLogo } from "../icons";
+import Beaver from "../pictures/Beaver01.png"
 
 const Home = () => {
   return (
@@ -17,8 +18,8 @@ const Home = () => {
         </button>
       </div>
       <div className="flex justify-center ml-6 ">
-        <BeaverLogo
-          className="w-[410px] h-[410px] rounded-full"
+        <img src={Beaver}
+          className="w-[410px] h-[410px]"
         />
       </div>
     </div>
