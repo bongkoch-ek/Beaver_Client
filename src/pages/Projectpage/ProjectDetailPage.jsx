@@ -6,7 +6,7 @@ export default function ProjectDetailPage() {
   return (
     <div>
         <ProjectDetail />
-        <ProjectTask classname="pt-[40px]" />
+        <ProjectTask  />
     
     </div>
   )

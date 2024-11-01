@@ -8,7 +8,6 @@ import ErrorPage from "../pages/ErrorPage";
 import ProjectPage from "../pages/Projectpage/ProjectPage";
 import Error401Page from "../pages/Error401Page";
 import ProjectLayout from "../layouts/ProjectLayout";
-import ProjectName from "../pages/Projectpage/ProjectName";
 import ProjectList from "../components/ProjectList";
 import ProjectDetailPage from "../pages/Projectpage/ProjectDetailPage";
 
@@ -29,7 +28,7 @@ const router = createBrowserRouter([
     element: <ProjectLayout />,
     children: [
       { path: "", element: <ProjectPage /> },
-      { path: "name", element: <ProjectName /> },
+
       { path: "detail", element: <ProjectDetailPage /> },
 
     ],
