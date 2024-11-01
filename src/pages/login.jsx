@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 // import BeaverLogo from "../../public/beaver-logo.svg"
 // import GoogleLogo from "../../public/google-logo.svg"
 import { BeaverLogo, GoogleLogo, OpenPassword } from '../icons'
+import Input from '../components/common/Input'
 // import useUserStore from "../stores/useStore";
 
 
@@ -17,7 +18,7 @@ const Login = () => {
   // const login = useUserStore( state => state.login ) //รอzustand****
 	// const token = useUserStore( state => state.token)
 	const [input, setInput] = useState({
-		username: '',
+		email: '',
 		password: ''
 	})
 
@@ -25,9 +26,11 @@ const Login = () => {
 		try {
 			e.preventDefault()
 			// validation
-			if (!(input.username.trim() && input.password.trim())) {
+			if (!(input.email.trim() && input.password.trim())) {
 				return console.log('Please fill all input')
 			}
+
+      console.log(input)
 
 
 		} catch (err) {
@@ -37,7 +40,7 @@ const Login = () => {
 
   const hdlChange = e => {
 		setInput(prv => ({ ...prv, [e.target.name]: e.target.value }))
-    console.log(e.target.value)
+    // console.log(e.target.value)
 	}
 
   return (
@@ -55,22 +58,9 @@ const Login = () => {
           
         </div>
         <form onSubmit={hdlLogin}>
-          <div className="mb-4">
-            <label className="block text-gray-600 mb-1">Username</label>
-            <input type="text" placeholder="Username" 
-            name='username'
-						value={input.username}
-						onChange={hdlChange} className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#FFE066]" />
-          </div>
-          <div className="mb-6 relative w-full">
-            <label className="block text-gray-600 mb-1">Password</label>
-            <input 
-            name='password'
-						value={input.password}
-						onChange={hdlChange}   type={showPassword ? 'text' : 'password'} placeholder="Password" className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#FFE066]" />
-            <OpenPassword onClick={togglePasswordVisibility} className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer w-6 h-6 " />
-            
-          </div>
+          <Input label="Email" placeholder="Email" name="email" value={input.email} onChange={hdlChange}/>
+          <Input type='password' label="Password" placeholder="Password" name="password" value={input.password} onChange={hdlChange}/>
+         
           <button  type="submit" className="w-full  bg-[#FFE066] hover:bg-yellow-400 text-black py-2 rounded font-semibold">
             Login
           </button> 
@@ -90,6 +80,8 @@ const Login = () => {
           </button>
         </form>
       </div>
+
+      
     </div>
   )
 }
