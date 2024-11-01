@@ -34,7 +34,7 @@ const Login = () => {
       //#endregion
 
       await actionLogin(input)
-      navigate("/home")
+      navigate("/")
     } catch (err) {
       console.log(err)
     }
