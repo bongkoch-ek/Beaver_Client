@@ -1,8 +1,8 @@
 import React from "react";
 
-const ProjectName = () => {
+const ProjectDetail = () => {
   return (
-    <div className="flex flex-col mx-auto min-h-screen p-8 w-[90%]">
+    <div className="flex flex-col mx-auto  p-8 w-[90%]">
   
 
       {/* Project Title */}
@@ -28,4 +28,4 @@ const ProjectName = () => {
   );
 };
 
-export default ProjectName;
+export default ProjectDetail;
