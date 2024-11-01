@@ -9,7 +9,16 @@ const ProjectList = () => {
   ];
 
   return (
-    <div className="flex flex-col mx-auto min-h-screen p-8 w-[90%] ">
+    
+    <div>
+
+    <div className="flex text-gray-600 text-[16px] ml-[65px]">
+    <a href='/home'>Home</a>
+    <span className="mx-2">{'>'}</span>
+    <a href="/project" className="font-semibold text-black">Project</a>
+    </div>
+
+    <div className="flex flex-col mx-auto min-h-screen p-8 w-[95%] ">
       <div className="flex pb-[40px]">
         <p className="text-[32px] font-semibold">Project</p>
       </div>
@@ -58,7 +67,10 @@ const ProjectList = () => {
           </div>
         </div>
       </div>
+
+      
     </div>
+          </div>
   );
 };
 
