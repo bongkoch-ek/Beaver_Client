@@ -13,7 +13,7 @@ const useUserStore  = create( persist((set,get) => ({
         return result.data
     },
     actionLogout: () =>{
-        set({token: '', user: null})
+        set({token: null, user: null})
     },
     actionRegister: async (input) => {
         const result = await userService.actionRegister(input)
