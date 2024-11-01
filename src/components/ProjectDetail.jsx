@@ -20,9 +20,9 @@ const ProjectDetail = () => {
 
       {/* Tab Menu */}
       <div className="flex justify-around w-full h-[50px] mt-[80px]">
-        <button className="w-[300px] bg-[#FFE006] text-black rounded-full font-semibold">Task</button>
-        <button className="w-[300px] bg-[#FFE006] text-black rounded-full font-semibold">Dashboard</button>
-        <button className="w-[300px] bg-[#FFE006] text-black rounded-full font-semibold">Schedule</button>
+        <button className="w-[300px] bg-[#ffea98] text-black rounded-full font-semibold">Task</button>
+        <button className="w-[300px] bg-[#ffea98] text-black rounded-full font-semibold">Dashboard</button>
+        <button className="w-[300px] bg-[#ffea98] text-black rounded-full font-semibold">Schedule</button>
       </div>
     </div>
   );
