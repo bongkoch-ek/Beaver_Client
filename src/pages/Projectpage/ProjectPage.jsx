@@ -1,12 +1,17 @@
 import React from "react";
 
 const ProjectPage = () => {
+
+
   return (
     
     <div className="bg-gray-100">
-
+       
     <div className="flex flex-col  min-h-screen p-8 w-[95%] mx-auto bg-gray-100">
       {/* Header */}
+      <div className="flex items-center text-gray-600 text-[16px] mb-6">
+      </div>
+
       <div className="flex justify-between items-center ">
         <div className="text-black text-[32px] font-semibold font-['IBM Plex Sans Thai'] leading-[48px]">
           Project
