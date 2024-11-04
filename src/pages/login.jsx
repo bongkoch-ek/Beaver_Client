@@ -7,6 +7,7 @@ import useUserStore from "../stores/userStore";
 import { useNavigate } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
 import validate from '../utils/validator'
+import { toast } from 'react-toastify';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -39,22 +40,9 @@ const Login = () => {
         password: input.password
       };
 
-      // Attempt login
-      const response = await actionLogin(loginData);
-      
-      // Check if login was successful
-      if (response?.token) {
-        // Clear form
-        setInput({
-          email: "",
-          password: ""
-        });
-        
-        // Navigate to home page
-        navigate("/");
-      } else {
-        setFormErrors({ auth: "Invalid email or password" });
-      }
+      await actionLogin(input)
+      toast.success('Login Success')
+      navigate("/")
 
     } catch (err) {
       // Handle specific error cases
@@ -86,7 +74,7 @@ const Login = () => {
 
     const { [e.target.name]: _, ...newData } = formErrors;
     setFormErrors(newData);
-    // console.log(e.target.value)
+    console.log(e.target.value)
   };
 
   return (

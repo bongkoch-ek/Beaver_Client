@@ -1,7 +1,7 @@
 import React from "react";
 import SecondaryButton from "./common/SecondaryButton";
 import { Plus } from "lucide-react";
-import bgImage from "../../../../pic/bg-image.png"
+// import bgImage from "../../../../pic/bg-image.png"
 
 const BackgroundImage = ({ isDisabled }) => {
   return (

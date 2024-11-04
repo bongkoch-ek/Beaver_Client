@@ -1,10 +1,13 @@
 import React from "react";
-import { useState } from "react";
-import { BeaverLogo, HidePasssword } from "../icons";
+
+import { useState } from 'react'
+import { BeaverLogo, HidePasssword, OpenPassword } from "../icons";
 import Input from "../components/common/Input";
 import validate from "../utils/validator";
 import useUserStore from "../stores/userStore";
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
+
 
 const Register = () => {
   const navigate = useNavigate();
@@ -31,11 +34,18 @@ const Register = () => {
     const error = validate.validateRegister(input);
     if (error) {
       setFormErrors(error);
-      console.log(error);
+      toast.error("Please check your form inputs."); 
       return;
     }
-    // await actionRegister(input)
-    navigate("/home");
+    try {
+      await actionRegister(input);
+      toast.success("Registration successful!");
+      navigate("/login");
+    } catch (err) {
+      const errMsg = err.response?.data?.err
+      toast.error(errMsg);
+      console.log(err.response.data.err); 
+    }
   };
 
   return (
@@ -73,6 +83,7 @@ const Register = () => {
                 />
               </div>
               <div>
+
                 <Input
                   label="Last name"
                   placeholder="Last name"
@@ -85,7 +96,7 @@ const Register = () => {
               </div>
             </div>
           </div>
-
+  
           {/* User Info Section */}
           <div className="mt-10 mb-8">
             <h3 className="text-[#333333] text-lg font-normal font-['IBM Plex Sans Thai'] mb-3">
@@ -115,17 +126,16 @@ const Register = () => {
                 />
               </div>
               <div className="relative w-full">
-                <Input
-                  type="password"
-                  label="Password"
-                  placeholder="Password"
-                  name="password"
-                  value={input.password}
-                  onChange={hdlChange}
-                  isError={formErrors.password ? true : false}
-                  errMessage={formErrors.password || ""}
-                />
-              </div>
+                <Input type="password" 
+                label="Password" 
+                placeholder="Password" 
+                name="password" 
+                value={input.password} 
+                onChange={hdlChange} 
+                isError={formErrors.password ? true : false} 
+                errMessage={formErrors.password || ""}/>
+              </div>   
+
               <div className="relative w-full">
                 <Input
                   type="password"
@@ -143,7 +153,8 @@ const Register = () => {
 
           {/* Register Button */}
           <div className="flex justify-center mt-10">
-            <button className="w-full max-w-xs px-4 py-2 bg-[#ffe066] text-[#333333] rounded-lg font-semibold font-['IBM Plex Sans Thai'] hover:bg-yellow-400 transition duration-300">
+            <button 
+            className="w-full max-w-xs px-4 py-2 bg-[#ffe066] text-[#333333] rounded-lg font-semibold font-['IBM Plex Sans Thai'] hover:bg-yellow-400 transition duration-300">
               Register
             </button>
           </div>
