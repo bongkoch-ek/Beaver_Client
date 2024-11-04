@@ -6,6 +6,6 @@ const header = {
   };
 
 export const actionGetAllComment = async () => {
-    
+    return await axios.get("http://localhost:8888/comment", header)
 }
 
