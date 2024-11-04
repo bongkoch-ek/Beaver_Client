@@ -1,3 +1,4 @@
+import CreateProjectModal from "@/src/components/CreateProjectModal";
 import React from "react";
 
 const ProjectPage = () => {
@@ -26,10 +27,8 @@ const ProjectPage = () => {
           <div className="text-black text-[32px] font-semibold font-['IBM Plex Sans Thai'] leading-[48px]">
             Project
           </div>
-          <div className="h-[42px] px-4 py-2 bg-[#ffe066] rounded-lg justify-center items-center gap-2 inline-flex">
-            <button className="text-center text-[#333333] text-base font-semibold font-['IBM Plex Sans Thai'] leading-relaxed">
-              Create New Project
-            </button>
+          <div className="">
+            <CreateProjectModal className="text-center  text-base font-semibold font-['IBM Plex Sans Thai'] leading-relaxed "/>
           </div>
         </div>
 
