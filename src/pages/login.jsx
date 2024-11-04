@@ -6,6 +6,7 @@ import validateLogin from "../utils/validator";
 import useUserStore from "../stores/userStore";
 import { useNavigate } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
+import validate from '../utils/validator'
 
 const Login = () => {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const Login = () => {
     try {
       e.preventDefault();
       //#region  validation
-      const error = validateLogin(input);
+      const error = validate.validateLogin(input)
       if (error) {
         setFormErrors(error);
         console.log(error);
@@ -60,7 +61,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-start  min-h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-start">
       {/* Login Form */}
       <div className="bg-white shadow-lg rounded-lg p-10 mt-10 w-[30%]">
         <div className="flex flex-col items-center mb-6">
@@ -73,23 +74,10 @@ const Login = () => {
           </div>
         </div>
         <form onSubmit={hdlLogin}>
-          <Input
-            label="Email"
-            placeholder="Email"
-            name="email"
-            value={input.email}
-            onChange={hdlChange}
-            isError={formErrors.email ? true : false}
-          />
-          <Input
-            type="password"
-            label="Password"
-            placeholder="Password"
-            name="password"
-            value={input.password}
-            onChange={hdlChange}
-            isError={formErrors.password ? true : false}
-          />
+          <div className='flex flex-col gap-2 mb-3'>
+            <Input label="Email" placeholder="Email" name="email" value={input.email} onChange={hdlChange} isError={formErrors.email ? true : false} errMessage={formErrors.email || ""} />
+            <Input type='password' label="Password" placeholder="Password" name="password" value={input.password} onChange={hdlChange} isError={formErrors.password ? true : false} errMessage={formErrors.password || ""} />
+          </div>
 
           <button
             type="submit"
