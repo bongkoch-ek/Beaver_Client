@@ -1,6 +1,11 @@
 import axios from "axios"
 
-const dashboardService = {}
 
+const header = {
+    headers: { Authorization: `Bearer ${token}` }
+  };
 
-export default dashboardService
+export const actionGetAllComment = async () => {
+    
+}
+
