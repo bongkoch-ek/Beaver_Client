@@ -9,6 +9,7 @@ export default function Input({
   value,
   isError = false,
   isDisabled = false,
+  errMessage = "",
   ...restProps
 }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -40,11 +41,11 @@ export default function Input({
           }`}
           {...restProps}
         />
-        {isError && <p>Email is required</p>}
+        {isError && <p>{errMessage}</p>}
         {type == "password" && (
           <OpenPassword
             onClick={togglePasswordVisibility}
-            className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer w-6 h-6 "
+            className={`absolute ${isError? "top-1/3" : "top-1/2"} right-3 transform -translate-y-1/2 cursor-pointer w-6 h-6`}
           />
         )}
       </label>
