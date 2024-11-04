@@ -1,8 +1,17 @@
 import React from "react";
 // import { Beaver, BeaverLogo } from "../icons";
 import Beaver from "../pictures/Beaver01.png"
+import { useNavigate } from 'react-router-dom'
+
 
 const Home = () => {
+
+  const navigate = useNavigate();
+
+  const goToProject = () => {
+    navigate('/project');
+  };
+
   return (
     <div className="flex items-center justify-around bg-gray-100 min-h-screen ">
       <div className="flex flex-col w-[25%] justify-around gap-6 items-start">
@@ -13,7 +22,7 @@ const Home = () => {
           Effortless planning, task assignment and real-time updates for total
           project control.
         </p>
-        <button className="mt-6 px-6 py-2 bg-[#FFE066] text-black rounded-lg hover:bg-yellow-400">
+        <button onClick={goToProject} className="mt-6 px-6 py-2 bg-[#FFE066] text-black rounded-lg hover:bg-yellow-400">
           Let's get Start
         </button>
       </div>
