@@ -7,6 +7,7 @@ import useUserStore from "../stores/userStore";
 import { useNavigate } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
 import validate from '../utils/validator'
+import { toast } from 'react-toastify';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -33,6 +34,7 @@ const Login = () => {
 
 
       await actionLogin(input)
+      toast.success('Login Success')
       navigate("/")
 
     } catch (err) {
@@ -57,7 +59,7 @@ const Login = () => {
 
     const { [e.target.name]: _, ...newData } = formErrors;
     setFormErrors(newData);
-    // console.log(e.target.value)
+    console.log(e.target.value)
   };
 
   return (
