@@ -1,11 +1,6 @@
 import axios from "axios";
 
-export const actionGetAllComment = async (token) => {
-  const header = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
-  return await axios.get("http://localhost:8888/dashboard/comment", header);
-};
+//// CREATE
 
 export const createProject = async (token, form) => {
   const header = {
@@ -61,3 +56,14 @@ export const addMember = async (token, memberData) => {
     header
   );
 };
+
+
+
+//// READ
+
+export const actionGetAllComment = async (token) => {
+    const header = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    return await axios.get("http://localhost:8888/dashboard/comment", header);
+  };
