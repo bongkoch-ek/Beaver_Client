@@ -11,7 +11,7 @@ const ProjectPage = () => {
   return (
     <div className="bg-gray-100">
       <div className="flex text-gray-600 text-[16px] ml-[65px]">
-        <a href="/home">Home</a>
+        <a href="/">Home</a>
         <span className="mx-2">{">"}</span>
         <a href="/project" className="font-semibold text-black">
           Project

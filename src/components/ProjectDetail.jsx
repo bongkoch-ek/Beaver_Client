@@ -4,7 +4,7 @@ const ProjectDetail = () => {
   return (
     <div>
          <div className="flex text-gray-600 text-[16px] ml-[65px]">
-    <a href='/home'>Home</a>
+    <a href='/'>Home</a>
     <span className="mx-2">{'>'}</span>
     <a href="/project" >Project</a>
     <span className="mx-2">{'>'}</span>

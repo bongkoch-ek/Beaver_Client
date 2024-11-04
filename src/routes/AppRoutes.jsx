@@ -10,6 +10,7 @@ import Error401Page from "../pages/Error401Page";
 import ProjectLayout from "../layouts/ProjectLayout";
 import ProjectList from "../components/ProjectList";
 import ProjectDetailPage from "../pages/Projectpage/ProjectDetailPage";
+import Profile from "../pages/Profile";
 
 
 const router = createBrowserRouter([
@@ -17,8 +18,9 @@ const router = createBrowserRouter([
     path: "/",
     element: <UserLayout />,
     children: [
-      { path: "home", element: <Home /> },
+      { path: "", element: <Home /> },
       { path: "login", element: <Login /> },
+      {path: "profile", element: <Profile/>},
       { path: "register", element: <Register /> },
       { path: "*", element: <ErrorPage /> },
     ],
