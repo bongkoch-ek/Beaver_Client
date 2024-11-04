@@ -109,3 +109,30 @@ export function HidePasssword(props) {
   )
 }  
 
+export function CloudIcon(props) {
+  return (
+    <svg
+      width={20}
+      height={21}
+      viewBox="0 0 20 21"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M10 11.333V18M3.333 12.916a5.833 5.833 0 119.759-5.75h1.492a3.75 3.75 0 012.083 6.869"
+        stroke="#333"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M6.667 14.667L10 11.333l3.333 3.334"
+        stroke="#333"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
