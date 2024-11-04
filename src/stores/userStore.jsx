@@ -39,7 +39,8 @@ const useUserStore  = create( persist((set,get) => ({
           token: result.data.token,
         });
         return result
-      }
+      },
+      setUser: (userData) => set({ user: userData }),
     
 }),{
     name: 'state',
