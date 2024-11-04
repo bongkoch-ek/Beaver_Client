@@ -12,7 +12,7 @@ const registerSchema = joi.object({
     password: joi.string().required().pattern(/[0-9a-zA-Z]{6,}$/).messages(
         {
             "string.empty": "Password is required",
-            "string.pattern.base": "password must contain a-z A-Z 0-9 and must be at least 6 characters"
+            "string.pattern.base": "Password: 6+ chars, a-z, A-Z, 0-9."
         }
     ),
     confirmPassword: joi.string().required().valid(joi.ref("password"))
