@@ -18,7 +18,18 @@ const Register = () => {
   })
   const [formErrors, setFormErrors] = useState({})
 
+<<<<<<< HEAD
+  const [showPassword, setShowPassword] = useState(true);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(true);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+=======
   const actionRegister = useUserStore( state => state.actionRegister ) 
+>>>>>>> origin/develop
 
   const hdlChange = e => {
     setInput(prv => ({ ...prv, [e.target.name]: e.target.value }))

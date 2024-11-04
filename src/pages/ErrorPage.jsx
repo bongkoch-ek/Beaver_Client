@@ -1,8 +1,18 @@
 import React from "react";
 import { BeaverLogo } from "../icons";
 import BeaverErr from "../pictures/Beaver404.png"
+import { useNavigate } from 'react-router-dom'
 
-const ErrorPage = () => {
+
+
+const ErrorPage = () => { 
+  const navigate = useNavigate();
+
+  const goToHomepage = () => {
+    navigate('/home');
+  };
+
+
   return (
     <div className="flex items-center justify-center gap-24  bg-gray-100 min-h-screen ">
         <div className="flex justify-center">
@@ -16,7 +26,7 @@ const ErrorPage = () => {
             Looks like this page wandered off. Let's get you back to the
             homepage!
           </p>
-          <button className="mt-6 px-6 py-2 bg-[#FFE066] text-black rounded-lg hover:bg-yellow-400">
+          <button onClick={goToHomepage} className="mt-6 px-6 py-2 bg-[#FFE066] text-black rounded-lg hover:bg-yellow-400">
             Back to Homepage
           </button>
         </div>
