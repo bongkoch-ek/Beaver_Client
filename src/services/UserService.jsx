@@ -15,7 +15,7 @@ userService.actionUpdateUser = (token,input) => {
     const header = {
         headers: { Authorization: `Bearer ${token}` }
       };
-    return axios.patch(`http://localhost:8888/update-profile`, input,header)
+    return axios.patch('http://localhost:8888/user/update-profile',input,header)
 }
 
 userService.actionLoginGoogle = (profile) => {
