@@ -20,9 +20,8 @@ const useUserStore  = create( persist((set,get) => ({
         return result.data
     },
     actionUpdateProfile: async (token,input) => {
-        console.log(input)
         const result = await userService.actionUpdateUser(token,input)
-        set({token : result.data.token, user: result.data.user})
+        set({ user: result.data.user})
         return result.data
     },
     actionLoginGoogle : async (codeResponse) => {

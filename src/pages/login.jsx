@@ -74,7 +74,6 @@ const Login = () => {
 
     const { [e.target.name]: _, ...newData } = formErrors;
     setFormErrors(newData);
-    console.log(e.target.value)
   };
 
   return (

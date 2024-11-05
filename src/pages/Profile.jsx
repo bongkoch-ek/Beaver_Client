@@ -33,7 +33,6 @@ const Profile = () => {
   const hdlClickSave = async () => {
     try {
         const updatedUser = await actionUpdateProfile(token, editedForm);
-        setUser(updatedUser); // This will update both Zustand state and localStorage
         toast.success("Update profile successfully");
         setIsDisabled(true);
     } catch (error) {
