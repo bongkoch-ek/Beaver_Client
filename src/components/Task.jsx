@@ -1,11 +1,24 @@
 import React from "react";
 import { motion } from "framer-motion";
 import DropTaskIndicator from "./DropTaskIndicator";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+  } from "@/components/ui/dialog";
+import { EditTaskModal } from "./EditTaskModal";
+
 
 export default function Task({ item,hdlDragStart }) {
 
   return (
     <>
+    <Dialog>
+    <DialogTrigger asChild>
       <motion.div
         key={item.id}
         layout
@@ -31,6 +44,11 @@ export default function Task({ item,hdlDragStart }) {
           </div>
         </div>
       </motion.div>
+      </DialogTrigger>
+  <EditTaskModal />
+</Dialog>
     </>
   );
 }
+
+
