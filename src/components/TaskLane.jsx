@@ -1,155 +1,80 @@
-import React from 'react'
-import Task from './Task'
-
-
-
+import React, { useState } from "react";
+import Task from "./Task";
+import StatusColums from "./StatusColums";
 
 export default function TaskLane() {
+  const DEFAULT_TASKS = [
+    // To do
+    { title: "Look into render bug in dashboard", id: "1", column: "To do" },
+    { title: "SOX compliance checklist", id: "2", column: "To do" },
+    { title: "[SPIKE] Migrate to Azure", id: "3", column: "To do" },
+    { title: "Document Notifications service", id: "4", column: "To do" },
+
+    // In progress
+    {
+      title: "Research DB options for new microservice",
+      id: "5",
+      column: "In progress",
+    },
+    { title: "Postmortem for outage", id: "6", column: "In progress" },
+    {
+      title: "Sync with product on Q3 roadmap",
+      id: "7",
+      column: "In progress",
+    },
+
+    // Done
+    {
+      title: "Refactor context providers to use Zustand",
+      id: "8",
+      column: "Done",
+    },
+    { title: "Add logging to daily CRON", id: "9", column: "Done" },
+
+    // Late
+    {
+      title: "Set up DD dashboards for Lambda listener",
+      id: "10",
+      column: "Late",
+    },
+  ];
+  const [taskCard, setTaskCard] = useState(DEFAULT_TASKS);
+
+
+  const hdlTaskMove = (taskId, newStatus) => {
+    setTaskCard((prev) => {
+      return prev.map((task) =>
+        task.id === taskId ? { ...task, column: newStatus } : task
+      );
+    });
+  };
+
   return (
-
-    <div className="self-stretch justify-center items-start gap-4 inline-flex ">
-
-               {/* Late */}
-               <div className="w-[280px] px-4 py-5 bg-neutral-100 rounded-2xl shadow flex-col justify-start items-start gap-6 inline-flex">
-            <div className="self-stretch h-full flex-col justify-start items-start gap-6 flex">
-                <div className=" justify-center items-center gap-[198px] inline-flex">
-                    <div className="grow shrink basis-0 h-[30px] justify-center items-center gap-[198px] flex">
-                        <div className="px-2.5 py-2 rounded-lg justify-center items-center gap-2 flex">
-                            <button className="text-right text-[#333333] text-base font-normal leading-relaxed">+ Create</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="self-stretch h-min-full flex-col justify-start items-start gap-5 flex">
-                    <div className="self-stretch px-2 justify-start items-center gap-2 inline-flex">
-                        <div className="w-4 h-4 relative">
-                            <div className="w-4 h-4 left-0 top-0 absolute bg-[#91959a] rounded-lg" />
-                        </div>
-                        <div className="grow shrink basis-0 text-black text-xl font-semibold  leading-[33px]">TODO (4)</div>
-                        <div className="w-6 h-6 relative" />
-                    </div>
-
-                    <Task />
-                    <Task />
-                    <Task />
-
-                    {/* <div className="self-stretch h-[100px] p-4 bg-neutral-100 rounded-lg flex-col justify-start items-start gap-5 flex">
-                        <div className="self-stretch justify-start items-center gap-2 inline-flex">
-                            <p className="grow shrink basis-0 text-center text-[#d3d5d7] text-sm font-normal  leading-[23px]">No task</p>
-                        </div>
-                    </div> */}
-
-                </div>
-            </div>
-        </div>
-        
-              {/* In Progress */}
-              <div className="w-[280px] px-4 py-5 bg-neutral-100 rounded-2xl shadow flex-col justify-start items-start gap-6 inline-flex">
-            <div className="self-stretch h-full flex-col justify-start items-start gap-6 flex">
-                <div className=" justify-center items-center gap-[198px] inline-flex">
-                    <div className="grow shrink basis-0 h-[30px] justify-center items-center gap-[198px] flex">
-                        <div className="px-2.5 py-2 rounded-lg justify-center items-center gap-2 flex">
-                            <button className="text-right text-[#333333] text-base font-normal leading-relaxed">+ Create</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="self-stretch h-min-full flex-col justify-start items-start gap-5 flex">
-                    <div className="self-stretch px-2 justify-start items-center gap-2 inline-flex">
-                        <div className="w-4 h-4 relative">
-                            <div className="w-4 h-4 left-0 top-0 absolute bg-[#5DB9F8] rounded-lg" />
-                        </div>
-                        <div className="grow shrink basis-0 text-black text-xl font-semibold  leading-[33px]">In Progress(4)</div>
-                        <div className="w-6 h-6 relative" />
-                    </div>
-
-                    <Task />
-                    <Task />
-                    <Task />
-
-                    {/* <div className="self-stretch h-[100px] p-4 bg-neutral-100 rounded-lg flex-col justify-start items-start gap-5 flex">
-                        <div className="self-stretch justify-start items-center gap-2 inline-flex">
-                            <p className="grow shrink basis-0 text-center text-[#d3d5d7] text-sm font-normal  leading-[23px]">No task</p>
-                        </div>
-                    </div> */}
-
-                </div>
-            </div>
-        </div>
-
-
-
-            {/* Done */}
-            <div className="w-[280px] px-4 py-5 bg-neutral-100 rounded-2xl shadow flex-col justify-start items-start gap-6 inline-flex">
-            <div className="self-stretch h-full flex-col justify-start items-start gap-6 flex">
-                <div className=" justify-center items-center gap-[198px] inline-flex">
-                    <div className="grow shrink basis-0 h-[30px] justify-center items-center gap-[198px] flex">
-                        <div className="px-2.5 py-2 rounded-lg justify-center items-center gap-2 flex">
-                            <button className="text-right text-[#333333] text-base font-normal leading-relaxed">+ Create</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="self-stretch h-min-full flex-col justify-start items-start gap-5 flex">
-                    <div className="self-stretch px-2 justify-start items-center gap-2 inline-flex">
-                        <div className="w-4 h-4 relative">
-                            <div className="w-4 h-4 left-0 top-0 absolute bg-[#43A047] rounded-lg" />
-                        </div>
-                        <div className="grow shrink basis-0 text-black text-xl font-semibold  leading-[33px]">Done (4)</div>
-                        <div className="w-6 h-6 relative" />
-                    </div>
-
-                    <Task />
-                    {/* <Task />
-                    <Task /> */}
-
-                    {/* <div className="self-stretch h-[100px] p-4 bg-neutral-100 rounded-lg flex-col justify-start items-start gap-5 flex">
-                        <div className="self-stretch justify-start items-center gap-2 inline-flex">
-                            <p className="grow shrink basis-0 text-center text-[#d3d5d7] text-sm font-normal  leading-[23px]">No task</p>
-                        </div>
-                    </div> */}
-
-                </div>
-            </div>
-        </div>
-
-
-        {/* Late */}
-        <div className="w-[280px] px-4 py-5 bg-neutral-100 rounded-2xl shadow flex-col justify-start items-start gap-6 inline-flex">
-            <div className="self-stretch h-full flex-col justify-start items-start gap-6 flex">
-                <div className=" justify-center items-center gap-[198px] inline-flex">
-                    <div className="grow shrink basis-0 h-[30px] justify-center items-center gap-[198px] flex">
-                        <div className="px-2.5 py-2 rounded-lg justify-center items-center gap-2 flex">
-                            <button className="text-right text-[#333333] text-base font-normal leading-relaxed">+ Create</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="self-stretch h-min-full flex-col justify-start items-start gap-5 flex">
-                    <div className="self-stretch px-2 justify-start items-center gap-2 inline-flex">
-                        <div className="w-4 h-4 relative">
-                            <div className="w-4 h-4 left-0 top-0 absolute bg-[#E53935] rounded-lg" />
-                        </div>
-                        <div className="grow shrink basis-0 text-black text-xl font-semibold  leading-[33px]">Late (4)</div>
-                        <div className="w-6 h-6 relative" />
-                    </div>
-
-                    <Task />
-                    {/* <Task /> */}
-                    {/* <Task /> */}
-
-                    {/* <div className="self-stretch h-[100px] p-4 bg-neutral-100 rounded-lg flex-col justify-start items-start gap-5 flex">
-                        <div className="self-stretch justify-start items-center gap-2 inline-flex">
-                            <p className="grow shrink basis-0 text-center text-[#d3d5d7] text-sm font-normal  leading-[23px]">No task</p>
-                        </div>
-                    </div> */}
-
-                </div>
-            </div>
-        </div>
-
-
-
+    <div className="self-stretch justify-start items-start gap-4 inline-flex ">
+      <StatusColums
+        taskCard={taskCard}
+        setTaskCard={setTaskCard}
+        hdlTaskMove={hdlTaskMove}
+        status="To do"
+      />
+      <StatusColums
+        taskCard={taskCard}
+        setTaskCard={setTaskCard}
+        hdlTaskMove={hdlTaskMove}
+        status="In progress"
+      />
+      <StatusColums
+        taskCard={taskCard}
+        setTaskCard={setTaskCard}
+        hdlTaskMove={hdlTaskMove}
+        status="Done"
+      />
+      <StatusColums
+        taskCard={taskCard}
+        setTaskCard={setTaskCard}
+        hdlTaskMove={hdlTaskMove}
+        status="Late"
+      />
     </div>
-  )
+  );
 }

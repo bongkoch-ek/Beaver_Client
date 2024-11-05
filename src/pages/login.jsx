@@ -7,6 +7,7 @@ import useUserStore from "../stores/userStore";
 import { useNavigate } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
 import validate from '../utils/validator'
+import { toast } from 'react-toastify';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -22,21 +23,37 @@ const Login = () => {
   const hdlLogin = async (e) => {
     try {
       e.preventDefault();
-      //#region  validation
-      const error = validate.validateLogin(input)
+      
+      // Clear any previous errors
+      setFormErrors({});
+      
+      // Validate input
+      const error = validate.validateLogin(input);
       if (error) {
         setFormErrors(error);
-        console.log(error);
         return;
       }
-      //#endregion
 
+      // Trim whitespace from email
+      const loginData = {
+        email: input.email.trim(),
+        password: input.password
+      };
 
       await actionLogin(input)
+      toast.success('Login Success')
       navigate("/")
 
     } catch (err) {
-      console.log(err);
+      // Handle specific error cases
+      if (err.response?.status === 401) {
+        setFormErrors({ auth: "Invalid credentials" });
+      } else if (err.response?.status === 429) {
+        setFormErrors({ auth: "Too many attempts, please try again later" });
+      } else {
+        setFormErrors({ auth: "Login failed. Please try again." });
+      }
+      console.error("Login error:", err);
     }
   };
 
@@ -57,7 +74,6 @@ const Login = () => {
 
     const { [e.target.name]: _, ...newData } = formErrors;
     setFormErrors(newData);
-    // console.log(e.target.value)
   };
 
   return (
@@ -110,3 +126,4 @@ const Login = () => {
 };
 
 export default Login;
+

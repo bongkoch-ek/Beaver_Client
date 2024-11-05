@@ -6,41 +6,34 @@ import {createProject, updateProject} from "../services/DashboardService";
 
 
 const dashboardStore = (set, get) => ({
-  project: [],
+  projects: [],
   task: [],
   list: [],
   isLoading: false,
   currentUser: null,
+  error: null,
   
-  actionCreateProject: async (form, userId) => {
-    set({ isLoading: true });
-    
+  actionCreateProject: async (projectData, token) => {
+    set({ loading: true, error: null });
     try {
-      const result = await createProject(token, {
-        ...form,
-        userId,
-        createdBy: userId
+      const response = await axios.post('http://localhost:8888/user/create-project', projectData, {
+        headers: {
+          Authorization: `Bearer ${token}`, 
+        },
       });
-      
-      set(state => ({
-        project: [...state.project, {
-          ...result.data.project,
-          owner: userId
-        }],
-        isLoading: false
+      const newProject = response.data.project;
+
+      set((state) => ({
+        projects: [...state.projects, newProject],
+        loading: false,
       }));
 
-      toast.success("Project created successfully!");
-      return result.data;
-      
-    } catch (err) {
-      set({ isLoading: false });
-      toast.error("Failed to create project");
-      throw err;
+      return response.data; 
+    } catch (error) {
+      set({ loading: false, error: error.response?.data || 'Something went wrong' });
+      throw error;
     }
-  },
-
-  getUserProjects: (userId) => {
+  },  getUserProjects: (userId) => {
     const state = get();
     return state.project.filter(p => p.owner === userId);
   },

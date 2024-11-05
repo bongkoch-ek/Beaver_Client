@@ -19,7 +19,7 @@ const Navbar = () => {
   const user = useUserStore((state) => state.user);
   const actionLogout = useUserStore((state)=>state.actionLogout)
   const [isOpen, setIsopen] = useState(false);
-  console.log(user);
+
   const navigate = useNavigate()
 
   const hdlLogout = () =>{

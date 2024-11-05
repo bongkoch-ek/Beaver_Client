@@ -1,49 +1,111 @@
 import { PencilIcon, Plus, User2Icon, UserSquare } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ProfileImage from "../components/ProfileImage";
-import BackgroundImage from "../components/BackgroundImage";
 import PrimaryButton from "../components/common/PrimaryButton";
 import Input from "../components/common/Input";
 import IconButton from "../components/common/IconButton";
 import SecondaryButton from "../components/common/SecondaryButton";
 import useUserStore from "../stores/userStore";
+import { toast } from "react-toastify";
 
 const Profile = () => {
-  const user = useUserStore((state)=>state.user)
-  console.log(user)
+  const user = useUserStore((state) => state.user);
+  const actionUpdateProfile = useUserStore(
+    (state) => state.actionUpdateProfile
+  );
+  const token = useUserStore((state) => state.token);
 
   const [editedForm, setEditedForm] = useState({
-    bio: "test",
-    firstname: "test",
-    lastname: "test",
-    displayname: "test",
-    phone: "081-234-5678",
+    bio: "",
+    firstname: "",
+    lastname: "",
+    displayname: "",
+    phone: "",
   });
-  const [isDisabled, setIsDisabled] = useState(true);
 
-  const hdlOnChangeEditedForm = (e) => {
-    setEditedForm((prv) => ({ ...prv, [e.target.name]: e.target.value }));
+  const [isDisabled, setIsDisabled] = useState(true);
+  const [errors, setErrors] = useState({}); 
+
+  useEffect(() => {
+    if (user) {
+      const nameParts = user.fullname.trim().split(" ");
+      const firstname = nameParts[0] || ""; 
+      const lastname = nameParts.slice(1).join(" ") || ""; 
+
+      setEditedForm({
+        bio: user.bio || "",
+        firstname,
+        lastname,
+        displayname: user.displayName || "",
+        phone: user.phone || "",
+      });
+    }
+  }, [user]);
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (editedForm.bio.trim() === "") newErrors.bio = "Bio is required.";
+    if (editedForm.firstname.trim() === "")
+      newErrors.firstname = "Firstname is required.";
+    if (editedForm.lastname.trim() === "")
+      newErrors.lastname = "Lastname is required.";
+    if (editedForm.displayname.trim() === "")
+      newErrors.displayname = "Display name is required.";
+    if (editedForm.phone.trim() === "")
+      newErrors.phone = "Phone number is required.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0; 
+  };
+
+  const hdlClickSave = async () => {
+    if (!validateForm()) {
+      toast.error("Please fill in all fields."); 
+      return; 
+    }
+
+    try {
+      const result = await actionUpdateProfile(token, editedForm);
+      toast.success("Update profile successfully");
+
+      if (result.user) {
+        const nameParts = result.user.fullname.trim().split(" ");
+        const firstname = nameParts[0] || "";
+        const lastname = nameParts.slice(1).join(" ") || "";
+
+        setEditedForm({
+          bio: result.user.bio || "",
+          firstname,
+          lastname,
+          displayname: result.user.displayName || "",
+          phone: result.user.phone || "",
+        });
+      }
+      setIsDisabled(true);
+    } catch (error) {
+      toast.error("Failed to update profile");
+    }
   };
 
   const hdlClickEdit = () => {
-    setIsDisabled((prv) => prv === false);
-  };
-
-  const hdlClickSave = () => {
-    setIsDisabled((prv) => prv === false);
+    setIsDisabled(false);
   };
 
   const hdlClickCancel = () => {
-    setIsDisabled((prv) => prv === false);
+    setEditedForm({
+      bio: user.bio || "",
+      firstname: "",
+      lastname: "",
+      displayname: user.displayName || "",
+      phone: user.phone || "",
+    });
+    setIsDisabled(true);
   };
-
-  console.log(editedForm);
 
   return (
     <div className="bg-[#F5F5F5] min-h-screen py-10">
       <div className="mx-[110px] rounded-[32px] pb-10 bg-white">
         <div className="relative">
-          <BackgroundImage isDisabled={isDisabled} />
           <div className="absolute inset-0 flex justify-center items-start top-1/2 group">
             <div className="relative">
               <ProfileImage isDisabled={isDisabled} />
@@ -57,13 +119,13 @@ const Profile = () => {
             </div>
           </div>
         </div>
-        <div></div>
         <div className="pt-[80px]">
           <label className="flex flex-col gap-0.5 px-10 py-6 rounded-[32px] text-sm">
-            {" "}
             Bio
             <textarea
-              onChange={hdlOnChangeEditedForm}
+              onChange={(e) =>
+                setEditedForm({ ...editedForm, bio: e.target.value })
+              }
               disabled={isDisabled}
               value={editedForm.bio}
               name="bio"
@@ -71,7 +133,7 @@ const Profile = () => {
               className={`resize-none min-h-[120px] px-4 py-4 justify-start items-start gap-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#5DB9F8] ${
                 isDisabled &&
                 "bg-gray-100 text-gray-500 border-gray-300 border-none "
-              }  font-semibold placeholder:font-normal`}
+              } font-semibold placeholder:font-normal`}
             ></textarea>
           </label>
         </div>
@@ -85,19 +147,30 @@ const Profile = () => {
               placeholder="Firstname"
               type="text"
               name="firstname"
-              onChange={hdlOnChangeEditedForm}
+              onChange={(e) =>
+                setEditedForm({ ...editedForm, firstname: e.target.value })
+              }
               value={editedForm.firstname}
               isDisabled={isDisabled}
             />
+            {errors.firstname && (
+              <p className="text-red-500">{errors.firstname}</p>
+            )}
+
             <Input
               label="Lastname"
               placeholder="Lastname"
               type="text"
               name="lastname"
-              onChange={hdlOnChangeEditedForm}
+              onChange={(e) =>
+                setEditedForm({ ...editedForm, lastname: e.target.value })
+              }
               value={editedForm.lastname}
               isDisabled={isDisabled}
             />
+            {errors.lastname && (
+              <p className="text-red-500">{errors.lastname}</p>
+            )}
           </div>
           <div className="flex gap-10">
             <Input
@@ -105,7 +178,9 @@ const Profile = () => {
               placeholder="Display name"
               type="text"
               name="displayname"
-              onChange={hdlOnChangeEditedForm}
+              onChange={(e) =>
+                setEditedForm({ ...editedForm, displayname: e.target.value })
+              }
               value={editedForm.displayname}
               isDisabled={isDisabled}
             />
@@ -114,7 +189,9 @@ const Profile = () => {
               placeholder="08X-XXX-XXXX"
               type="text"
               name="phone"
-              onChange={hdlOnChangeEditedForm}
+              onChange={(e) =>
+                setEditedForm({ ...editedForm, phone: e.target.value })
+              }
               value={editedForm.phone}
               isDisabled={isDisabled}
             />
