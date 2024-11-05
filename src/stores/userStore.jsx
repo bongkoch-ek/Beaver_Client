@@ -19,8 +19,9 @@ const useUserStore  = create( persist((set,get) => ({
         const result = await userService.actionRegister(input)
         return result.data
     },
-    actionUpdateProfile: async (input) => {
-        const result = await userService.actionUpdateUser(input)
+    actionUpdateProfile: async (token,input) => {
+        console.log(input)
+        const result = await userService.actionUpdateUser(token,input)
         set({token : result.data.token, user: result.data.user})
         return result.data
     },

@@ -1,49 +1,61 @@
 import { PencilIcon, Plus, User2Icon, UserSquare } from "lucide-react";
 import React, { useState } from "react";
 import ProfileImage from "../components/ProfileImage";
-import BackgroundImage from "../components/BackgroundImage";
 import PrimaryButton from "../components/common/PrimaryButton";
 import Input from "../components/common/Input";
 import IconButton from "../components/common/IconButton";
 import SecondaryButton from "../components/common/SecondaryButton";
 import useUserStore from "../stores/userStore";
+import { toast } from "react-toastify";
 
 const Profile = () => {
-  const user = useUserStore((state)=>state.user)
-  console.log(user)
-
+  const user = useUserStore(state => state.user);
+  const actionUpdateProfile = useUserStore(state => state.actionUpdateProfile);
+  const token = useUserStore(state => state.token);
+  const setUser = useUserStore(state => state.setUser);
   const [editedForm, setEditedForm] = useState({
-    bio: "test",
-    firstname: "test",
-    lastname: "test",
-    displayname: "test",
-    phone: "081-234-5678",
+    bio: user?.bio || "",
+    firstname: user?.firstname || "",
+    lastname: user?.lastname || "",
+    displayname: user?.displayname || "",
+    phone: user?.phone || "",
   });
   const [isDisabled, setIsDisabled] = useState(true);
 
   const hdlOnChangeEditedForm = (e) => {
-    setEditedForm((prv) => ({ ...prv, [e.target.name]: e.target.value }));
+    setEditedForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const hdlClickEdit = () => {
-    setIsDisabled((prv) => prv === false);
+    setIsDisabled(false);
   };
 
-  const hdlClickSave = () => {
-    setIsDisabled((prv) => prv === false);
-  };
-
+  const hdlClickSave = async () => {
+    try {
+        const updatedUser = await actionUpdateProfile(token, editedForm);
+        setUser(updatedUser); // This will update both Zustand state and localStorage
+        toast.success("Update profile successfully");
+        setIsDisabled(true);
+    } catch (error) {
+        toast.error("Failed to update profile");
+    }
+};
   const hdlClickCancel = () => {
-    setIsDisabled((prv) => prv === false);
+    setEditedForm({
+      bio: user?.bio || "",
+      firstname: user?.firstname || "",
+      lastname: user?.lastname || "",
+      displayname: user?.displayname || "",
+      phone: user?.phone || "",
+    });
+    setIsDisabled(true);
   };
-
-  console.log(editedForm);
 
   return (
     <div className="bg-[#F5F5F5] min-h-screen py-10">
       <div className="mx-[110px] rounded-[32px] pb-10 bg-white">
         <div className="relative">
-          <BackgroundImage isDisabled={isDisabled} />
+          {/* <BackgroundImage isDisabled={isDisabled} /> */}
           <div className="absolute inset-0 flex justify-center items-start top-1/2 group">
             <div className="relative">
               <ProfileImage isDisabled={isDisabled} />
