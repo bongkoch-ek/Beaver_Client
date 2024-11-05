@@ -4,12 +4,17 @@ import Resize from "react-image-file-resizer";
 import { Loader } from 'lucide-react';
 import useUserStore from "../stores/userStore";
 import { removeFiles , uploadFiles } from "../services/ImageUploadService";
+import { Paperclip } from 'lucide-react';
 
 
-const UploadFile = ({ form, setForm }) => {
+const UploadFile = () => {
     const token = useUserStore((state) => state.token);
     const [isLoading, setIsLoading] = useState(false);
-  
+
+    const [form, setForm] = useState({
+      images: [],
+    });
+
     const hdlOnChange = (e) => {
       setIsLoading(true);
       const files = e.target.files;
@@ -73,27 +78,46 @@ const UploadFile = ({ form, setForm }) => {
     };
   
     return (
-      <div className="my-4">
-        <div className="flex mx-4 gap-4 my-4">
-          {
-            isLoading && <Loader className="w-16 h-16 animate-spin" />
-          }
-          {form.images.map((item, index) => (
-            <div className="relative" key={index}>
-              <img src={item.url} className="w-24 h-24 hover:scale-110" />
-              <span
-                className="absolute top-0 right-0 bg-red-500 p-1 rounded-full"
-                onClick={() => hdlDelete(item.public_id)}
-              >
-                X
-              </span>
-            </div>
-          ))}
-        </div>
-        <div className="">
-          <input type="file" onChange={hdlOnChange} name="images" multiple />
-        </div>
+<div className="my-4">
+ 
+
+  <div className="relative h-[42px] px-4 py-2 bg-[#ffe066] rounded-lg justify-center items-center gap-2 inline-flex cursor-pointer">
+    <Paperclip className="mr-2" />
+    <span className="text-center text-[#333333] text-base font-semibold  leading-relaxed">
+      Attach Files
+    </span>
+    <input
+      type="file"
+      onChange={hdlOnChange}
+      name="images"
+      multiple
+      className="absolute inset-0 opacity-0 cursor-pointer"
+    />
+  </div>
+
+       <div className="flex gap-4 my-4">
+    {isLoading && <Loader className="w-8 h-8 animate-spin" />}
+    {form.images.map((item, index) => (
+      <div className="relative" key={index}>
+        <img
+          src={item.url}
+          alt={`Image ${index}`}
+          className="w-24 h-24 object-cover rounded-lg transition-transform duration-200 ease-in-out hover:scale-110"
+        />
+        <span
+          className="absolute top-0 right-0 p-1 text-white cursor-pointer hover:text-red-500"
+          onClick={() => hdlDelete(item.public_id)}
+        >
+          X
+        </span>
       </div>
+    ))}
+  </div>
+
+
+
+</div>
+
     );
   };
   
