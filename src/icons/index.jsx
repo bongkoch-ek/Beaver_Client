@@ -191,4 +191,27 @@ export function CloseIcon(props) {
       </defs>
     </svg>
   )
+} 
+
+
+
+export function EditIcon(props) {
+  return (
+    <svg
+      width={24}
+      height={24}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M21.174 6.812a2.819 2.819 0 10-3.986-3.987L3.842 16.174a2 2 0 00-.5.83L2.02 21.356a.5.5 0 00.623.622l4.353-1.32a2 2 0 00.83-.497L21.174 6.812zM15 5l4 4"
+        stroke="#333"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
 }
