@@ -67,3 +67,11 @@ export const actionGetAllComment = async (token) => {
     };
     return await axios.get("http://localhost:8888/dashboard/comment", header);
   };
+
+
+export const getUser = async (token) => {
+  const header = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  return await axios.get("http://localhost:8888/user/get-user", header);
+};
