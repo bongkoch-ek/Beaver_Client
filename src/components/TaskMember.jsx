@@ -1,4 +1,5 @@
 import React from 'react'
+import AddMemberModal from './AddMemberModal'
 
 export default function TaskMember() {
   return (
@@ -17,9 +18,9 @@ export default function TaskMember() {
                 <p className="text-[#333333] text-lg font-normal leading-[30px]">Username</p>
             </div>
          
+        <div >
+            <AddMemberModal/>
         </div>
-        <div className="p-2 bg-black/20 rounded-[360px] border-2 border-white justify-start items-center gap-2 flex">
-            <div className="w-6 h-6 relative" />
         </div>
     </div>
     </div>

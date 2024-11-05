@@ -214,4 +214,66 @@ export function EditIcon(props) {
       />
     </svg>
   )
+} 
+
+
+export function AddMemberIcon(props) {
+  return (
+    <svg
+      width={40}
+      height={40}
+      viewBox="0 0 40 40"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <rect
+        x={1}
+        y={1}
+        width={38}
+        height={38}
+        rx={19}
+        fill="#000"
+        fillOpacity={0.15}
+      />
+      <rect
+        x={1}
+        y={1}
+        width={38}
+        height={38}
+        rx={19}
+        stroke="#fff"
+        strokeWidth={2}
+      />
+      <path
+        d="M24 29v-2a4 4 0 00-4-4h-6a4 4 0 00-4 4v2M17 19a4 4 0 100-8 4 4 0 000 8zM27 16v6M30 19h-6"
+        stroke="#fff"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+
+export function PlusIcon(props) {
+  return (
+    <svg
+      width={20}
+      height={21}
+      viewBox="0 0 20 21"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M4.167 10.5h11.666M10 4.667v11.666"
+        stroke="#333"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
 }

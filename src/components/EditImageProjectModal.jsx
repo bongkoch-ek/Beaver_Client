@@ -77,7 +77,7 @@ const EditImageProjectModal = ({projectId, currentName}) => {
             <Input
               type="file"
               id="uploadImage"
-              className="w-full border border-gray-300 p-2 rounded-md hover:border-gray-600 file:hidden cursor-pointer"
+              className="w-full border border-gray-300 p-2 rounded-md hover:border-gray-400 file:hidden cursor-pointer"
               accept="image/*"
               onChange={handleImageUpload}
             />
