@@ -2,12 +2,26 @@ import axios from "axios";
 
 //// CREATE
 
-export const createProject = async (token, form) => {
+export const createProject = async (formData, userId) => {
   const header = {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { 
+      'Content-Type': 'multipart/form-data',
+      Authorization: `Bearer ${token}` 
+    },
   };
   return await axios.post(
     "http://localhost:8888/user/create-project",
+    formData,
+    header
+  );
+};
+
+export const updateProject = async (token, projectId, form) => {
+  const header = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  return await axios.put(
+    `http://localhost:8888/user/update-project/${projectId}`,
     form,
     header
   );

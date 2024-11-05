@@ -3,17 +3,19 @@ import {Button} from '../../components/ui/button'
 import {Input} from "../../components/ui/input" 
 import {Dialog,DialogPortal,DialogOverlay,DialogTrigger,DialogClose,DialogContent,DialogHeader,DialogFooter,DialogTitle,DialogDescription,} from "../../components/ui/dialog"
 import { Label } from '@/components/ui/label';
-import { CloudIcon, VectorIcon, CloseIcon } from '../icons';
+import { CloudIcon, VectorIcon, CloseIcon, EditIcon } from '../icons';
+import  useDashboardStore  from '../stores/dashboardStore';
 
 
-
-const EditImageProjectModal = () => {
+const EditImageProjectModal = ({projectId, currentName}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
   const [input, setInput] = useState({
-    projectName: "",
+    projectName: currentName || "",
   });
   const [error, setError] = useState("");
+  const actionUpdateProject = useDashboardStore(state => state.actionUpdateProject);
+
 
   const openModal = () => {
     console.log("Opening modal...");
@@ -21,13 +23,13 @@ const EditImageProjectModal = () => {
   };
   const closeModal = () => setIsOpen(false);
 
-  const handleEditProject = () => {
+  const handleEditProject = async () => {
     if (!input.projectName.trim()) {
       setError("New Project name is required");
       return;
     }
-    setError("");
-    closeModal();
+      setError("");
+      closeModal();
   };
 
   const handleInputChange = (e) => {
@@ -52,7 +54,7 @@ const EditImageProjectModal = () => {
   return (
     <div>
       <Button
-        className=" p-2 bg-gray-300 rounded-full justify-center items-center gap-2 inline-flex  hover:bg-gray-500"
+        className=" p-2 bg-gray-300 rounded-full justify-center items-center gap-2 flex  hover:bg-gray-500"
         onClick={openModal}
       >
         <EditIcon />
@@ -89,7 +91,7 @@ const EditImageProjectModal = () => {
                   error ? "text-red-500" : "text-[#333333]"
                 }`}
               >
-                Project Name
+                New Project Name
               </Label>
               <Input
                 id="projectName"

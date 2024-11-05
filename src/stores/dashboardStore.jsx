@@ -2,7 +2,8 @@ import axios from "axios";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { toast } from "react-toastify";
-import {createProject} from "../services/DashboardService";
+import {createProject, updateProject} from "../services/DashboardService"; 
+
 
 const dashboardStore = (set, get) => ({
   projects: [],
@@ -32,11 +33,33 @@ const dashboardStore = (set, get) => ({
       set({ loading: false, error: error.response?.data || 'Something went wrong' });
       throw error;
     }
-  
   },  getUserProjects: (userId) => {
     const state = get();
     return state.project.filter(p => p.owner === userId);
-  }
+  },
+
+  actionUpdateProject: async (projectId, form) => {
+    set({ isLoading: true });
+    
+    try {
+      const result = await updateProject(token, projectId, form);
+      
+      set(state => ({
+        project: state.project.map(p => 
+          p.id === projectId ? { ...p, ...form } : p
+        ),
+        isLoading: false
+      }));
+      
+      toast.success("Project updated successfully!");
+      return result.data;
+      
+    } catch (err) {
+      set({ isLoading: false });
+      toast.error("Failed to update project");
+      throw err;
+    }
+  },
 });
 
 const usePersist = {

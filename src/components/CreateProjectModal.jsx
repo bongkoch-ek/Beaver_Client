@@ -25,8 +25,8 @@ const CreateProjectModal = () => {
   const openModal = () => {
     setIsOpen(true);
   };
-
-  const closeModal = () => {
+  
+    const closeModal = () => {
     setIsOpen(false);
     setInput({ projectName: '' }); 
     setImagePreview(null); 
@@ -35,7 +35,6 @@ const CreateProjectModal = () => {
 
   const handleCreateProject = async (e) => {
     e.preventDefault();
-  
     if (!input.projectName.trim()) {
       setError('Project name is required');
       return;
@@ -54,7 +53,10 @@ const CreateProjectModal = () => {
       } else {
         console.log('No message in response');
       }
-  
+      setIsOpen(false);
+      setInput({ projectName: '' });
+      setImagePreview(null);
+      setImageFile(null);
       closeModal(); 
     } catch (err) {
       console.log(err);
