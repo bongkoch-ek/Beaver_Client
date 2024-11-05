@@ -19,21 +19,10 @@ const useUserStore  = create( persist((set,get) => ({
         const result = await userService.actionRegister(input)
         return result.data
     },
-    actionUpdateProfile: async (token, input) => {
-        try {
-            const result = await userService.actionUpdateUser(token, input)
-            const updatedUser = {
-                ...get().user,
-                ...result.data.user
-            }
-            set({
-                token: result.data.token,
-                user: updatedUser
-            })
-            return result.data
-        } catch (error) {
-            throw error
-        }
+    actionUpdateProfile: async (token,input) => {
+        const result = await userService.actionUpdateUser(token,input)
+        set({ user: result.data.user})
+        return result.data
     },
     actionLoginGoogle : async (codeResponse) => {
         const res = await axios.get(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${codeResponse.access_token}`,

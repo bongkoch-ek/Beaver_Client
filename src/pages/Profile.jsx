@@ -33,7 +33,6 @@ const Profile = () => {
   const hdlClickSave = async () => {
     try {
         const updatedUser = await actionUpdateProfile(token, editedForm);
-        setUser(updatedUser);
         toast.success("Update profile successfully");
         setIsDisabled(true);
     } catch (error) {
