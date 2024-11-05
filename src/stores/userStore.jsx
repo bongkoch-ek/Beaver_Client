@@ -7,6 +7,7 @@ import userService from "../services/UserService";
 const useUserStore  = create( persist((set,get) => ({
     user: null,
     token: null,
+    
     actionLogin: async (input) => {
         const result = await userService.actionLogin(input)
         set({token : result.data.token, user: result.data.payload})

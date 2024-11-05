@@ -18,13 +18,30 @@ const CreateProjectModal = () => {
     setIsOpen(true)};
   const closeModal = () => setIsOpen(false);
 
-  const handleCreateProject = () => {
+  const actionCreateProject = useDashboardStore(state => state.actionCreateProject);
+
+  const handleCreateProject = async () => {
     if (!input.projectName.trim()) {
       setError('Project name is required');
       return;
     }
-    setError('');
-    closeModal();
+    try {
+      const formData = new FormData();
+      formData.append('projectName', input.projectName);
+      if (imageFile) {
+        formData.append('projectImage', imageFile);
+      }
+
+      await actionCreateProject(formData, userId);
+      setIsOpen(false);
+      setInput({ projectName: '' });
+      setImagePreview(null);
+      setImageFile(null);
+      
+    } catch (err) {
+      console.error('Failed to create project:', err);
+      setError('Failed to create project');
+    }
   };
 
   const handleInputChange = (e) => {
