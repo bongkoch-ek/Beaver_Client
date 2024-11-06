@@ -4,7 +4,7 @@ import useDashboardStore from '../stores/dashboardStore';
 
 const ProjectDetail = () => {
   const { project } = useDashboardStore();
-  const { projectName, projectId } = project;
+  // const { projectName, projectId } = project;
   return (
     <div>
       <div className="flex text-gray-600 text-[16px] ml-[65px]">
@@ -38,8 +38,8 @@ const ProjectDetail = () => {
 
           <div className="flex items-center"> 
             <EditImageProjectModal
-              projectId={projectId}
-              currentName={projectName}
+              // projectId={projectId}
+              // currentName={projectName}
             />
           </div>
         </div>
@@ -52,10 +52,10 @@ const ProjectDetail = () => {
         </div>
 
         {/* Tab Menu */}
-        <div className="flex justify-around w-full h-[50px] mt-[80px]">
-          <button className="w-[300px] bg-[#ffea98] text-black rounded-full font-semibold">Task</button>
-          <button className="w-[300px] bg-[#ffea98] text-black rounded-full font-semibold">Dashboard</button>
-          <button className="w-[300px] bg-[#ffea98] text-black rounded-full font-semibold">Schedule</button>
+        <div className="flex justify-center gap-9  h-[50px] mt-[80px]">
+          <button className="w-[360px] bg-[#ffe066] rounded-2xl border-4 border-[#ffea98] text-[#333333] text-[18px] font-semibold">Task</button>
+          <button className="w-[360px] bg-[#ffe066] rounded-2xl border-4 border-[#ffea98] text-[#333333] text-[18px] font-semibold">Dashboard</button>
+          <button className="w-[360px] bg-[#ffe066] rounded-2xl border-4 border-[#ffea98] text-[#333333] text-[18px] font-semibold">Schedule</button>
         </div>
       </div>
     </div>
