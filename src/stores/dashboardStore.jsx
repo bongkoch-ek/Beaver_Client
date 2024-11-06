@@ -15,7 +15,7 @@ const dashboardStore = (set, get) => ({
   isLoading: false,
   currentUser: null,
   error: null,
-  
+
   actionCreateProject: async (projectData, token) => {
     set({ loading: true, error: null });
     try {
@@ -31,32 +31,46 @@ const dashboardStore = (set, get) => ({
         loading: false,
       }));
 
-      return response.data; 
+      return response.data;
     } catch (error) {
       set({ loading: false, error: error.response?.data || 'Something went wrong' });
       throw error;
     }
-  },  getUserProjects: (userId) => {
-    const state = get();
-    return state.project.filter(p => p.owner === userId);
+  },
+  actionGetUserProjects: async (userId, token) => {
+    set({ loading: true, error: null });
+    try {
+      const state = await axios.get(`http://localhost:8888/dashboard/project/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      console.log(state)
+      return state
+    }
+    catch (error) {
+      set({ loading: false, error: error.response?.data || 'Something went wrong' });
+      throw error;
+    }
+
   },
 
   actionUpdateProject: async (projectId, form) => {
     set({ isLoading: true });
-    
+
     try {
       const result = await updateProject(token, projectId, form);
-      
+
       set(state => ({
-        project: state.project.map(p => 
+        project: state.project.map(p =>
           p.id === projectId ? { ...p, ...form } : p
         ),
         isLoading: false
       }));
-      
+
       toast.success("Project updated successfully!");
       return result.data;
-      
+
     } catch (err) {
       set({ isLoading: false });
       toast.error("Failed to update project");
@@ -65,11 +79,6 @@ const dashboardStore = (set, get) => ({
   },
 });
 
-const usePersist = {
-  name: "state",
-  storage: createJSONStorage(() => localStorage),
-};
-
-const useDashboardStore = create(persist(dashboardStore, usePersist));
+const useDashboardStore = create(dashboardStore);
 
 export default useDashboardStore;

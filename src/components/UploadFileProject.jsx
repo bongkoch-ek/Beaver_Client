@@ -8,13 +8,13 @@ import { Paperclip } from 'lucide-react';
 import { set } from "date-fns";
 
 
-const UploadFile = () => {
+const UploadFile = ({input,setInput}) => {
     const token = useUserStore((state) => state.token);
     const [isLoading, setIsLoading] = useState(false);
 
-    const [form, setForm] = useState({
-      images: [],
-    });
+    // const [form, setForm] = useState({
+    //   images: [],
+    // });
 
     const hdlOnChange = (e) => {
       setIsLoading(true);
@@ -98,7 +98,7 @@ const UploadFile = () => {
 
        <div className="flex gap-4 my-4">
     {isLoading && <Loader className="w-8 h-8 animate-spin" />}
-    {form.images.map((item, index) => (
+    {input.images.map((item, index) => (
       <div className="relative" key={index}>
         <img
           src={item.url}
