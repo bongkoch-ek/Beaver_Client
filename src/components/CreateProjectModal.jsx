@@ -11,6 +11,8 @@ import { CloudIcon, VectorIcon } from '../icons';
 import useDashboardStore from '../stores/dashboardStore';
 import useUserStore from '../stores/userStore';
 import { toast } from 'react-toastify';
+import { Upload } from 'lucide-react';
+import UploadFileProject from './UploadFileProject';
 
 const CreateProjectModal = () => {
   const token = useUserStore((state) => state.token);
@@ -19,6 +21,7 @@ const CreateProjectModal = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [input, setInput] = useState({
     projectName: '',
+    images: [],
   });
   const [error, setError] = useState('');
 
@@ -104,6 +107,7 @@ const CreateProjectModal = () => {
                 <CloudIcon className="w-12 h-12" />
               )}
             </div>
+            <UploadFileProject input={input} setInput={setInput} />
             <Input 
               type="file" 
               id="uploadImage" 
