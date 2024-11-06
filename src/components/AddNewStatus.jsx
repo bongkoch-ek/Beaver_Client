@@ -32,7 +32,7 @@ const AddNewStatus = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button className="bg-[#F5F5F5] rounded-[16px] justify-start items-center gap-4 flex">
+        <button className="bg-[#F5F5F5] rounded-[16px] justify-center items-center w-[55px] h-[55px] hover:bg-slate-200  flex">
           <PlusIcon className="w-10 h-10 " />
         </button>
       </DialogTrigger>

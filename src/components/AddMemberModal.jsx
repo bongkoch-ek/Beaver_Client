@@ -32,7 +32,7 @@ const AddMemberModal = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button className="rounded-[360px] justify-start items-center gap-4 flex">
+        <button className="rounded-[360px] justify-start items-center gap-4 flex hover:bg-slate-200 ">
           <AddMemberIcon className="w-10 h-10 " />
         </button>
       </DialogTrigger>
