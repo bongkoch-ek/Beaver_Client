@@ -6,13 +6,7 @@ import TaskMember from '@/src/components/TaskMember';
 
 export default function ProjectSchedule(props) {
 
-    const data = [
-        { id: 1, title: "testTitle", description: "123456789", startDate: "2024-11-02", dueDate: "2024-11-05", column: { status: "DONE" } },
-        { id: 2, title: "testTitle", description: "123456789", startDate: "2024-11-02", dueDate: "2024-11-09", column: { status: "INPROGRESS" } },
-        { id: 3, title: "testTitle", description: "123456789", startDate: "2024-11-02", dueDate: new Date().toISOString(), column: { status: "LATE" } },
-        { id: 4, title: "testTitle", description: "123456789", startDate: "2024-11-05", dueDate: new Date().toISOString(), column: { status: "LATE" } },
-        { id: 5, title: "testTitle", description: "123456789", startDate: "2024-11-04", dueDate: new Date().toISOString(), column: { status: "LATE" } },
-    ]
+    const data = []
 
     const today = new Date().toISOString().split('T')[0]
     console.log(today)
