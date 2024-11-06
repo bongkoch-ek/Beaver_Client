@@ -7,7 +7,7 @@ export default function TaskMember() {
     <div className="self-stretch text-black text-lg font-normal  leading-[30px]">Member</div>
     <div className="justify-start items-start gap-4 inline-flex">
         <div className="justify-start items-center gap-4 flex">
-            <div className="h-[42px] px-2 py-1.5 bg-[#ffe066] rounded-2xl border-4 border-[#ffea98] justify-center items-center gap-2 flex">
+            <div className="h-[42px] w-[100px] min-w-[80px] px-2 py-1.5 bg-[#ffe066] rounded-2xl border-4 border-[#ffea98] justify-center items-center gap-2 flex">
                 <div className="grow shrink basis-0 text-center text-[#333333] text-lg font-semibold  leading-[30px]">All</div>
             </div>
 
