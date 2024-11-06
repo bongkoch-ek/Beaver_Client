@@ -7,8 +7,9 @@ import { createProject, updateProject } from "../services/DashboardService";
 
 const dashboardStore = (set, get) => ({
   projects: [],
-  task: [],
+  column: [],
   list: [],
+  allProject: [],
   isLoading: false,
   currentUser: null,
   error: null,
@@ -34,16 +35,16 @@ const dashboardStore = (set, get) => ({
       throw error;
     }
   },
-  actionGetUserProjects: async (userId, token) => {
+  actionGetUserProjects: async (token) => {
     set({ loading: true, error: null });
     try {
-      const state = await axios.get(`http://localhost:8888/dashboard/project/${userId}`, {
+      const response = await axios.get(`http://localhost:8888/dashboard/project`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
-      console.log(state)
-      return state
+      set({ loading: false, allProject: response.data })
+      return response
     }
     catch (error) {
       set({ loading: false, error: error.response?.data || 'Something went wrong' });
@@ -74,6 +75,28 @@ const dashboardStore = (set, get) => ({
       throw err;
     }
   },
+
+  actionCreateColumn: async (data, token) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await axios.post('http://localhost:8888/dashboard/create-list', data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const newColumn = response.data;
+
+      set((state) => ({
+        projects: [...state.column, newColumn],
+        loading: false,
+      }));
+
+      return response.data;
+    } catch (error) {
+      set({ loading: false, error: error.response?.data || 'Something went wrong' });
+      throw error;
+    }
+  }
 });
 
 const useDashboardStore = create(dashboardStore);

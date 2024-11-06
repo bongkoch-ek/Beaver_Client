@@ -1,5 +1,7 @@
 import CreateProjectModal from "@/src/components/CreateProjectModal";
-import React from "react";
+import useDashboardStore from "@/src/stores/dashboardStore";
+import useUserStore from "@/src/stores/userStore";
+import React, { useEffect } from "react";
 
 const ProjectPage = () => {
   const projects = [
@@ -8,6 +10,13 @@ const ProjectPage = () => {
     { name: "Project_name", status: "In progress", dueDate: "12:00 A.M." },
     { name: "Project_name", status: "In progress", dueDate: "12:00 A.M." },
   ];
+
+  const user = useUserStore(state => state.user)
+  const token = useUserStore(state => state.token)
+  const actionGetUserProjects = useDashboardStore(state => state.actionGetUserProjects)
+  const allProject = useDashboardStore(state => state.allProject)
+  useEffect(() =>actionGetUserProjects(token),[])
+  console.log(allProject)
 
   return (
     <div className="bg-gray-100">
