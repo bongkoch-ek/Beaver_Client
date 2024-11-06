@@ -1,17 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Task from "./Task";
 import { motion } from "framer-motion";
 import DropTaskIndicator from "./DropTaskIndicator";
+import io from "socket.io-client";
+import useDashboardStore from "../stores/dashboardStore";
 
+// let socket = io.connect("http://localhost:8888");
 export default function StatusColums({
   taskCard,
   setTaskCard,
   hdlTaskMove,
   status,
 }) {
+  const socket = useDashboardStore((state)=>state.socket)
   const filteredTaskCard = taskCard.filter((item) => item.column === status);
 
   const [isActive, setIsActive] = useState(false);
+
+  // useEffect(() => {
+  //   // socket = io.connect("http://localhost:8888");
+  // }, []);
+  useEffect(() => {
+    socket.on("move_task", (data) => {
+      console.log(data,"-------")
+      setTaskCard((prv) => prv.map(item => {
+       return item.id === data.id ? data : item
+      }));
+    });
+  }, [socket]);
 
   const hdlDragStart = (e, task) => {
     e.dataTransfer.setData("taskId", task.id);
@@ -73,7 +89,7 @@ export default function StatusColums({
     setIsActive(false);
   };
 
-  const hdlDragEnd = (e) => {
+  const hdlDragEnd = async (e) => {
     const taskId = e.dataTransfer.getData("taskId");
     setIsActive(false);
     clearIndicator();
@@ -107,6 +123,7 @@ export default function StatusColums({
 
       setTaskCard(newTask);
       console.log("Updated task:", taskToTransfer);
+      await socket.emit("cardDragging", taskToTransfer);
     }
   };
 
