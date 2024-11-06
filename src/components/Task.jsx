@@ -11,6 +11,7 @@ import {
     DialogTrigger,
   } from "@/components/ui/dialog";
 import { EditTaskModal } from "./EditTaskModal";
+import { ThreePointIconWithBG } from "../icons";
 
 
 export default function Task({ item,hdlDragStart }) {
@@ -24,11 +25,14 @@ export default function Task({ item,hdlDragStart }) {
         layout
         draggable="true"
         onDragStart={(e)=>hdlDragStart(e,item)}
-        className="cursor-grab w-full active:cursor-grabbing self-stretch h-full p-4 bg-[#cde9fd] rounded-lg flex-col justify-start items-start gap-5 shadow flex"
+        className=" cursor-grab w-full active:cursor-grabbing self-stretch h-full p-4 bg-[#cde9fd] rounded-lg flex-col justify-start items-start gap-5 shadow flex"
       >
-        <div className="self-stretch justify-start items-center gap-2 inline-flex">
+        <div className="self-stretch justify-between items-center gap-2 inline-flex">
           <div className="grow shrink basis-0 text-black text-sm font-normal font-['IBM Plex Sans Thai'] leading-[23px]">
             {item.title}
+          </div> 
+          <div className="flex w-[28px] h-[28px] mb-1 hover:bg-slate-300 rounded-full ">
+          <ThreePointIconWithBG/>
           </div>
         </div>
         <div className="self-stretch justify-between items-center inline-flex">
