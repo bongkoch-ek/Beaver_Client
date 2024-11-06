@@ -66,7 +66,7 @@ const AddMemberModal = () => {
                   <SelectGroup>
                     <SelectLabel className="font-normal text-[14px]">Select role</SelectLabel>
                     <SelectItem value="Member" className="font-normal text-[14px]">Member</SelectItem>
-                    <SelectItem value="Mannager" className="font-normal text-[14px]">Manager</SelectItem>
+                    <SelectItem value="Mannager" className="font-normal text-[14px]">Owner</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
