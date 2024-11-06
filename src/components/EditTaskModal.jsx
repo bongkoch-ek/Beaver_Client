@@ -21,25 +21,80 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useState } from "react";
-import { ChevronsDown, ChevronsUp, CalendarIcon, Equal } from "lucide-react";
+import {
+  ChevronsDown,
+  ChevronsUp,
+  CalendarIcon,
+  Equal,
+  Pencil,
+  PencilIcon,
+  X,
+  Check
+} from "lucide-react";
 
 export function EditTaskModal() {
   const [dueDate, setDueDate] = useState(new Date());
   const [startDate, setStartDate] = useState(new Date());
   const [priority, setPriority] = useState("Medium");
+  const [taskName, setTaskName] = useState("Task_Name");
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempTaskName, setTempTaskName] = useState(taskName);
+
+ 
+  const hdlEdit = () => {
+    setIsEditing(true);
+    setTempTaskName(taskName);
+  };
+
+  
+  const hdlSave = () => {
+    setTaskName(tempTaskName);
+    setIsEditing(false);
+  };
+
+ 
+  const hdlCancle = () => {
+    setIsEditing(false);
+    setTempTaskName(taskName);
+  };
 
   return (
-    <DialogContent className="inset-0 max-w-3xl w-[856px] max-h-min p-12 bg-white rounded-2xl flex flex-col justify-center gap-8 mx-auto">
+    <DialogContent className="inset-0 max-w-3xl w-[856px] max-h-min p-12 bg-white rounded-2xl flex flex-col justify-center gap-8 mx-auto mt-[100px]">
       <div className="flex flex-col space-y-8 ">
         {/* ชื่อ Task */}
-        <p className="text-[#333333] text-2xl font-semibold leading-9">
-          Task_Name
-        </p>
+        <div className="flex items-center gap-2">
+          {isEditing ? (
+            <div className="flex items-center w-full gap-2 border border-blue-300 rounded px-2 py-1">
+              <Input
+                type="text"
+                value={tempTaskName}
+                onChange={(e) => setTempTaskName(e.target.value)}
+                className="border-none outline-none w-full"
+                autoFocus
+              />
+              <button onClick={hdlSave}
+               className="w-7 h-7 p-2 bg-[#43a047]/20 rounded-[360px] justify-center items-center gap-2 inline-flex">
+                <Check className="w-3.5 h-3.5 relative" />
+              </button>
+              <button onClick={hdlCancle}
+              className="w-7 h-7 p-2 bg-[#e53935]/20 rounded-[360px] justify-center items-center gap-2 inline-flex">
+                <X className="text-red-500" size={24} />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <span className="text-lg font-semibold">{taskName}</span>
+              <button onClick={hdlEdit}
+              className="w-7 h-7 p-2 bg-black/20 rounded-[360px] justify-center items-center gap-2 inline-flex">
+                <PencilIcon className="w-3.5 h-3.5 relative" />
+                
 
+              </button>
+            </div>
+          )}
+        </div>
 
-
-
-        {/* รายละเอียดของ Task */}
+        {/* data */}
         <div className="space-y-4">
           {/* Status */}
           <div className="flex gap-4  items-center">
@@ -75,7 +130,7 @@ export function EditTaskModal() {
                         : "text-[#5db9f8]"
                     }`}
                   >
-                  {priority}
+                    {priority}
                   </p>
                 </Button>
               </PopoverTrigger>
@@ -106,7 +161,6 @@ export function EditTaskModal() {
                     <ChevronsUp className="text-[#e53935]" />
                     <span>High</span>
                   </Button>
-
                 </div>
               </PopoverContent>
             </Popover>
@@ -131,7 +185,7 @@ export function EditTaskModal() {
                       !startDate && "text-gray-500"
                     )}
                   >
-                    <CalendarIcon className="mr-2 text-gray-600" />
+                    <CalendarIcon className="text-gray-600" />
                     {startDate ? (
                       format(startDate, "PPP")
                     ) : (
@@ -164,7 +218,7 @@ export function EditTaskModal() {
                       !dueDate && "text-gray-500"
                     )}
                   >
-                    <CalendarIcon className="mr-2 text-gray-600" />
+                    <CalendarIcon className=" text-gray-600" />
                     {dueDate ? (
                       format(dueDate, "PPP")
                     ) : (
