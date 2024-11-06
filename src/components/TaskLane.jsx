@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Task from "./Task";
 import StatusColums from "./StatusColums";
+import AddNewStatus from "./AddNewStatus";
 
 export default function TaskLane() {
   const DEFAULT_TASKS = [
@@ -74,7 +75,8 @@ export default function TaskLane() {
         setTaskCard={setTaskCard}
         hdlTaskMove={hdlTaskMove}
         status="Late"
-      />
+      /> 
+      <AddNewStatus/>
     </div>
   );
 }
