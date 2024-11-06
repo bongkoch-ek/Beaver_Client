@@ -4,7 +4,7 @@ import useDashboardStore from '../stores/dashboardStore';
 
 const ProjectDetail = () => {
   const { project } = useDashboardStore();
-  const { projectName, projectId } = project;
+  // const { projectName, projectId } = project;
   return (
     <div>
       <div className="flex text-gray-600 text-[16px] ml-[65px]">
@@ -38,8 +38,8 @@ const ProjectDetail = () => {
 
           <div className="flex items-center"> 
             <EditImageProjectModal
-              projectId={projectId}
-              currentName={projectName}
+              // projectId={projectId}
+              // currentName={projectName}
             />
           </div>
         </div>

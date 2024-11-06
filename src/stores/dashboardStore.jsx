@@ -3,9 +3,12 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { toast } from "react-toastify";
 import {createProject, updateProject} from "../services/DashboardService"; 
+import io from "socket.io-client";
+
 
 
 const dashboardStore = (set, get) => ({
+ socket : io.connect("http://localhost:8888"),
   projects: [],
   task: [],
   list: [],
