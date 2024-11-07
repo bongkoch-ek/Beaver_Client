@@ -4,6 +4,8 @@ import StatusColums from "./StatusColums";
 import AddNewStatus from "./AddNewStatus";
 
 export default function TaskLane() {
+  
+
   // DATA FOR TESTING FEATURE DRAG AND DROP
   const DEFAULT_TASKS = [
     // To do
@@ -77,7 +79,7 @@ export default function TaskLane() {
         hdlTaskMove={hdlTaskMove}
         status="Late"
       /> 
-      <AddNewStatus/>
+      <AddNewStatus />
     </div>
   );
 }
