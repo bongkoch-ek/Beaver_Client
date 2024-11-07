@@ -1,5 +1,8 @@
 import CreateProjectModal from "@/src/components/CreateProjectModal";
-import React from "react";
+import useDashboardStore from "@/src/stores/dashboardStore";
+import useUserStore from "@/src/stores/userStore";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ProjectPage = () => {
   const projects = [
@@ -8,6 +11,19 @@ const ProjectPage = () => {
     { name: "Project_name", status: "In progress", dueDate: "12:00 A.M." },
     { name: "Project_name", status: "In progress", dueDate: "12:00 A.M." },
   ];
+
+  const user = useUserStore(state => state.user)
+  const token = useUserStore(state => state.token)
+  const actionGetUserProjects = useDashboardStore(state => state.actionGetUserProjects)
+  const allProjects = useDashboardStore(state => state.projects)
+  const navigate = useNavigate()
+  // console.log(allProject)
+  
+  //#region MOCK
+  function hdlClickProject(){
+    navigate('detail')
+  }
+  //#endregion
 
   return (
     <div className="bg-gray-100">
@@ -24,11 +40,11 @@ const ProjectPage = () => {
         <div className="flex items-center text-gray-600 text-[16px] mb-6"></div>
 
         <div className="flex justify-between items-center ">
-          <div className="text-black text-[32px] font-semibold font-['IBM Plex Sans Thai'] leading-[48px]">
+          <div className="text-black text-[32px] font-semibold  leading-[48px]">
             Project
           </div>
           <div className="">
-            <CreateProjectModal className="text-center  text-base font-semibold font-['IBM Plex Sans Thai'] leading-relaxed "/>
+            <CreateProjectModal className="text-center  text-base font-semibold  leading-relaxed "/>
           </div>
         </div>
 
@@ -36,7 +52,7 @@ const ProjectPage = () => {
         <div>
           <div className="flex justify-between mt-[32px]">
             <p className="text-[24px] font-normal mb-[20px]">Today Lists</p>
-            <p className="text-right text-[#767676] text-lg font-normal font-['IBM Plex Sans Thai'] leading-[30px]">
+            <p className="text-right text-[#767676] text-lg font-normal  leading-[30px]">
               29 / 10 / 2567
             </p>
           </div>
@@ -75,7 +91,7 @@ const ProjectPage = () => {
                     </div>
 
                     <div className="flex items-center pr-[40px] ">
-                      <button className="px-4 py-2 bg-[#ffe066] text-[#333333] rounded-md">
+                      <button className="px-4 py-2 bg-[#ffe066] text-[#333333] rounded-md" onClick={hdlClickProject}>
                         Go to Project
                       </button>
                     </div>

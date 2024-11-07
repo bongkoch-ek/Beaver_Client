@@ -114,6 +114,7 @@ const AddMemberModal = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
+
                     <SelectLabel className="font-normal text-[14px]">
                       Select role
                     </SelectLabel>
@@ -129,6 +130,7 @@ const AddMemberModal = () => {
                     >
                       Owner
                     </SelectItem>
+
                   </SelectGroup>
                 </SelectContent>
               </Select>
