@@ -1,5 +1,8 @@
 import CreateProjectModal from "@/src/components/CreateProjectModal";
-import React from "react";
+import useDashboardStore from "@/src/stores/dashboardStore";
+import useUserStore from "@/src/stores/userStore";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ProjectPage = () => {
   const projects = [
@@ -8,6 +11,19 @@ const ProjectPage = () => {
     { name: "Project_name", status: "In progress", dueDate: "12:00 A.M." },
     { name: "Project_name", status: "In progress", dueDate: "12:00 A.M." },
   ];
+
+  const user = useUserStore(state => state.user)
+  const token = useUserStore(state => state.token)
+  const actionGetUserProjects = useDashboardStore(state => state.actionGetUserProjects)
+  const allProjects = useDashboardStore(state => state.projects)
+  const navigate = useNavigate()
+  // console.log(allProject)
+  
+  //#region MOCK
+  function hdlClickProject(){
+    navigate('detail')
+  }
+  //#endregion
 
   return (
     <div className="bg-gray-100">
@@ -75,7 +91,7 @@ const ProjectPage = () => {
                     </div>
 
                     <div className="flex items-center pr-[40px] ">
-                      <button className="px-4 py-2 bg-[#ffe066] text-[#333333] rounded-md">
+                      <button className="px-4 py-2 bg-[#ffe066] text-[#333333] rounded-md" onClick={hdlClickProject}>
                         Go to Project
                       </button>
                     </div>
