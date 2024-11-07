@@ -276,7 +276,6 @@ export function PlusIcon(props) {
       />
     </svg>
   )
-<<<<<<< HEAD
 }
 
 export function ProjectImg(props) {
@@ -366,7 +365,8 @@ export function ProjectImg(props) {
           </g>
         </g>
       </g>
-=======
+      </svg>
+)
 } 
 
 
@@ -416,7 +416,6 @@ export function ThreePointIcon(props) {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
->>>>>>> develop
     </svg>
   )
 }
