@@ -89,3 +89,13 @@ export const getUser = async (token) => {
   };
   return await axios.get("http://localhost:8888/user/get-user", header);
 };
+
+export const deleteTask = async (token, taskId) => {
+  const header = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  return await axios.delete(
+    `http://localhost:8888/dashboard/task/${taskId}`,
+    header
+  );
+};

@@ -276,6 +276,7 @@ export function PlusIcon(props) {
       />
     </svg>
   )
+<<<<<<< HEAD
 }
 
 export function ProjectImg(props) {
@@ -365,6 +366,57 @@ export function ProjectImg(props) {
           </g>
         </g>
       </g>
+=======
+} 
+
+
+export function ThreePointIconWithBG(props) {
+  return (
+    <svg
+      width={29}
+      height={28}
+      viewBox="0 0 29 28"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <rect
+        x={0.5}
+        width={28}
+        height={28}
+        rx={14}
+        fill="#000"
+        fillOpacity={0.15}
+      />
+      <path
+        d="M14.5 14.584a.583.583 0 100-1.167.583.583 0 000 1.167zM18.583 14.584a.583.583 0 100-1.167.583.583 0 000 1.167zM10.416 14.584a.583.583 0 100-1.167.583.583 0 000 1.167z"
+        stroke="#333"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+} 
+
+export function ThreePointIcon(props) {
+  return (
+    <svg
+      width={25}
+      height={25}
+      viewBox="0 0 25 25"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M12.5 13.5a1 1 0 100-2 1 1 0 000 2zM19.5 13.5a1 1 0 100-2 1 1 0 000 2zM5.5 13.5a1 1 0 100-2 1 1 0 000 2z"
+        stroke="#333"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+>>>>>>> develop
     </svg>
   )
 }
