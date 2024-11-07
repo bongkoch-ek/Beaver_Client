@@ -29,7 +29,7 @@ import {
   Pencil,
   PencilIcon,
   X,
-  Check
+  Check,
 } from "lucide-react";
 
 export function EditTaskModal() {
@@ -39,20 +39,29 @@ export function EditTaskModal() {
   const [taskName, setTaskName] = useState("Task_Name");
   const [isEditing, setIsEditing] = useState(false);
   const [tempTaskName, setTempTaskName] = useState(taskName);
+  const [url, setUrl] = useState("");
 
- 
+  const handlePost = () => {
+    // จัดการเมื่อกดปุ่ม Post
+    console.log("Posted URL:", url);
+    // เพิ่มโค้ดสำหรับบันทึก URL
+  };
+
+  const handleCancel = () => {
+    // จัดการเมื่อกดปุ่ม Cancel
+    setUrl("");
+  };
+
   const hdlEdit = () => {
     setIsEditing(true);
     setTempTaskName(taskName);
   };
 
-  
   const hdlSave = () => {
     setTaskName(tempTaskName);
     setIsEditing(false);
   };
 
- 
   const hdlCancle = () => {
     setIsEditing(false);
     setTempTaskName(taskName);
@@ -72,23 +81,27 @@ export function EditTaskModal() {
                 className="border-none outline-none w-full"
                 autoFocus
               />
-              <button onClick={hdlSave}
-               className="w-7 h-7 p-2 bg-[#43a047]/20 rounded-[360px] justify-center items-center gap-2 inline-flex">
+              <button
+                onClick={hdlSave}
+                className="w-7 h-7 p-2 bg-[#43a047]/20 rounded-[360px] justify-center items-center gap-2 inline-flex"
+              >
                 <Check className="w-3.5 h-3.5 relative" />
               </button>
-              <button onClick={hdlCancle}
-              className="w-7 h-7 p-2 bg-[#e53935]/20 rounded-[360px] justify-center items-center gap-2 inline-flex">
+              <button
+                onClick={hdlCancle}
+                className="w-7 h-7 p-2 bg-[#e53935]/20 rounded-[360px] justify-center items-center gap-2 inline-flex"
+              >
                 <X className="text-red-500" size={24} />
               </button>
             </div>
           ) : (
             <div className="flex items-center gap-2">
               <span className="text-lg font-semibold">{taskName}</span>
-              <button onClick={hdlEdit}
-              className="w-7 h-7 p-2 bg-black/20 rounded-[360px] justify-center items-center gap-2 inline-flex">
+              <button
+                onClick={hdlEdit}
+                className="w-7 h-7 p-2 bg-black/20 rounded-[360px] justify-center items-center gap-2 inline-flex"
+              >
                 <PencilIcon className="w-3.5 h-3.5 relative" />
-                
-
               </button>
             </div>
           )}
@@ -249,10 +262,38 @@ export function EditTaskModal() {
         <UploadFile />
 
         {/* ลิงก์ URL */}
-        <div className="space-y-2">
+                {/* ลิงก์ URL */}
+                <div className="space-y-2">
           <p className="text-sm font-semibold">Link URL</p>
-          <Input placeholder="www.beaver.co.th" />
+          <div className="relative focus-within:opacity-100">
+            <Input
+              placeholder="www.beaver.co.th"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              className="w-full focus-within:border-blue-300"
+            />
+
+            <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-2 opacity-0 focus-within:opacity-100 transition-opacity duration-200">
+              {url && (
+                <>
+                  <button
+                    onClick={handlePost}
+                    className="px-3 py-1 bg-[#43a047]/20 rounded-lg text-xs font-semibold text-green-700 hover:bg-[#43a047]/30"
+                  >
+                    Post
+                  </button>
+                  <button
+                    onClick={handleCancel}
+                    className="px-3 py-1 bg-[#e53935]/20 rounded-lg text-xs font-semibold text-red-600 hover:bg-[#e53935]/30"
+                  >
+                    Cancel
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
         </div>
+
 
         {/* คอมเมนต์ */}
         <Input placeholder="Add a comment..." />
