@@ -10,6 +10,7 @@ import io from "socket.io-client";
 const dashboardStore = (set, get) => ({
  socket : io.connect("http://localhost:8888"),
   projects: [],
+  project: [],
   column: [],
   list: [],
   allProject: [],
@@ -46,7 +47,7 @@ const dashboardStore = (set, get) => ({
           Authorization: `Bearer ${token}`,
         },
       })
-      set({ loading: false, allProject: response.data })
+      set({ loading: false, projects: response.data })
       return response
     }
     catch (error) {
@@ -76,6 +77,23 @@ const dashboardStore = (set, get) => ({
       set({ isLoading: false });
       toast.error("Failed to update project");
       throw err;
+    }
+  },
+
+  actionGetProjectById: async (id,token) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await axios.get(`http://localhost:8888/dashboard/project/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      set({ loading: false, project: response.data })
+      return response
+    }
+    catch (error) {
+      set({ loading: false, error: error.response?.data || 'Something went wrong' });
+      throw error;
     }
   },
 
