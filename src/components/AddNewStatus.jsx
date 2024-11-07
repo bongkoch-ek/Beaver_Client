@@ -6,21 +6,27 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue,SelectLabel,SelectGroup } from "@/components/ui/select"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectLabel, SelectGroup } from "@/components/ui/select"
+import useDashboardStore from '../stores/dashboardStore'
+import useUserStore from '../stores/userStore'
 
 const AddNewStatus = () => {
-    const [text, setText] = useState('')
-    const [status, setStatus] = useState('')
-    const [error, setError] = useState('')
+  const [text, setText] = useState('')
+  const [status, setStatus] = useState('')
+  const [error, setError] = useState('')
 
+  const actionCreateColumn = useDashboardStore(state => state.actionCreateColumn)
+  const project = useDashboardStore(state => state.project)
+  const token = useUserStore(state => state.token)
+
+  const data = { name: text, projectId: project.id, status: status }
   const handleSubmit = () => {
     if (!text.trim()) {
       setError('Please select status type')
       return
     }
-    
-    //ใส่API เพื่อเพิ่มสมาชิก
-    console.log({ text, status })
+    console.log(data)
+    actionCreateColumn(data, token)
     setError('')
   }
 
@@ -48,16 +54,16 @@ const AddNewStatus = () => {
               <label className="text-sm text-[#333333]">Status Name</label>
               <Input
                 type="text"
-                placeholder="Type your new status name" 
+                placeholder="Type your new status name"
                 value={text}
                 onChange={handleTextChange}
                 className={`mt-1 focus:border-[#5DB9F8] `}
               />
-              
+
             </div>
 
             <div>
-            <label className={`text-sm ${error ? 'text-red-500' : 'text-[#333333]'}`}>Status type</label>
+              <label className={`text-sm ${error ? 'text-red-500' : 'text-[#333333]'}`}>Status type</label>
               <Select value={status} onValueChange={setStatus}>
                 <SelectTrigger className={`mt-1 ${error ? 'border-red-500' : ''}`}>
                   <SelectValue placeholder="Select Status" />
@@ -65,9 +71,9 @@ const AddNewStatus = () => {
                 <SelectContent>
                   <SelectGroup>
                     <SelectLabel className="font-normal text-[14px]">Select Status</SelectLabel>
-                    <SelectItem value="TO DO" className="font-normal text-[14px]">To do</SelectItem>
-                    <SelectItem value="In Progress" className="font-normal text-[14px]">In Progress</SelectItem>
-                    <SelectItem value="Done" className="font-normal text-[14px]">Done</SelectItem>
+                    <SelectItem value="TODO" className="font-normal text-[14px]">To do</SelectItem>
+                    <SelectItem value="INPROGRESS" className="font-normal text-[14px]">In Progress</SelectItem>
+                    <SelectItem value="DONE" className="font-normal text-[14px]">Done</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -80,10 +86,10 @@ const AddNewStatus = () => {
               onClick={handleSubmit}
               className="bg-[#FFE066] text-[#333333] w-[90px] h-[42px] rounded-[8px] hover:bg-yellow-400 font-semibold flex items-center justify-center gap-2"
             >
-              Add 
-              <PlusIcon className="mb-1"/>
+              Add
+              <PlusIcon className="mb-1" />
             </button>
-          </div>  
+          </div>
         </div>
       </DialogContent>
     </Dialog>

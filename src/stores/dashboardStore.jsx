@@ -108,7 +108,7 @@ const dashboardStore = (set, get) => ({
       const newColumn = response.data;
 
       set((state) => ({
-        projects: [...state.column, newColumn],
+        projects: [...state.list, newColumn],
         loading: false,
       }));
 
