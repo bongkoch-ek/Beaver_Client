@@ -4,6 +4,7 @@ import StatusColums from "./StatusColums";
 import AddNewStatus from "./AddNewStatus";
 
 export default function TaskLane() {
+  // DATA FOR TESTING FEATURE DRAG AND DROP
   const DEFAULT_TASKS = [
     // To do
     { title: "Look into render bug in dashboard", id: "1", column: "To do" },
