@@ -10,10 +10,8 @@ import io from "socket.io-client";
 const dashboardStore = (set, get) => ({
  socket : io.connect("http://localhost:8888"),
   projects: [],
-  project: [],
-  column: [],
+  task: [],
   list: [],
-  allProject: [],
   isLoading: false,
   currentUser: null,
   error: null,
@@ -39,16 +37,16 @@ const dashboardStore = (set, get) => ({
       throw error;
     }
   },
-  actionGetUserProjects: async (token) => {
+  actionGetUserProjects: async (userId, token) => {
     set({ loading: true, error: null });
     try {
-      const response = await axios.get(`http://localhost:8888/dashboard/project`, {
+      const state = await axios.get(`http://localhost:8888/dashboard/project/${userId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
-      set({ loading: false, projects: response.data })
-      return response
+      console.log(state)
+      return state
     }
     catch (error) {
       set({ loading: false, error: error.response?.data || 'Something went wrong' });
@@ -79,45 +77,6 @@ const dashboardStore = (set, get) => ({
       throw err;
     }
   },
-
-  actionGetProjectById: async (id,token) => {
-    set({ loading: true, error: null });
-    try {
-      const response = await axios.get(`http://localhost:8888/dashboard/project/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      set({ loading: false, project: response.data })
-      return response
-    }
-    catch (error) {
-      set({ loading: false, error: error.response?.data || 'Something went wrong' });
-      throw error;
-    }
-  },
-
-  actionCreateColumn: async (data, token) => {
-    set({ loading: true, error: null });
-    try {
-      const response = await axios.post('http://localhost:8888/dashboard/create-list', data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const newColumn = response.data;
-
-      set((state) => ({
-        projects: [...state.column, newColumn],
-        loading: false,
-      }));
-
-      return response.data;
-    } catch (error) {
-      set({ loading: false, error: error.response?.data || 'Something went wrong' });
-      throw error;
-    }
-  }
 });
 
 const useDashboardStore = create(dashboardStore);
