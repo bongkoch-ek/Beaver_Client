@@ -8,13 +8,9 @@ import { Paperclip } from "lucide-react";
 import { set } from "date-fns";
 import { CloudIcon, VectorIcon } from "../icons";
 
-const UploadFile = ({ input, setInput }) => {
+const UploadFileProject = ({ input, setInput }) => {
   const token = useUserStore((state) => state.token);
   const [isLoading, setIsLoading] = useState(false);
-
-  // const [form, setForm] = useState({
-  //   images: [],
-  // });
 
   const hdlOnChange = (e) => {
     setIsLoading(true);
@@ -122,4 +118,4 @@ const UploadFile = ({ input, setInput }) => {
   );
 };
 
-export default UploadFile;
+export default UploadFileProject;
