@@ -2,12 +2,6 @@ import React, { useState } from "react";
 import { AddMemberIcon, PlusIcon } from "../icons";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectLabel, SelectGroup } from "@/components/ui/select"
 import useDashboardStore from '../stores/dashboardStore'
 import useUserStore from '../stores/userStore'
