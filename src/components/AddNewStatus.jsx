@@ -3,14 +3,14 @@ import { AddMemberIcon, PlusIcon } from "../icons";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  SelectLabel,
-  SelectGroup,
-} from "@/components/ui/select";
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectLabel, SelectGroup } from "@/components/ui/select"
+import useDashboardStore from '../stores/dashboardStore'
+import useUserStore from '../stores/userStore'
 import { Cross2Icon } from "@radix-ui/react-icons";
 
 const AddNewStatus = () => {
@@ -19,6 +19,11 @@ const AddNewStatus = () => {
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
 
+  const actionCreateColumn = useDashboardStore(state => state.actionCreateColumn)
+  const project = useDashboardStore(state => state.project)
+  const token = useUserStore(state => state.token)
+
+  const data = { name: text, projectId: project.id, status: status }
   const handleSubmit = () => {
     if (!text.trim()) {
       setError("Please select status type");
