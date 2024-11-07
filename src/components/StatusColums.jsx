@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Task from "./Task";
 import { motion } from "framer-motion";
 import DropTaskIndicator from "./DropTaskIndicator";
-import { ThreePointIcon, ThreePointIconWithBG } from "../icons";
 import io from "socket.io-client";
 import useDashboardStore from "../stores/dashboardStore";
 
@@ -162,9 +161,7 @@ export default function StatusColums({
               {status}
               <div>({filteredTaskCard.length})</div>
             </div>
-            <div className="w-6 h-6 relative hover:bg-slate-200 rounded-full flex justify-center items-center ">
-              <ThreePointIcon/>
-            </div>
+            <div className="w-6 h-6 relative" />
           </div>
 
           {/* ใส่taskตรงนี้ */}
@@ -172,9 +169,7 @@ export default function StatusColums({
             <>
               <DropTaskIndicator beforeId={item.id} column={item.column} />
               <Task item={item} hdlDragStart={hdlDragStart} />
-
             </>
-
           ))}
           <DropTaskIndicator column={status} />
 
