@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html dir="ltr" lang="en">
+  <head>
+    <!-- Import IBM Plex Sans from Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        background-color: #f9f9f9;
+        font-family: "IBM Plex Sans", sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 40px;
+        text-align: center;
+      }
+      .logo-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin: auto;
+        text-align: center;
+      }
+      .logo {
+        width: 48px;
+        height: 48px;
+        margin-bottom: 10px;
+      }
+      h1 {
+        font-size: 36px;
+        font-weight: bold;
+        color: #f9c850;
+        margin: 0;
+      }
+      p {
+        font-size: 16px;
+        color: #555;
+        margin: 16px 0;
+      }
+      .btn {
+        background-color: #f9c850;
+        color: #ffff;
+        font-weight: bold;
+        padding: 12px 30px;
+        text-decoration: none;
+        border-radius: 8px;
+        display: inline-block;
+        margin-top: 20px;
+        font-family: "IBM Plex Sans", sans-serif;
+      }
+      .btn:hover {
+        background-color: #e8b548;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Center-aligned logo and Beaver text -->
+      <div class="logo-container">
+        <h1>Beaver</h1>
+      </div>
+
+      <img
+        src="https://res.cloudinary.com/dp7ggau3r/image/upload/v1730953983/p2q7bsrou6uupelr6ynr.png"
+        alt="Beaver Mascot"
+        style="width: 200px; height: auto; margin: 20px auto; border-radius: 64px"
+      />
+
+      <p style="font-size: 24px; font-weight: bold; color: #f9c850">
+        <strong style="font-weight: bold; color: #333333">Hello!!</strong> {{email}}
+      </p>
+      <p>
+        You have successfully received an invitation to join
+        <strong>{{Project_Name}}</strong>.
+      </p>
+      <p>Please click “Confirm” to join the project.</p>
+
+      <a href="http://localhost:5173/project/detail" class="btn">Confirm</a>
+    </div>
+  </body>
+</html>
