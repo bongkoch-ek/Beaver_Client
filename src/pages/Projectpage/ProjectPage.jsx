@@ -40,11 +40,11 @@ const ProjectPage = () => {
         <div className="flex items-center text-gray-600 text-[16px] mb-6"></div>
 
         <div className="flex justify-between items-center ">
-          <div className="text-black text-[32px] font-semibold font-['IBM Plex Sans Thai'] leading-[48px]">
+          <div className="text-black text-[32px] font-semibold  leading-[48px]">
             Project
           </div>
           <div className="">
-            <CreateProjectModal className="text-center  text-base font-semibold font-['IBM Plex Sans Thai'] leading-relaxed "/>
+            <CreateProjectModal className="text-center  text-base font-semibold  leading-relaxed "/>
           </div>
         </div>
 
@@ -52,7 +52,7 @@ const ProjectPage = () => {
         <div>
           <div className="flex justify-between mt-[32px]">
             <p className="text-[24px] font-normal mb-[20px]">Today Lists</p>
-            <p className="text-right text-[#767676] text-lg font-normal font-['IBM Plex Sans Thai'] leading-[30px]">
+            <p className="text-right text-[#767676] text-lg font-normal  leading-[30px]">
               29 / 10 / 2567
             </p>
           </div>

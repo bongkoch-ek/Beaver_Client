@@ -99,23 +99,11 @@ const CreateProjectModal = () => {
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="fixed inset-0 flex items-center justify-center rounded-lg gap-16 h-[400px] max-w-3xl m-auto">
-          <div className="flex flex-col gap-6 p-8 items-center justify-center border-2 border-gray-400 rounded-[32px] h-[240px] w-[180px]">
-            <div className='bg-gray-300 w-[120px] h-[120px] flex justify-center items-center rounded-md overflow-hidden'>
-              {imagePreview ? (
-                <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
-              ) : (
-                <CloudIcon className="w-12 h-12" />
-              )}
-            </div>
-            <UploadFileProject input={input} setInput={setInput} />
-            <Input 
-              type="file" 
-              id="uploadImage" 
-              className="w-full border border-gray-300 p-2 rounded-md hover:border-gray-600 file:hidden cursor-pointer"
-              accept="image/*"
-              onChange={handleImageUpload}
-            />
+          
+          <div >
+              <UploadFileProject input={input} setInput={setInput}  />
           </div>
+          
 
           <div className="flex flex-col justify-center items-center h-[240px] w-[380px] gap-8">
             <div className="grid w-full max-w-sm items-center">
