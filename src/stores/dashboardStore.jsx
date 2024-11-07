@@ -2,14 +2,16 @@ import axios from "axios";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { toast } from "react-toastify";
-import {createProject, updateProject} from "../services/DashboardService"; 
+import { createProject, updateProject } from "../services/DashboardService";
 import io from "socket.io-client";
 
 
 
 const dashboardStore = (set, get) => ({
- socket : io.connect("http://localhost:8888"),
+  socket: io.connect("http://localhost:8888"),
   projects: [],
+  project: [],
+  column: [],
   task: [],
   list: [],
   isLoading: false,
@@ -21,7 +23,7 @@ const dashboardStore = (set, get) => ({
     try {
       const response = await axios.post('http://localhost:8888/user/create-project', projectData, {
         headers: {
-          Authorization: `Bearer ${token}`, 
+          Authorization: `Bearer ${token}`,
         },
       });
       const newProject = response.data.project;
@@ -37,16 +39,16 @@ const dashboardStore = (set, get) => ({
       throw error;
     }
   },
-  actionGetUserProjects: async (userId, token) => {
+  actionGetUserProjects: async (token) => {
     set({ loading: true, error: null });
     try {
-      const state = await axios.get(`http://localhost:8888/dashboard/project/${userId}`, {
+      const response = await axios.get(`http://localhost:8888/dashboard/project`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
-      console.log(state)
-      return state
+      set({ loading: false, projects: response.data })
+      return response
     }
     catch (error) {
       set({ loading: false, error: error.response?.data || 'Something went wrong' });
@@ -77,8 +79,7 @@ const dashboardStore = (set, get) => ({
       throw err;
     }
   },
-
-  actionGetProjectById: async (id,token) => {
+  actionGetProjectById: async (id, token) => {
     set({ loading: true, error: null });
     try {
       const response = await axios.get(`http://localhost:8888/dashboard/project/${id}`, {
@@ -106,7 +107,7 @@ const dashboardStore = (set, get) => ({
       const newColumn = response.data;
 
       set((state) => ({
-        projects: [...state.list, newColumn],
+        projects: [...state.column, newColumn],
         loading: false,
       }));
 
