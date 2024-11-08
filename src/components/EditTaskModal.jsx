@@ -20,7 +20,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ChevronsDown,
   ChevronsUp,
@@ -31,6 +31,9 @@ import {
   X,
   Check,
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { CloseIconForBadge } from "../icons";
+import { actionGetAllComment } from "../services/DashboardService";
 
 export function EditTaskModal() {
   const [dueDate, setDueDate] = useState(new Date());
@@ -40,16 +43,42 @@ export function EditTaskModal() {
   const [isEditing, setIsEditing] = useState(false);
   const [tempTaskName, setTempTaskName] = useState(taskName);
   const [url, setUrl] = useState("");
+  const [txt, setTxt] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
+  const [isFocusedComment, setIsFocusedComment] = useState(false);
+  const [postedUrls, setPostedUrls] = useState([]);
+  const [postedComments, setPostedComments] = useState([]);
+  const [userPicture, setUserPicture] = useState("");
 
   const handlePost = () => {
-    // จัดการเมื่อกดปุ่ม Post
-    console.log("Posted URL:", url);
-    // เพิ่มโค้ดสำหรับบันทึก URL
+    if (url.trim()) {
+      setPostedUrls([...postedUrls, url]);
+      setUrl("");
+      setIsFocused(false);
+    }
   };
 
   const handleCancel = () => {
-    // จัดการเมื่อกดปุ่ม Cancel
     setUrl("");
+  };
+
+  const handlePostComment = () => {
+    if (txt.trim()) {
+      const newComment = {
+        text: txt,
+        userPicture: userPicture,
+        timestamp: new Date(),
+        userId: "current_user_id"  //รับค่า userId
+      };
+      
+      setPostedComments([...postedComments, newComment]);
+      setTxt("");
+      setIsFocusedComment(false);
+    }
+  };
+
+  const handleCancelComment = () => {
+    setTxt("");
   };
 
   const hdlEdit = () => {
@@ -66,6 +95,19 @@ export function EditTaskModal() {
     setIsEditing(false);
     setTempTaskName(taskName);
   };
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const response = await actionGetAllComment(token);
+        setPostedComments(response.data);
+      } catch (err) {
+        console.error("Error fetching comments:", err);
+      }
+    };
+
+    fetchComments();
+  }, []);
 
   return (
     <DialogContent className="inset-0 max-w-3xl w-[856px] max-h-min p-12 bg-white rounded-2xl flex flex-col justify-center gap-8 mx-auto mt-[100px]">
@@ -262,41 +304,123 @@ export function EditTaskModal() {
         <UploadFile />
 
         {/* ลิงก์ URL */}
-                {/* ลิงก์ URL */}
-                <div className="space-y-2">
+        <div className="justify-start  flex flex-col gap-2">
           <p className="text-sm font-semibold">Link URL</p>
-          <div className="relative focus-within:opacity-100">
+          <div className="flex flex-col">
             <Input
               placeholder="www.beaver.co.th"
               value={url}
+              type="text"
               onChange={(e) => setUrl(e.target.value)}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
               className="w-full focus-within:border-blue-300"
             />
-
-            <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-2 opacity-0 focus-within:opacity-100 transition-opacity duration-200">
-              {url && (
-                <>
-                  <button
-                    onClick={handlePost}
-                    className="px-3 py-1 bg-[#43a047]/20 rounded-lg text-xs font-semibold text-green-700 hover:bg-[#43a047]/30"
-                  >
-                    Post
-                  </button>
-                  <button
-                    onClick={handleCancel}
-                    className="px-3 py-1 bg-[#e53935]/20 rounded-lg text-xs font-semibold text-red-600 hover:bg-[#e53935]/30"
-                  >
-                    Cancel
-                  </button>
-                </>
-              )}
+            {(isFocused || url ) && (
+              <div className="mt-2 w-[120px] h-[30px] right-2 top-1/2 -translate-y-1/2 flex gap-[10px]">
+                <Button
+                  onClick={handlePost}
+                  className="bg-[#FFE066] w-[45px] h-[30px] py-[4px] px-[8px] rounded-[8px] text-sm font-semibold text-black hover:bg-yellow-200"
+                >
+                  Post
+                </Button>
+                <Button
+                  onClick={handleCancel}
+                  className="bg-gray-50 w-[60px] h-[30px] rounded-[8px] py-[4px] px-[8px] text-sm font-semibold text-black hover:bg-gray-200"
+                >
+                  Cancel
+                </Button>
+              </div>
+            )}
+            
+            {/* Badge สำหรับ URL ที่โพสต์แล้ว */}
+            <div className="flex  flex-wrap gap-2 mt-2">
+              {postedUrls.map((postedUrl, index) => (
+                <Badge 
+                  key={index}
+                  variant="outline"
+                  className="rounded-[16px] px-2 py-1 text-[#333333] font-normal bg-gray-300 hover:bg-gray-200 "
+                >
+                  {postedUrl}
+                  <CloseIconForBadge 
+                    className="w-5 h-5 ml-4 cursor-pointer" 
+                    onClick={() => {
+                      const newUrls = postedUrls.filter((_, i) => i !== index);
+                      setPostedUrls(newUrls);
+                    }}
+                  />
+                </Badge>
+              ))}
             </div>
           </div>
         </div>
 
-
         {/* คอมเมนต์ */}
-        <Input placeholder="Add a comment..." />
+        <div className="justify-start flex flex-col gap-2">
+          <p className="text-sm font-semibold">Comment</p>
+          <div className="flex flex-col gap-2">
+            <div className="flex gap-2">
+              <div className="bg-gray-500 min-w-[40px] min-h-[40px] rounded-full justify-center items-center">
+                {/* UserPicture */}
+              </div>
+              <Input 
+                placeholder="Comment..."
+                value={txt}
+                type="text"
+                onChange={(e) => setTxt(e.target.value)}
+                onFocus={() => setIsFocusedComment(true)}
+                onBlur={() => setIsFocusedComment(false)}
+                className="w-full focus-within:border-blue-300"
+              />
+            </div>
+            
+            {(isFocusedComment || txt) && (
+              <div className="flex gap-2 justify-start ml-[50px]">
+                <Button
+                  onClick={handlePostComment}
+                  className="bg-[#FFE066] w-[45px] h-[30px] py-[4px] px-[8px] rounded-[8px] text-sm font-semibold text-black hover:bg-yellow-200"
+                >
+                  Post
+                </Button>
+                <Button
+                  onClick={handleCancelComment}
+                  className="bg-gray-50 w-[60px] h-[30px] rounded-[8px] py-[4px] px-[8px] text-sm font-semibold text-black hover:bg-gray-200"
+                >
+                  Cancel
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* แสดงความคิดเห็นที่โพสต์แล้ว */}
+        <div className="flex flex-col gap-4 mt-4">
+          {postedComments.map((comment, index) => (
+            <div key={index} className="flex gap-3">
+              <div className="bg-gray-500 min-w-[40px] min-h-[40px] rounded-full overflow-hidden">
+                {comment.userPicture ? (
+                  <img 
+                    src={comment.userPicture} 
+                    alt="User" 
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-white">
+                    {/* แสดงตัวอักษรแรกของชื่อผู้ใช้หากไม่มีรูป */}
+                    U
+                  </div>
+                )}
+              </div>
+              <div className="flex flex-col">
+                <p className="text-sm text-gray-600">User Name</p>    {/*comment.name */}
+                <p className="text-md font-[600px] text-[#333333] ">{comment.text}</p>
+                <p className="text-xs text-gray-400">
+                  {new Date(comment.timestamp).toLocaleString()}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </DialogContent>
   );
