@@ -3,6 +3,7 @@ import EditImageProjectModal from "./EditImageProjectModal";
 import useDashboardStore from '../stores/dashboardStore';
 import useUserStore from "../stores/userStore";
 import { ProjectImg } from "../icons";
+import moment from "moment";
 
 const ProjectDetail = (props) => {
   // const { project } = useDashboardStore();
@@ -38,7 +39,7 @@ const ProjectDetail = (props) => {
           </div>
           
           <div className="flex items-center">
-            <p className="text-[32px] font-semibold">{project?.projectName}</p>
+            <p className="text-[32px] font-semibold">{project.projectName}</p>
           </div>
 
           <div className="flex items-center"> 
@@ -52,8 +53,8 @@ const ProjectDetail = (props) => {
         {/* Project Detail */}
         <div className="flex flex-col gap-[20px]">
           <p className="text-[24px]">Project Detail</p>
-          <p className="text-[14px] text-black">Created by: <span className="text-[#767676]">{project?.user?.fullname}</span></p>
-          <p className="text-[14px] text-black">Created Date: <span className="text-[#767676]">{project.createdAt}</span></p>
+          <p className="text-[14px] text-black">Created by: <span className="text-[#767676]">{project.user?.fullname}</span></p>
+          <p className="text-[14px] text-black">Created Date: <span className="text-[#767676]">{ moment(project.createdAt).format('DD/MM/YYYY')}</span></p>
         </div>
 
         {/* Tab Menu */}
