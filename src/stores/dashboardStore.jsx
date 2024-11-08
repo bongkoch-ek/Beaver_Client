@@ -4,6 +4,7 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import { toast } from "react-toastify";
 import { createProject, updateProject } from "../services/DashboardService";
 import io from "socket.io-client";
+import { act } from "react";
 
 
 
@@ -14,6 +15,7 @@ const dashboardStore = (set, get) => ({
   column: [],
   task: [],
   list: [],
+  activityLogs: [],
   isLoading: false,
   currentUser: null,
   error: null,
@@ -116,9 +118,32 @@ const dashboardStore = (set, get) => ({
       set({ loading: false, error: error.response?.data || 'Something went wrong' });
       throw error;
     }
-  }
-});
-
+  },
+  actionCreateActivityLog: async (projectId, token) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await axios.post('http://localhost:8888/dashboard/create-activitylog', 
+        { projectId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      
+      const newActivityLog = response.data;
+      set((state) => ({
+        activityLogs: [...(state.activityLogs || []), newActivityLog],
+        loading: false,
+      }));
+      
+      return response.data;
+    } catch (error) {
+      set({ loading: false, error: error.response?.data || 'Something went wrong' });
+      throw error;
+    }
+  }}
+)
 const useDashboardStore = create(dashboardStore);
 
 export default useDashboardStore;
