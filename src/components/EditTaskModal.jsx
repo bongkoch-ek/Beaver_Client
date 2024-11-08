@@ -136,13 +136,13 @@ export function EditTaskModal() {
               </PopoverTrigger>
               <PopoverContent className="w-auto p-2">
                 <div className="flex flex-col space-y-2">
-                  <Button
+                <Button
                     variant="ghost"
-                    className="text-[#5db9f8] text-sm font-semibold flex items-center"
-                    onClick={() => setPriority("Low")}
+                    className="text-[#e53935] text-sm font-semibold flex items-center "
+                    onClick={() => setPriority("High")}
                   >
-                    <ChevronsDown className="text-[#5db9f8]" />
-                    <span>Low</span>
+                    <ChevronsUp className="text-[#e53935]" />
+                    <span>High</span>
                   </Button>
                   <Button
                     variant="ghost"
@@ -155,12 +155,15 @@ export function EditTaskModal() {
 
                   <Button
                     variant="ghost"
-                    className="text-[#e53935] text-sm font-semibold flex items-center "
-                    onClick={() => setPriority("High")}
+                    className="text-[#5db9f8] text-sm font-semibold flex items-center"
+                    onClick={() => setPriority("Low")}
                   >
-                    <ChevronsUp className="text-[#e53935]" />
-                    <span>High</span>
+                    <ChevronsDown className="text-[#5db9f8]" />
+                    <span>Low</span>
                   </Button>
+              
+
+               
                 </div>
               </PopoverContent>
             </Popover>
