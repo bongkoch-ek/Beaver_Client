@@ -11,6 +11,7 @@ import ProjectLayout from "../layouts/ProjectLayout";
 import ProjectList from "../components/ProjectList";
 import ProjectDetailPage from "../pages/Projectpage/ProjectDetailPage";
 import Profile from "../pages/Profile";
+import ProjectListPage from "../pages/Projectpage/ProjectListPage";
 
 
 const router = createBrowserRouter([
@@ -30,6 +31,7 @@ const router = createBrowserRouter([
     element: <ProjectLayout />,
     children: [
       { path: "", element: <ProjectPage /> },
+      { path: "list", element: <ProjectListPage /> },
 
       { path: "detail", element: <ProjectDetailPage /> },
 

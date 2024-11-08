@@ -14,11 +14,16 @@ import { toast } from 'react-toastify';
 import { Upload } from 'lucide-react';
 import UploadFileProject from './UploadFileProject';
 
+
+const initialState = {
+  projectName : "",
+  images : []
+}
+
 const CreateProjectModal = () => {
   const token = useUserStore((state) => state.token);
   const actionCreateProject = useDashboardStore((state) => state.actionCreateProject);
   const [isOpen, setIsOpen] = useState(false);
-  const [imagePreview, setImagePreview] = useState(null);
   const [input, setInput] = useState({
     projectName: '',
     images: [],
@@ -31,8 +36,9 @@ const CreateProjectModal = () => {
   
     const closeModal = () => {
     setIsOpen(false);
-    setInput({ projectName: '' }); 
-    setImagePreview(null); 
+    setInput({ projectName: '' ,
+      images: []
+    }); 
     setError('');
   };
 
@@ -46,6 +52,7 @@ const CreateProjectModal = () => {
     try {
       const projectData = {
         projectName: input.projectName,
+        images: input?.images,
       };
   
       const res = await actionCreateProject(projectData, token);
@@ -57,9 +64,7 @@ const CreateProjectModal = () => {
         console.log('No message in response');
       }
       setIsOpen(false);
-      setInput({ projectName: '' });
-      setImagePreview(null);
-      setImageFile(null);
+      setInput(initialState);
       closeModal(); 
     } catch (err) {
       console.log(err);
@@ -72,21 +77,12 @@ const CreateProjectModal = () => {
   const handleInputChange = (e) => {
     setInput({
       ...input,
-      projectName: e.target.value
+      projectName: e.target.value,
+      images: input?.images,
     });
     setError(''); 
   };
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   return (
     <div>
@@ -100,21 +96,8 @@ const CreateProjectModal = () => {
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="fixed inset-0 flex items-center justify-center rounded-lg gap-16 h-[400px] max-w-3xl m-auto">
           <div className="flex flex-col gap-6 p-8 items-center justify-center border-2 border-gray-400 rounded-[32px] h-[240px] w-[180px]">
-            <div className='bg-gray-300 w-[120px] h-[120px] flex justify-center items-center rounded-md overflow-hidden'>
-              {imagePreview ? (
-                <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
-              ) : (
-                <CloudIcon className="w-12 h-12" />
-              )}
-            </div>
+         
             <UploadFileProject input={input} setInput={setInput} />
-            <Input 
-              type="file" 
-              id="uploadImage" 
-              className="w-full border border-gray-300 p-2 rounded-md hover:border-gray-600 file:hidden cursor-pointer"
-              accept="image/*"
-              onChange={handleImageUpload}
-            />
           </div>
 
           <div className="flex flex-col justify-center items-center h-[240px] w-[380px] gap-8">

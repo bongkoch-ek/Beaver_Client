@@ -2,15 +2,9 @@ import React, { useState } from "react";
 import { AddMemberIcon, PlusIcon } from "../icons";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  SelectLabel,
-  SelectGroup,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectLabel, SelectGroup } from "@/components/ui/select"
+import useDashboardStore from '../stores/dashboardStore'
+import useUserStore from '../stores/userStore'
 import { Cross2Icon } from "@radix-ui/react-icons";
 
 const AddNewStatus = () => {
@@ -19,13 +13,18 @@ const AddNewStatus = () => {
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = () => {
+  const actionCreateColumn = useDashboardStore(state => state.actionCreateColumn)
+  const project = useDashboardStore(state => state.project)
+  const token = useUserStore(state => state.token)
+
+  const data = { name: text, projectId: project.id, status: status }
+  const handleSubmit = async() => {
     if (!text.trim()) {
       setError("Please select status type");
       return;
     }
 
-    //ใส่API เพื่อเพิ่มสมาชิก
+    await actionCreateColumn(data,token)
     console.log({ text, status });
     setError("");
     setIsOpen(false)
@@ -84,7 +83,7 @@ const AddNewStatus = () => {
                       Select Status
                     </SelectLabel>
                     <SelectItem
-                      value="TO DO"
+                      value="TODO"
                       className="font-normal text-[14px]"
                     >
                       To do

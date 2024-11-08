@@ -1,13 +1,26 @@
 import CreateProjectModal from "@/src/components/CreateProjectModal";
-import React from "react";
+import useDashboardStore from "@/src/stores/dashboardStore";
+import useUserStore from "@/src/stores/userStore";
+import moment from "moment";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ProjectPage = () => {
-  const projects = [
-    { name: "Project_name", status: "In progress", dueDate: "12:00 A.M." },
-    { name: "Project_name", status: "In progress", dueDate: "12:00 A.M." },
-    { name: "Project_name", status: "In progress", dueDate: "12:00 A.M." },
-    { name: "Project_name", status: "In progress", dueDate: "12:00 A.M." },
-  ];
+  
+  const navigate = useNavigate()
+  const token = useUserStore(state => state.token)
+  const actionGetTodayTask = useDashboardStore(state => state.actionGetTodayTask)
+  const actionGetProjectById = useDashboardStore(state => state.actionGetProjectById)
+  const actionActivityLog = useDashboardStore(state => state.actionActivityLog)
+  const task = useDashboardStore(state => state.task)
+  useEffect(() => { actionGetTodayTask(token) }, [])
+  console.log(task)
+
+  async function hdlClickProject(projectId) {
+    await actionGetProjectById(projectId, token)
+    await actionActivityLog(projectId, token)
+    navigate('detail')
+  }
 
   return (
     <div className="bg-gray-100">
@@ -24,11 +37,11 @@ const ProjectPage = () => {
         <div className="flex items-center text-gray-600 text-[16px] mb-6"></div>
 
         <div className="flex justify-between items-center ">
-          <div className="text-black text-[32px] font-semibold font-['IBM Plex Sans Thai'] leading-[48px]">
+          <div className="text-black text-[32px] font-semibold  leading-[48px]">
             Project
           </div>
           <div className="">
-            <CreateProjectModal className="text-center  text-base font-semibold font-['IBM Plex Sans Thai'] leading-relaxed "/>
+            <CreateProjectModal className="text-center  text-base font-semibold  leading-relaxed " />
           </div>
         </div>
 
@@ -36,51 +49,50 @@ const ProjectPage = () => {
         <div>
           <div className="flex justify-between mt-[32px]">
             <p className="text-[24px] font-normal mb-[20px]">Today Lists</p>
-            <p className="text-right text-[#767676] text-lg font-normal font-['IBM Plex Sans Thai'] leading-[30px]">
+            <p className="text-right text-[#767676] text-lg font-normal  leading-[30px]">
               29 / 10 / 2567
             </p>
           </div>
         </div>
 
-        {projects.length > 0 ? (
+        {task.length > 0 ? (
           <div className="bg-white rounded-2xl mt-[20px]">
             <div className="flex flex-col w-full gap-1  rounded-3xl ">
-              {projects.map((project, index) => (
-                <div>
+              {task.map((el, index) => (
+                <div key={index}>
                   <div
-                    key={index}
                     className=" flex justify-between  h-[150px] "
                   >
                     <div className="flex flex-col text-[16px] justify-center gap-[16px] pl-[40px] pt=[px]">
                       <div>
-                        <p>{project.name}</p>
+                        <p>{el.title}</p>
                       </div>
 
                       <div className="flex flex-col gap-[10px]">
                         <p className="text-[14px]">
-                          Status :{" "}
+                          Status :
                           <span className="text-[#767676]">
                             {" "}
-                            {project.status}
+                            {el.priority}
                           </span>
                         </p>
                         <p className="text-[14px]">
                           Due Date :{" "}
                           <span className="text-[#767676]">
                             {" "}
-                            {project.dueDate}
+                            {moment(el.dueDate).format('DD/MM/YYYY')}
                           </span>
                         </p>
                       </div>
                     </div>
 
                     <div className="flex items-center pr-[40px] ">
-                      <button className="px-4 py-2 bg-[#ffe066] text-[#333333] rounded-md">
+                      <button className="px-4 py-2 bg-[#ffe066] text-[#333333] rounded-md" onClick={() => hdlClickProject(el.list?.projectId)}>
                         Go to Project
                       </button>
                     </div>
                   </div>
-                  {index + 1 !== projects.length && (
+                  {index + 1 !== task.length && (
                     <hr className="border mx-[65px]" />
                   )}
                 </div>
