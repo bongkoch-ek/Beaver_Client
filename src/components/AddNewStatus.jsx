@@ -18,13 +18,13 @@ const AddNewStatus = () => {
   const token = useUserStore(state => state.token)
 
   const data = { name: text, projectId: project.id, status: status }
-  const handleSubmit = () => {
+  const handleSubmit = async() => {
     if (!text.trim()) {
       setError("Please select status type");
       return;
     }
 
-    //ใส่API เพื่อเพิ่มสมาชิก
+    await actionCreateColumn(data,token)
     console.log({ text, status });
     setError("");
     setIsOpen(false)
@@ -83,7 +83,7 @@ const AddNewStatus = () => {
                       Select Status
                     </SelectLabel>
                     <SelectItem
-                      value="TO DO"
+                      value="TODO"
                       className="font-normal text-[14px]"
                     >
                       To do

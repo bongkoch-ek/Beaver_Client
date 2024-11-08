@@ -118,32 +118,40 @@ const dashboardStore = (set, get) => ({
       throw error;
     }
   },
-  actionCreateActivityLog: async (projectId, token) => {
+
+  actionGetTodayTask: async (token) => {
     set({ loading: true, error: null });
     try {
-      const response = await axios.post('http://localhost:8888/dashboard/create-activitylog', 
-        { projectId },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      
-      const newActivityLog = response.data;
-      set((state) => ({
-        activityLogs: [...(state.activityLogs || []), newActivityLog],
-        loading: false,
-      }));
-      
-      return response.data;
-    } catch (error) {
+      const response = await axios.get(`http://localhost:8888/dashboard/today-task`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      set({ loading: false, task: response.data })
+      return response
+    }
+    catch (error) {
       set({ loading: false, error: error.response?.data || 'Something went wrong' });
       throw error;
     }
+
   },
-}
-)
+
+  actionActivityLog: async (projectId, token) => {
+    try {
+      const response = await axios.post('http://localhost:8888/dashboard/create-activitylog', {projectId}, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+});
+
 const useDashboardStore = create(dashboardStore);
 
 export default useDashboardStore;
