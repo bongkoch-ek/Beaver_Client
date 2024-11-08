@@ -97,7 +97,6 @@ const dashboardStore = (set, get) => ({
       throw error;
     }
   },
-
   actionCreateColumn: async (data, token) => {
     set({ loading: true, error: null });
     try {
@@ -142,7 +141,8 @@ const dashboardStore = (set, get) => ({
       set({ loading: false, error: error.response?.data || 'Something went wrong' });
       throw error;
     }
-  }}
+  },
+}
 )
 const useDashboardStore = create(dashboardStore);
 
