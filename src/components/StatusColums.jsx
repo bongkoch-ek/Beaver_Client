@@ -1,31 +1,70 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Task from "./Task";
 import { motion } from "framer-motion";
 import DropTaskIndicator from "./DropTaskIndicator";
 import io from "socket.io-client";
 import useDashboardStore from "../stores/dashboardStore";
+import { PlusIcon } from "../icons";
+import { ArrowDownIcon } from "lucide-react";
+import PrimaryButton from "./common/PrimaryButton";
+import SecondaryButton from "./common/SecondaryButton";
+import useUserStore from "../stores/userStore";
 
-// let socket = io.connect("http://localhost:8888");
 export default function StatusColums({
   taskCard,
   setTaskCard,
   hdlTaskMove,
   status,
 }) {
-  const socket = useDashboardStore((state)=>state.socket)
+  const socket = useDashboardStore((state) => state.socket);
+  const actionCreateTask = useDashboardStore((state) => state.actionCreateTask);
+  const token = useUserStore((state) => state.token);
   const filteredTaskCard = taskCard.filter((item) => item.column === status);
 
   const [isActive, setIsActive] = useState(false);
+  const containerRef = useRef(null);
+  const [isScroll, setIsScroll] = useState(false);
+  const [isOverflow, setIsOverflow] = useState(false);
+  const [isCreate, setIsCreate] = useState(false);
+  const [formTask, setFormTask] = useState({
+    title: "",
+    listId: "",
+  });
 
-  // useEffect(() => {
-  //   // socket = io.connect("http://localhost:8888");
-  // }, []);
+  useEffect(() => {
+    const container = containerRef.current;
+
+    const hdlScroll = () => {
+      if (container) {
+        const scrollTop = container.scrollTop;
+        const scrollHeight = container.scrollHeight;
+        const clientHeight = container.clientHeight;
+
+        setIsScroll(scrollTop > 0);
+        setIsOverflow(scrollHeight > clientHeight);
+      }
+    };
+
+    if (container) {
+      container.addEventListener("scroll", hdlScroll);
+      setIsOverflow(container.scrollHeight > container.clientHeight); // Check initial overflow
+    }
+
+    return () => {
+      if (container) {
+        container.removeEventListener("scroll", hdlScroll);
+      }
+    };
+  }, [taskCard]); // Re-run when taskCard changes
+
   useEffect(() => {
     socket.on("move_task", (data) => {
-      console.log(data,"-------")
-      setTaskCard((prv) => prv.map(item => {
-       return item.id === data.id ? data : item
-      }));
+      // console.log(data, "-------");
+      setTaskCard((prv) =>
+        prv.map((item) => {
+          return item.id === data.id ? data : item;
+        })
+      );
     });
   }, [socket]);
 
@@ -127,21 +166,41 @@ export default function StatusColums({
     }
   };
 
+  const hdlChangeTask = (e) => {
+    setFormTask((prv) => ({
+      ...prv,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const hdlCreateTask = async (e) => {
+    e.preventDefault();
+    await actionCreateTask(token, formTask);
+    setIsCreate(false);
+  };
+
   return (
     <motion.div
       layout
       onDrop={hdlDragEnd}
       onDragOver={hdlDragOver}
       onDragLeave={hdlDragLeave}
-      className={`w-[264px] px-4 py-4 bg-[#F5F5F5] duration-200 transition-colors ${
+      className={`w-[264px] px-4 py-4 ${
+        isCreate && "pt-0"
+      } bg-[#F5F5F5] duration-200 transition-colors ${
         isActive && "border bg-[#f5f5f550] border-[#DDE6F0]"
       } rounded-2xl shadow flex-col justify-start items-start gap-5 inline-flex`}
     >
       <div className="self-stretch h-full flex-col justify-start items-start gap-6 flex">
         <div className="w-full flex justify-center">
-          <button className="text-center text-[#333333] text-base font-normal leading-relaxed">
-            + Create
-          </button>
+          {!isCreate && (
+            <button
+              onClick={() => setIsCreate(true)}
+              className="text-center text-[#333333] text-base font-normal hover:bg-[#00000026] hover:text-white hover:font-semibold w-full p-0.5 rounded-md leading-relaxed"
+            >
+              + Create
+            </button>
+          )}
         </div>
 
         <div className="self-stretch flex-col justify-start items-start gap-1 flex">
@@ -165,19 +224,57 @@ export default function StatusColums({
           </div>
 
           {/* ใส่taskตรงนี้ */}
-          {filteredTaskCard.map((item) => (
-            <>
-              <DropTaskIndicator beforeId={item.id} column={item.column} />
-              <Task item={item} hdlDragStart={hdlDragStart} />
-            </>
-          ))}
-          <DropTaskIndicator column={status} />
+          {isCreate && (
+            <div className="w-full mb-4">
+              <textarea
+                placeholder="Add task"
+                value={formTask.title}
+                name="title"
+                onChange={hdlChangeTask}
+                className="w-full leading-[23px] min-h-[100px] border text-[14px] overflow-auto scrollbar-hide focus:outline-[#5DB9F8] resize-none p-4 rounded-md"
+              ></textarea>
+              <div className="flex flex-col gap-2">
+                <PrimaryButton onClick={hdlCreateTask} text="Create" />
+                <SecondaryButton
+                  onClick={() => setIsCreate(false)}
+                  type="button"
+                  text="Back"
+                  color="border-none bg-[#f5f5f5]"
+                />
+              </div>
+            </div>
+          )}
+          <div
+            className="relative w-full max-h-[554px] overflow-auto scrollbar-hide"
+            ref={containerRef}
+          >
+            <div className="relative">
+              {filteredTaskCard.map((item) => (
+                <>
+                  <DropTaskIndicator beforeId={item.id} column={item.column} />
+                  <Task item={item} hdlDragStart={hdlDragStart} />
+                </>
+              ))}
+              <DropTaskIndicator column={status} />
+            </div>
+            {isOverflow && (
+              <>
+                {/* Top blur layer */}
+                {isScroll && (
+                  <div className="absolute top-0 left-0 w-full h-12 bg-gradient-to-b z-10 from-[#F5F5F5] via-[#F5F5F5] to-transparent pointer-events-none"></div>
+                )}
 
-          {/* <div className="self-stretch h-[100px] p-4 bg-neutral-100 rounded-lg flex-col justify-start items-start gap-5 flex">
-                    <div className="self-stretch justify-start items-center gap-2 inline-flex">
-                        <p className="grow shrink basis-0 text-center text-[#d3d5d7] text-sm font-normal  leading-[23px]">No task</p>
-                    </div>
-        </div>  */}
+                {/* Bottom blur layer */}
+                {!isScroll && (
+                  <div className="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-[#F5F5F5] via-[#F5F5F5] to-transparent pointer-events-none">
+                    <button className="bg-[#F5F5F5]/40 rounded-[16px] absolute bottom-3 left-1/2 transform -translate-x-1/2 flex justify-center items-center p-2 hover:bg-slate-200">
+                      <ArrowDownIcon className="w-[20px] h-[20px] " />
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </div>
     </motion.div>

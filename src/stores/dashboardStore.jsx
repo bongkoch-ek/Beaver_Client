@@ -2,11 +2,13 @@ import axios from "axios";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { toast } from "react-toastify";
-import { createProject, updateProject } from "../services/DashboardService";
+import {
+  createProject,
+  createTask,
+  updateProject,
+} from "../services/DashboardService";
 import io from "socket.io-client";
 import { act } from "react";
-
-
 
 const dashboardStore = (set, get) => ({
   socket: io.connect("http://localhost:8888"),
@@ -37,7 +39,10 @@ const dashboardStore = (set, get) => ({
 
       return response.data;
     } catch (error) {
-      set({ loading: false, error: error.response?.data || 'Something went wrong' });
+      set({
+        loading: false,
+        error: error.response?.data || "Something went wrong",
+      });
       throw error;
     }
   },
@@ -56,28 +61,46 @@ const dashboardStore = (set, get) => ({
       set({ loading: false, error: error.response?.data || 'Something went wrong' });
       throw error;
     }
-
   },
 
-  actionUpdateProject: async (projectId, form) => {
+  actionUpdateProject: async (token,projectId, form) => {
     set({ isLoading: true });
 
     try {
       const result = await updateProject(token, projectId, form);
 
-      set(state => ({
-        project: state.project.map(p =>
+      set((state) => ({
+        project: state.project.map((p) =>
           p.id === projectId ? { ...p, ...form } : p
         ),
-        isLoading: false
+        isLoading: false,
       }));
 
       toast.success("Project updated successfully!");
       return result.data;
-
     } catch (err) {
       set({ isLoading: false });
       toast.error("Failed to update project");
+      throw err;
+    }
+  },
+
+  actionCreateTask: async (token,form) => {
+    set({ isLoading: true });
+
+    try {
+      const result = await createTask(token, form);
+
+      set((state) => ({
+        task: [{ ...result.data }, ...state.task],
+        isLoading: false,
+      }));
+
+      toast.success("Task created successfully!");
+      return result.data;
+    } catch (err) {
+      set({ isLoading: false });
+      toast.error("Failed to create task");
       throw err;
     }
   },
