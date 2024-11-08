@@ -47,13 +47,17 @@ export default function Task({ item, hdlDragStart }) {
 
   const confirmDelete = async () => {
     try {
-      await deleteTask(token, item.id);
-      toast.success("Delete task success");
-
+      await deleteTask(token, parseInt(item.id));
+      toast.success("Delete Task success");
+      // get().socket.emit("taskDeleted", item.id);
 
     } catch (err) {
-      console.error("Delete task failed:", err);
-      toast.error("Delete task failed");
+      console.error("Delete Task failed:", err);
+      if (err.response?.status === 404) {
+        toast.error("Not found Task ,You want to Delete");
+      } else {
+        toast.error("Delete Task Error");
+      }
     }
   };
 
