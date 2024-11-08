@@ -2,13 +2,15 @@ import axios from "axios";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { toast } from "react-toastify";
-import {createProject, updateProject} from "../services/DashboardService"; 
+import {
+  createProject,
+  createTask,
+  updateProject,
+} from "../services/DashboardService";
 import io from "socket.io-client";
 
-
-
 const dashboardStore = (set, get) => ({
- socket : io.connect("http://localhost:8888"),
+  socket: io.connect("http://localhost:8888"),
   projects: [],
   task: [],
   list: [],
@@ -19,11 +21,15 @@ const dashboardStore = (set, get) => ({
   actionCreateProject: async (projectData, token) => {
     set({ loading: true, error: null });
     try {
-      const response = await axios.post('http://localhost:8888/user/create-project', projectData, {
-        headers: {
-          Authorization: `Bearer ${token}`, 
-        },
-      });
+      const response = await axios.post(
+        "http://localhost:8888/user/create-project",
+        projectData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const newProject = response.data.project;
 
       set((state) => ({
@@ -33,47 +39,73 @@ const dashboardStore = (set, get) => ({
 
       return response.data;
     } catch (error) {
-      set({ loading: false, error: error.response?.data || 'Something went wrong' });
+      set({
+        loading: false,
+        error: error.response?.data || "Something went wrong",
+      });
       throw error;
     }
   },
   actionGetUserProjects: async (userId, token) => {
     set({ loading: true, error: null });
     try {
-      const state = await axios.get(`http://localhost:8888/dashboard/project/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      console.log(state)
-      return state
-    }
-    catch (error) {
-      set({ loading: false, error: error.response?.data || 'Something went wrong' });
+      const state = await axios.get(
+        `http://localhost:8888/dashboard/project/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(state);
+      return state;
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data || "Something went wrong",
+      });
       throw error;
     }
-
   },
 
-  actionUpdateProject: async (projectId, form) => {
+  actionUpdateProject: async (token,projectId, form) => {
     set({ isLoading: true });
 
     try {
       const result = await updateProject(token, projectId, form);
 
-      set(state => ({
-        project: state.project.map(p =>
+      set((state) => ({
+        project: state.project.map((p) =>
           p.id === projectId ? { ...p, ...form } : p
         ),
-        isLoading: false
+        isLoading: false,
       }));
 
       toast.success("Project updated successfully!");
       return result.data;
-
     } catch (err) {
       set({ isLoading: false });
       toast.error("Failed to update project");
+      throw err;
+    }
+  },
+
+  actionCreateTask: async (token,form) => {
+    set({ isLoading: true });
+
+    try {
+      const result = await createTask(token, form);
+
+      set((state) => ({
+        task: [{ ...result.data }, ...state.task],
+        isLoading: false,
+      }));
+
+      toast.success("Task created successfully!");
+      return result.data;
+    } catch (err) {
+      set({ isLoading: false });
+      toast.error("Failed to create task");
       throw err;
     }
   },

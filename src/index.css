@@ -6,6 +6,23 @@ html {
 };
 
 
+/* In your global CSS file */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Opera */
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.blur-layer {
+  backdrop-filter: blur(10px); /* Adjust the blur amount */
+  background: rgba(255, 255, 255, 0.6); /* Optional: Add some opacity */
+}
+
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
