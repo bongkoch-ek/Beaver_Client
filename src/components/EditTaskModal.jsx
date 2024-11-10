@@ -34,6 +34,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { CloseIconForBadge } from "../icons";
 import { actionGetAllComment } from "../services/DashboardService";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export function EditTaskModal() {
   const [dueDate, setDueDate] = useState(new Date());
@@ -110,7 +111,7 @@ export function EditTaskModal() {
   }, []);
 
   return (
-    <DialogContent className="inset-0 max-w-3xl w-[856px] max-h-min p-12 bg-white rounded-2xl flex flex-col justify-center gap-8 mx-auto mt-[100px]">
+    <DialogContent className="max-w-3xl w-[856px] max-h-[70vh] p-12 bg-white rounded-2xl flex flex-col gap-5 m-auto overflow-y-auto ">
       <div className="flex flex-col space-y-8 ">
         {/* ชื่อ Task */}
         <div className="flex items-center gap-2">
@@ -317,10 +318,10 @@ export function EditTaskModal() {
               onChange={(e) => setUrl(e.target.value)}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
-              className="w-full focus-within:border-blue-300"
+              className="w-full focus:border-blue-300"
             />
             {(isFocused || url ) && (
-              <div className="mt-2 w-[120px] h-[30px] right-2 top-1/2 -translate-y-1/2 flex gap-[10px]">
+              <div className="mt-2 w-[120px] h-[30px]  flex gap-[10px]">
                 <Button
                   onClick={handlePost}
                   className="bg-[#FFE066] w-[45px] h-[30px] py-[4px] px-[8px] rounded-[8px] text-sm font-semibold text-black hover:bg-yellow-200"
@@ -337,7 +338,8 @@ export function EditTaskModal() {
             )}
             
             {/* Badge สำหรับ URL ที่โพสต์แล้ว */}
-            <div className="flex  flex-wrap gap-2 mt-2">
+            <ScrollArea className="h-[50px] w-full rounded-md mt-3">
+            <div className="flex  flex-wrap gap-2 ">
               {postedUrls.map((postedUrl, index) => (
                 <Badge 
                   key={index}
@@ -355,11 +357,12 @@ export function EditTaskModal() {
                 </Badge>
               ))}
             </div>
+            </ScrollArea>
           </div>
         </div>
 
         {/* คอมเมนต์ */}
-        <div className="justify-start flex flex-col gap-2">
+        <div className="justify-start p-1 flex flex-col gap-2">
           <p className="text-sm font-semibold">Comment</p>
           <div className="flex flex-col gap-2">
             <div className="flex gap-2">
@@ -397,33 +400,34 @@ export function EditTaskModal() {
         </div>
 
         {/* แสดงความคิดเห็นที่โพสต์แล้ว */}
-        <div className="flex flex-col gap-4 mt-4">
-          {postedComments.map((comment, index) => (
-            <div key={index} className="flex gap-3">
-              <div className="bg-gray-500 min-w-[40px] min-h-[40px] rounded-full overflow-hidden">
-                {comment.userPicture ? (
-                  <img 
-                    src={comment.userPicture} 
-                    alt="User" 
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-white">
-                    {/* แสดงตัวอักษรแรกของชื่อผู้ใช้หากไม่มีรูป */}
-                    U
-                  </div>
-                )}
+        <ScrollArea className="h-[200px] w-full mt-0 rounded-md mb-6">
+          <div className="flex flex-col gap-4 pr-4">
+            {[...postedComments].reverse().map((comment, index) => (
+              <div key={index} className="flex items-center gap-3">
+                <div className="bg-gray-500 w-[40px] h-[40px] rounded-full overflow-hidden">
+                  {comment.userPicture ? (
+                    <img 
+                      src={comment.userPicture} 
+                      alt="User" 
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-white">
+                      U
+                    </div>
+                  )}
+                </div>
+                <div className="flex flex-col">
+                  <p className="text-sm text-gray-600">User Name</p>
+                  <p className="text-md font-[600px] text-[#333333]">{comment.text}</p>
+                  <p className="text-xs text-gray-400">
+                    {new Date(comment.timestamp).toLocaleString()}
+                  </p>
+                </div>
               </div>
-              <div className="flex flex-col">
-                <p className="text-sm text-gray-600">User Name</p>    {/*comment.name */}
-                <p className="text-md font-[600px] text-[#333333] ">{comment.text}</p>
-                <p className="text-xs text-gray-400">
-                  {new Date(comment.timestamp).toLocaleString()}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </ScrollArea>
       </div>
     </DialogContent>
   );
