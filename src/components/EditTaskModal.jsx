@@ -35,8 +35,11 @@ import { Badge } from "@/components/ui/badge";
 import { CloseIconForBadge } from "../icons";
 import { actionGetAllComment } from "../services/DashboardService";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import useUserStore from "../stores/userStore";
 
 export function EditTaskModal() {
+  const token = useUserStore(state => state.token)
+
   const [dueDate, setDueDate] = useState(new Date());
   const [startDate, setStartDate] = useState(new Date());
   const [priority, setPriority] = useState("Medium");

@@ -57,7 +57,6 @@ const AddMemberModal = () => {
     setForm((prv) => ({ ...prv, [e.target.name]: e.target.value }));
     setError("");
   };
-  console.log(form);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>

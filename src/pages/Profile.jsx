@@ -7,6 +7,7 @@ import IconButton from "../components/common/IconButton";
 import SecondaryButton from "../components/common/SecondaryButton";
 import useUserStore from "../stores/userStore";
 import { toast } from "react-toastify";
+import BackgroundImage from "../components/BackgroundImage";
 
 const Profile = () => {
   const user = useUserStore((state) => state.user);
@@ -24,13 +25,13 @@ const Profile = () => {
   });
 
   const [isDisabled, setIsDisabled] = useState(true);
-  const [errors, setErrors] = useState({}); 
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (user) {
       const nameParts = user.fullname.trim().split(" ");
-      const firstname = nameParts[0] || ""; 
-      const lastname = nameParts.slice(1).join(" ") || ""; 
+      const firstname = nameParts[0] || "";
+      const lastname = nameParts.slice(1).join(" ") || "";
 
       setEditedForm({
         bio: user.bio || "",
@@ -55,13 +56,13 @@ const Profile = () => {
       newErrors.phone = "Phone number is required.";
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0; 
+    return Object.keys(newErrors).length === 0;
   };
 
   const hdlClickSave = async () => {
     if (!validateForm()) {
-      toast.error("Please fill in all fields."); 
-      return; 
+      toast.error("Please fill in all fields.");
+      return;
     }
 
     try {
@@ -106,13 +107,13 @@ const Profile = () => {
     <div className="bg-[#F5F5F5] min-h-screen py-10">
       <div className="mx-[110px] rounded-[32px] pb-10 bg-white">
         <div className="relative">
+          <BackgroundImage isDisabled={isDisabled} />
           <div className="absolute inset-0 flex justify-center items-start top-1/2 group">
             <div className="relative">
               <ProfileImage isDisabled={isDisabled} />
               <div
-                className={`absolute bottom-5 right-3 ${
-                  isDisabled && "opacity-0"
-                } group-hover:opacity-0 transition-opacity duration-200`}
+                className={`absolute bottom-5 right-3 ${isDisabled && "opacity-0"
+                  } group-hover:opacity-0 transition-opacity duration-200`}
               >
                 <IconButton Icon={() => <Plus color="#333333" size={16} />} />
               </div>
@@ -130,10 +131,9 @@ const Profile = () => {
               value={editedForm.bio}
               name="bio"
               placeholder="Describe about yourself ..."
-              className={`resize-none min-h-[120px] px-4 py-4 justify-start items-start gap-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#5DB9F8] ${
-                isDisabled &&
+              className={`resize-none min-h-[120px] px-4 py-4 justify-start items-start gap-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#5DB9F8] ${isDisabled &&
                 "bg-gray-100 text-gray-500 border-gray-300 border-none "
-              } font-semibold placeholder:font-normal`}
+                } font-semibold placeholder:font-normal`}
             ></textarea>
           </label>
         </div>
