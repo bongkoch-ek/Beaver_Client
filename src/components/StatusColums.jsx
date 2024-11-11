@@ -11,6 +11,7 @@ import SecondaryButton from "./common/SecondaryButton";
 import useUserStore from "../stores/userStore";
 
 export default function StatusColums({
+  listId,
   taskCard,
   setTaskCard,
   hdlTaskMove,
@@ -24,8 +25,7 @@ export default function StatusColums({
   const actionCreateTask = useDashboardStore((state) => state.actionCreateTask);
   const token = useUserStore((state) => state.token);
   const filteredTaskCard = taskCard.filter((item) => item.status === status);
-  console.log(taskCard,"taskcard")
-
+  // console.log(filteredTaskCard, "======");
   const [isActive, setIsActive] = useState(false);
   const containerRef = useRef(null);
   const [isScroll, setIsScroll] = useState(false);
@@ -33,8 +33,12 @@ export default function StatusColums({
   const [isCreate, setIsCreate] = useState(false);
   const [formTask, setFormTask] = useState({
     title: "",
-    listId: "",
+    listId: listId,
   });
+  const InitialFormTask = {
+    title: "",
+    listId: listId,
+  };
 
   useEffect(() => {
     const container = containerRef.current;
@@ -134,6 +138,8 @@ export default function StatusColums({
 
   const hdlDragEnd = async (e) => {
     const taskId = e.dataTransfer.getData("taskId");
+    console.log("Dragged taskId:", taskId); // Check the taskId being dragged
+
     setIsActive(false);
     clearIndicator();
     hdlTaskMove(taskId, status);
@@ -146,19 +152,22 @@ export default function StatusColums({
     if (before !== taskId) {
       let newTask = [...taskCard];
 
-      let taskToTransfer = newTask.find((item) => item.id === taskId);
-      console.log(taskToTransfer);
-      if (!taskToTransfer) return;
-      taskToTransfer = { ...taskToTransfer, column: status };
+      let taskToTransfer = newTask.find((item) => {
+        return item.id === Number(taskId);
+      });
 
-      newTask = newTask.filter((item) => item.id !== taskId);
+      if (!taskToTransfer) return;
+      taskToTransfer = { ...taskToTransfer, status: status };
+
+      newTask = newTask.filter((item) => item.id !== Number(taskId));
 
       const moveToBack = before === "-1";
-
       if (moveToBack) {
         newTask.push(taskToTransfer);
       } else {
-        const insertAtIndex = newTask.findIndex((item) => item.id === before);
+        const insertAtIndex = newTask.findIndex((item) => {
+          return item.id === Number(before);
+        });
         if (insertAtIndex === -1) return;
 
         newTask.splice(insertAtIndex, 0, taskToTransfer);
@@ -177,19 +186,32 @@ export default function StatusColums({
     }));
   };
 
-  const hdlCreateTask = async (e) => {
-    e.preventDefault();
-    await actionCreateTask(token, formTask);
-    setIsCreate(false);
+  const hdlTypeNewTask = () => {
+    setIsCreate(true);
   };
 
+  const hdlCreateTask = async (e) => {
+    e.preventDefault();
+    const newTask = await actionCreateTask(token, formTask);
+    await actionGetProjectById(project.id, token);
+    setTaskCard((prv) => [
+      ...prv,
+      {
+        ...newTask,
+        status: status,
+        listId: listId,
+      },
+    ]);
+    setFormTask(InitialFormTask);
+    setIsCreate(false);
+  };
   return (
     <motion.div
       layout
       onDrop={hdlDragEnd}
       onDragOver={hdlDragOver}
       onDragLeave={hdlDragLeave}
-      className={`w-[264px] px-4 py-4 ${
+      className={`w-[264px] max-h-[676px] overflow-hidden px-4 py-4 ${
         isCreate && "pt-0"
       } bg-[#F5F5F5] duration-200 transition-colors ${
         isActive && "border bg-[#f5f5f550] border-[#DDE6F0]"
@@ -199,30 +221,29 @@ export default function StatusColums({
         <div className="w-full flex justify-center">
           {!isCreate && (
             <button
-              onClick={() => setIsCreate(true)}
+              onClick={hdlTypeNewTask}
               className="text-center text-[#333333] text-base font-normal hover:bg-[#00000026] hover:text-white hover:font-semibold w-full p-0.5 rounded-md leading-relaxed"
             >
               + Create
             </button>
           )}
         </div>
-
         <div className="self-stretch flex-col justify-start items-start gap-1 flex">
           <div className="self-stretch px-2 justify-start items-center gap-2 inline-flex">
-            <div className="w-4 h-4 relative">
-              {taskCard.status === "Late" ? (
+            <div key={taskCard.listId} className="w-4 h-4 relative">
+              {filteredTaskCard.status === "LATE" ? (
                 <div className="w-4 h-4 left-0 top-0 absolute bg-[#E53935] rounded-lg" />
-              ) : taskCard.status === "Done" ? (
+              ) : filteredTaskCard.status === "DONE" ? (
                 <div className="w-4 h-4 left-0 top-0 absolute bg-[#43A047] rounded-lg" />
-              ) : taskCard.status === "In progress" ? (
+              ) : filteredTaskCard.status === "IN PROGRESS" ? (
                 <div className="w-4 h-4 left-0 top-0 absolute bg-[#5DB9F8] rounded-lg" />
               ) : (
                 <div className="w-4 h-4 left-0 top-0 absolute bg-[#91959A] rounded-lg" />
               )}
             </div>
             <div className="grow shrink basis-0 text-black text-xl font-semibold leading-[33px] flex gap-2">
-              {taskCard?.status}
-              <div>({filteredTaskCard.length})</div>
+              {status}
+              <span>({filteredTaskCard?.length})</span>
             </div>
             <div className="w-6 h-6 relative" />
           </div>
@@ -249,15 +270,17 @@ export default function StatusColums({
             </div>
           )}
           <div
-            className="relative w-full max-h-[554px] overflow-auto scrollbar-hide"
+            className={`relative w-full max-h-[554px] ${
+              isCreate && "opacity-50"
+            } overflow-auto scrollbar-hide`}
             ref={containerRef}
           >
             <div className="relative">
               {filteredTaskCard.map((item) => (
-                <>
-                  <DropTaskIndicator beforeId={item.id} column={item.column} />
+                <div key={item.id}>
+                  <DropTaskIndicator beforeId={item.id} column={item.status} />
                   <Task item={item} hdlDragStart={hdlDragStart} />
-                </>
+                </div>
               ))}
               <DropTaskIndicator column={status} />
             </div>
