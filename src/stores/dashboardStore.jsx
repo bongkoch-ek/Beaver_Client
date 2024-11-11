@@ -160,7 +160,7 @@ const dashboardStore = (set, get) => ({
 
   },
 
-  actionActivityLog: async (projectId, token) => {
+  actionCreateActivityLog: async (projectId, token) => {
     try {
       const response = await axios.post('http://localhost:8888/dashboard/create-activitylog', {projectId}, {
         headers: {
@@ -168,6 +168,21 @@ const dashboardStore = (set, get) => ({
         },
       });
 
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  actionGetActivityLog: async (token) => {
+    try {
+      set({ loading: true, error: null });
+      const response = await axios.get('http://localhost:8888/dashboard/activitylog', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      set({ loading: false, activityLogs: response.data.data.activityLog })
       return response.data;
     } catch (error) {
       throw error;

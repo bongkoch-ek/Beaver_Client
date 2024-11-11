@@ -2,7 +2,8 @@ import React from 'react'
 
 export default function ProjectCard(props) {
 
-  const { projectName } = props
+  const { project } = props
+  console.log( "project" , project.project)
 
   const sliceStr = (str) => {
     if (str.length > 15) {
@@ -20,7 +21,7 @@ export default function ProjectCard(props) {
         <div className='bg-slate-400 w-7 h-7'>
           <img src="" alt="" />
         </div>
-        <p className='font-semibold text-xl'>{sliceStr(projectName)}</p>
+        <p className='font-semibold text-xl'>{project.project?.projectName}</p>
       </div>
 
       <div className='flex flex-col gap-3'>

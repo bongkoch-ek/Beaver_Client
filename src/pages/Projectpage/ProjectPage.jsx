@@ -1,4 +1,5 @@
 import CreateProjectModal from "@/src/components/CreateProjectModal";
+import ProjectCard from "@/src/components/ProjectCard";
 import useDashboardStore from "@/src/stores/dashboardStore";
 import useUserStore from "@/src/stores/userStore";
 import moment from "moment";
@@ -6,19 +7,25 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const ProjectPage = () => {
-  
+
   const navigate = useNavigate()
   const token = useUserStore(state => state.token)
   const actionGetTodayTask = useDashboardStore(state => state.actionGetTodayTask)
   const actionGetProjectById = useDashboardStore(state => state.actionGetProjectById)
-  const actionActivityLog = useDashboardStore(state => state.actionActivityLog)
+  const actionGetActivityLog = useDashboardStore(state => state.actionGetActivityLog)
+  const actionCreateActivityLog = useDashboardStore(state => state.actionCreateActivityLog)
   const task = useDashboardStore(state => state.task)
-  useEffect(() => { actionGetTodayTask(token) }, [])
-  console.log(task)
-
+  const activityLogs = useDashboardStore(state => state.activityLogs)
+  useEffect(() => {
+    async function fetchData() {
+      await actionGetTodayTask(token);
+      await actionGetActivityLog(token)
+    }
+    fetchData()
+  }, [])
   async function hdlClickProject(projectId) {
     await actionGetProjectById(projectId, token)
-    await actionActivityLog(projectId, token)
+    await actionCreateActivityLog(projectId, token)
     navigate('detail')
   }
 
@@ -116,11 +123,24 @@ const ProjectPage = () => {
           Recently
         </p>
 
-        <div className="h-40 px-10 py-8 bg-white rounded-[32px] flex-col justify-center items-center gap-6 inline-flex">
-          <div className="text-right text-[#767676] text-lg font-normal font-['IBM Plex Sans Thai'] leading-[30px]">
-            No tasks due today.
-          </div>
-        </div>
+
+        {
+          activityLogs.length > 0 ?
+            <div className="px-10 py-8 bg-white rounded-[32px] flex-col justify-center items-start gap-6 inline-flex">
+              {
+                activityLogs.map((el, index) => (<ProjectCard project={el} />))
+              }
+
+            </div>
+            :
+            <div className="h-40 px-10 py-8 bg-white rounded-[32px] flex-col justify-center items-center gap-6 inline-flex">
+              <div className="text-right text-[#767676] text-lg font-normal font-['IBM Plex Sans Thai'] leading-[30px]">
+                No tasks due today.
+              </div>
+            </div>
+
+        }
+
       </div>
     </div>
   );
