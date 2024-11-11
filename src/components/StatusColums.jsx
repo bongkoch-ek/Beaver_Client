@@ -17,9 +17,14 @@ export default function StatusColums({
   status,
 }) {
   const socket = useDashboardStore((state) => state.socket);
+  const project = useDashboardStore((state) => state.project);
+  const actionGetProjectById = useDashboardStore(
+    (state) => state.actionGetProjectById
+  );
   const actionCreateTask = useDashboardStore((state) => state.actionCreateTask);
   const token = useUserStore((state) => state.token);
-  const filteredTaskCard = taskCard.filter((item) => item.column === status);
+  const filteredTaskCard = taskCard.filter((item) => item.status === status);
+  console.log(taskCard,"taskcard")
 
   const [isActive, setIsActive] = useState(false);
   const containerRef = useRef(null);
@@ -59,7 +64,6 @@ export default function StatusColums({
 
   useEffect(() => {
     socket.on("move_task", (data) => {
-      // console.log(data, "-------");
       setTaskCard((prv) =>
         prv.map((item) => {
           return item.id === data.id ? data : item;
@@ -206,18 +210,18 @@ export default function StatusColums({
         <div className="self-stretch flex-col justify-start items-start gap-1 flex">
           <div className="self-stretch px-2 justify-start items-center gap-2 inline-flex">
             <div className="w-4 h-4 relative">
-              {status === "Late" ? (
+              {taskCard.status === "Late" ? (
                 <div className="w-4 h-4 left-0 top-0 absolute bg-[#E53935] rounded-lg" />
-              ) : status === "Done" ? (
+              ) : taskCard.status === "Done" ? (
                 <div className="w-4 h-4 left-0 top-0 absolute bg-[#43A047] rounded-lg" />
-              ) : status === "In progress" ? (
+              ) : taskCard.status === "In progress" ? (
                 <div className="w-4 h-4 left-0 top-0 absolute bg-[#5DB9F8] rounded-lg" />
               ) : (
                 <div className="w-4 h-4 left-0 top-0 absolute bg-[#91959A] rounded-lg" />
               )}
             </div>
             <div className="grow shrink basis-0 text-black text-xl font-semibold leading-[33px] flex gap-2">
-              {status}
+              {taskCard?.status}
               <div>({filteredTaskCard.length})</div>
             </div>
             <div className="w-6 h-6 relative" />
@@ -239,7 +243,7 @@ export default function StatusColums({
                   onClick={() => setIsCreate(false)}
                   type="button"
                   text="Back"
-                  color="border-none bg-[#f5f5f5]"
+                  color="border-none bg-[#F5F5F5]"
                 />
               </div>
             </div>

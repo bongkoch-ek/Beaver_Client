@@ -7,6 +7,7 @@ import { removeFiles, uploadFiles } from "../services/ImageUploadService";
 import { Paperclip } from "lucide-react";
 import { set } from "date-fns";
 import { CloudIcon, VectorIcon } from "../icons";
+import PrimaryButton from "./common/PrimaryButton";
 
 const UploadFileProject = ({ input, setInput }) => {
   const token = useUserStore((state) => state.token);
@@ -95,23 +96,22 @@ const UploadFileProject = ({ input, setInput }) => {
             </span>
           </div>
         ) : (
-          <CloudIcon className="w-12 h-12" />
+          <CloudIcon className="w-12 h-12 opacity-40" />
         )}
       </div>
 
       <div className="relative flex items-center justify-center w-full cursor-pointer">
-        <div className="px-4 py-2 bg-[#ffe066] rounded-lg flex items-center gap-2">
-          <Paperclip className="h-4 w-4" />
-          <span className="text-sm text-[#333333] font-semibold leading-relaxed">
-            Image
-          </span>
-        </div>
+        <PrimaryButton
+          text="Image"
+          type="button"
+          Icon={() => <Paperclip className="h-4 w-4" />}
+        />
         <input
           type="file"
           onChange={hdlOnChange}
           name="images"
           multiple
-          className="absolute inset-0 opacity-0 cursor-pointer"
+          className="absolute opacity-0 cursor-pointer"
         />
       </div>
     </div>
