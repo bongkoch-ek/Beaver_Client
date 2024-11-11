@@ -11,7 +11,6 @@ import { CloudIcon, VectorIcon } from '../icons';
 import useDashboardStore from '../stores/dashboardStore';
 import useUserStore from '../stores/userStore';
 import { toast } from 'react-toastify';
-import { Upload } from 'lucide-react';
 import UploadFileProject from './UploadFileProject';
 
 
@@ -94,7 +93,7 @@ const CreateProjectModal = () => {
       </Button>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="fixed inset-0 flex items-center justify-center rounded-lg gap-16 h-[400px] max-w-3xl m-auto">
+        <DialogContent className=" flex items-center justify-center rounded-lg gap-16 h-[400px] max-w-3xl m-auto">
           <div className="flex flex-col gap-6 p-8 items-center justify-center border-2 border-gray-400 rounded-[32px] h-[240px] w-[180px]">
          
             <UploadFileProject input={input} setInput={setInput} />
