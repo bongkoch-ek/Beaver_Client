@@ -101,3 +101,13 @@ export const deleteTask = async (token, taskId) => {
     header
   );
 };
+
+export const getProjectById = async (token, projectId) => {
+  const header = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  return await axios.get(
+    `http://localhost:8888/dashboard/project/${projectId}`,
+    header
+  );
+};

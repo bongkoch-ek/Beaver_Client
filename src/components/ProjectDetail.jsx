@@ -4,12 +4,12 @@ import useDashboardStore from '../stores/dashboardStore';
 import useUserStore from "../stores/userStore";
 import { ProjectImg } from "../icons";
 
+
 const ProjectDetail = (props) => {
   // const { project } = useDashboardStore();
   // const { projectName, projectId } = project;
- 
-  const project = useDashboardStore(state => state.project)
-  console.log(project)
+  const {fetchProject} = props
+
 
   return (
     <div>
@@ -18,7 +18,7 @@ const ProjectDetail = (props) => {
         <span className="mx-2">{'>'}</span>
         <a href="/project" >Project</a>
         <span className="mx-2">{'>'}</span>
-        <a href="/project/detail" className="font-semibold text-black">{project?.projectName}</a>
+        <a href="/project/detail" className="font-semibold text-black">{fetchProject?.data?.projectName}</a>
       </div>
 
       <div className="flex flex-col mx-auto gap-[40px] p-8 w-[95%]">
@@ -27,9 +27,9 @@ const ProjectDetail = (props) => {
         {/* Project Title */}
         <div className="flex items-center gap-4">
           <div className="flex items-center">
-             {project ? 
+             {fetchProject ? 
               <img
-                src={project.projectImage}
+                src={fetchProject.projectImage}
                 alt="Project"
                 className="w-12 h-12 rounded-lg object-cover"
               /> :
@@ -39,7 +39,7 @@ const ProjectDetail = (props) => {
           </div>
           
           <div className="flex items-center">
-            <p className="text-[32px] font-semibold">{project?.projectName}</p>
+            <p className="text-[32px] font-semibold">{fetchProject?.data?.projectName}</p>
           </div>
 
           <div className="flex items-center"> 
@@ -53,8 +53,8 @@ const ProjectDetail = (props) => {
         {/* Project Detail */}
         <div className="flex flex-col gap-[20px]">
           <p className="text-[24px]">Project Detail</p>
-          <p className="text-[14px] text-black">Created by: <span className="text-[#767676]">{project?.user?.fullname}</span></p>
-          <p className="text-[14px] text-black">Created Date: <span className="text-[#767676]">{project.createdAt}</span></p>
+          <p className="text-[14px] text-black">Created by: <span className="text-[#767676]">{fetchProject?.data?.user?.fullname}</span></p>
+          <p className="text-[14px] text-black">Created Date: <span className="text-[#767676]">{fetchProject?.data?.createdAt}</span></p>
         </div>
 
         {/* Tab Menu */}
