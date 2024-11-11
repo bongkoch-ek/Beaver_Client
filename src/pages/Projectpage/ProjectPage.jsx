@@ -1,5 +1,6 @@
 import PrimaryButton from "@/src/components/common/PrimaryButton";
 import CreateProjectModal from "@/src/components/CreateProjectModal";
+import ProjectCard from "@/src/components/ProjectCard";
 import useDashboardStore from "@/src/stores/dashboardStore";
 import useUserStore from "@/src/stores/userStore";
 import moment from "moment";
@@ -16,17 +17,20 @@ const ProjectPage = () => {
   const actionGetProjectById = useDashboardStore(
     (state) => state.actionGetProjectById
   );
-  const actionActivityLog = useDashboardStore(
-    (state) => state.actionActivityLog
-  );
+  const actionGetActivityLog = useDashboardStore(state => state.actionGetActivityLog)
+  const actionCreateActivityLog = useDashboardStore(state => state.actionCreateActivityLog)
   const task = useDashboardStore((state) => state.task);
   useEffect(() => {
-    actionGetTodayTask(token);
-  }, []);
+    async function fetchData() {
+      await actionGetTodayTask(token);
+      await actionGetActivityLog(token)
+    }
+    fetchData()
+  }, [])
 
   async function hdlClickProject(projectId) {
     await actionGetProjectById(projectId, token);
-    await actionActivityLog(projectId, token);
+    await actionCreateActivityLog(projectId, token)
     navigate("detail", {
       state: {
         projectId: projectId,
@@ -133,11 +137,24 @@ const ProjectPage = () => {
           Recently
         </p>
 
-        <div className="h-40 px-10 py-8 bg-white rounded-[32px] flex-col justify-center items-center gap-6 inline-flex">
-          <div className="text-right text-[#767676] text-lg font-normal font-['IBM Plex Sans Thai'] leading-[30px]">
-            No tasks due today.
-          </div>
-        </div>
+
+        {
+          activityLogs.length > 0 ?
+            <div className="px-10 py-8  rounded-[32px] flex-row justify-start items-start gap-6 inline-flex">
+              {
+                activityLogs.map((el, index) => (<ProjectCard project={el} />))
+              }
+
+            </div>
+            :
+            <div className="h-40 px-10 py-8 bg-white rounded-[32px] flex-col justify-center items-center gap-6 inline-flex">
+              <div className="text-right text-[#767676] text-lg font-normal font-['IBM Plex Sans Thai'] leading-[30px]">
+                No tasks due today.
+              </div>
+            </div>
+
+        }
+
       </div>
     </div>
   );

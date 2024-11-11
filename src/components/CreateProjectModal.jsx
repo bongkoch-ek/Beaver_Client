@@ -6,24 +6,29 @@ import {
   DialogContent,
   DialogFooter,
 } from "../../components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { CloudIcon, VectorIcon } from "../icons";
-import useDashboardStore from "../stores/dashboardStore";
-import useUserStore from "../stores/userStore";
-import { toast } from "react-toastify";
-import { Upload } from "lucide-react";
-import UploadFileProject from "./UploadFileProject";
+import { Label } from '@/components/ui/label';
+import { CloudIcon, VectorIcon } from '../icons';
+import useDashboardStore from '../stores/dashboardStore';
+import useUserStore from '../stores/userStore';
+import { toast } from 'react-toastify';
+import { Upload } from 'lucide-react';
+import UploadFileProject from './UploadFileProject';
+import { useNavigate } from 'react-router-dom';
+
 
 const initialState = {
   projectName: "",
-  images: [],
-};
+  images: []
+}
 
-const CreateProjectModal = ({ isOpen, setIsOpen }) => {
+const CreateProjectModal = () => {
+  const navigate = useNavigate()
   const token = useUserStore((state) => state.token);
-  const actionCreateProject = useDashboardStore(
-    (state) => state.actionCreateProject
-  );
+  const actionCreateProject = useDashboardStore((state) => state.actionCreateProject);
+  const newProject = useDashboardStore((state) => state.newProject)
+  const actionCreateActivityLog = useDashboardStore(state => state.actionCreateActivityLog)
+
+  const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState({
     projectName: "",
     images: [],
@@ -60,6 +65,10 @@ const CreateProjectModal = ({ isOpen, setIsOpen }) => {
       setIsOpen(false);
       setInput(initialState);
       closeModal();
+
+      await actionCreateActivityLog(res.project.id, token)
+      navigate('detail')
+
     } catch (err) {
       console.log(err);
       setError("Failed to create project. Please try again.");

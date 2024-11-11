@@ -27,22 +27,18 @@ const useDashboardStore = create(
       actionCreateProject: async (projectData, token) => {
         set({ loading: true, error: null });
         try {
-          const response = await axios.post(
-            "http://localhost:8888/user/create-project",
-            projectData,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+          const response = await axios.post('http://localhost:8888/user/create-project', projectData, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
           const newProject = response.data.project;
-
+          console.log(newProject)
           set((state) => ({
-            projects: [...state.projects, newProject],
+            project: newProject,
             loading: false,
           }));
-
+    
           return response.data;
         } catch (error) {
           set({
@@ -204,6 +200,35 @@ const useDashboardStore = create(
           throw error;
         }
       },
+
+      actionCreateActivityLog: async (projectId, token) => {
+        try {
+          const response = await axios.post('http://localhost:8888/dashboard/create-activitylog', {projectId}, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+    
+          return response.data;
+        } catch (error) {
+          throw error;
+        }
+      },
+    
+      actionGetActivityLog: async (token) => {
+        try {
+          set({ loading: true, error: null });
+          const response = await axios.get('http://localhost:8888/dashboard/activitylog', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          set({ loading: false, activityLogs: response.data.data.activityLog })
+          return response.data;
+        } catch (error) {
+          throw error;
+        }
+      }
     }),
     {
       name: "project-store",
