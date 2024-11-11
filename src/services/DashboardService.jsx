@@ -111,3 +111,5 @@ export const getProjectById = async (token, projectId) => {
     header
   );
 };
+
+export const searchFilters = async (arg) => await axios.post('http://localhost:8000/product/search/filters',arg)
