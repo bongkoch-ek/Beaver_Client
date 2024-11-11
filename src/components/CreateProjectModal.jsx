@@ -11,7 +11,6 @@ import { CloudIcon, VectorIcon } from '../icons';
 import useDashboardStore from '../stores/dashboardStore';
 import useUserStore from '../stores/userStore';
 import { toast } from 'react-toastify';
-import { Upload } from 'lucide-react';
 import UploadFileProject from './UploadFileProject';
 import { useNavigate } from 'react-router-dom';
 

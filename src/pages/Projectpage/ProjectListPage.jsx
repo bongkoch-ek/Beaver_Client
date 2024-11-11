@@ -1,61 +1,53 @@
 import Input from "@/src/components/common/Input";
 import CreateProjectModal from "@/src/components/CreateProjectModal";
-import useDashboardStore from "@/src/stores/dashboardStore";
 import useUserStore from "@/src/stores/userStore";
 import React, { useEffect, useState } from "react";
+import moment from 'moment';
+import { Link } from "react-router-dom";
 
 export default function ProjectListPage() {
-  const itemsPerPage = 10;
   const [page, setPage] = useState(1);
-  const [searchProject, setSearchProject] = useState(""); // State สำหรับการค้นหา
+  const [searchProject, setSearchProject] = useState(""); 
+  const [projects, setProjects] = useState([]); 
+  const token = useUserStore((state) => state.token);
+  const itemsPerPage = 10;
 
-  const mockProjects = [
-    { no: "1", name: "Website Redesign", displayName: "Alice Johnson", dueDate: "2024-12-01" },
-    { no: "2", name: "Mobile App Development", displayName: "Bob Smith", dueDate: "2024-11-15" },
-    { no: "3", name: "Marketing Campaign Q4", displayName: "Charlie Brown", dueDate: "2024-10-30" },
-    { no: "4", name: "Customer Feedback Analysis", displayName: "Dana White", dueDate: "2024-11-20" },
-    { no: "5", name: "Server Migration", displayName: "Ethan Lee", dueDate: "2024-11-25" },
-    { no: "6", name: "E-commerce Platform", displayName: "Fiona Gallagher", dueDate: "2024-12-10" },
-    { no: "7", name: "SEO Optimization", displayName: "George Harrison", dueDate: "2024-11-05" },
-    { no: "8", name: "Email Newsletter Design", displayName: "Holly Green", dueDate: "2024-11-12" },
-    { no: "9", name: "Inventory Management System", displayName: "Ivy Wang", dueDate: "2025-01-20" },
-    { no: "10", name: "Data Analysis Project", displayName: "Jack Wilson", dueDate: "2024-12-25" },
-    { no: "11", name: "Social Media Strategy", displayName: "Karen Black", dueDate: "2024-11-30" },
-    { no: "12", name: "UI/UX Research", displayName: "Liam Moore", dueDate: "2024-12-08" },
-    { no: "13", name: "Cloud Storage Implementation", displayName: "Molly Adams", dueDate: "2025-01-10" },
-    { no: "14", name: "Sales Training Workshop", displayName: "Nathan Baker", dueDate: "2024-12-20" },
-    { no: "15", name: "Bug Fixes & Updates", displayName: "Olivia Clark", dueDate: "2024-11-18" },
-    { no: "16", name: "New Feature Rollout", displayName: "Paul Young", dueDate: "2025-01-05" },
-    { no: "17", name: "Performance Review Cycle", displayName: "Quincy Wright", dueDate: "2024-12-15" },
-    { no: "18", name: "Employee Onboarding", displayName: "Rachel Gray", dueDate: "2024-11-22" },
-    { no: "19", name: "Financial Audit", displayName: "Sam Lopez", dueDate: "2024-12-02" },
-    { no: "20", name: "Product Launch Event", displayName: "Tina Scott", dueDate: "2025-01-15" },
-    { no: "21", name: "Quarterly Budget Review", displayName: "Uma Davis", dueDate: "2024-11-28" },
-    { no: "22", name: "Customer Satisfaction Survey", displayName: "Victor Hall", dueDate: "2024-11-19" },
-    { no: "23", name: "Website Speed Optimization", displayName: "Wendy King", dueDate: "2024-12-05" },
-    { no: "24", name: "Training Program for Interns", displayName: "Xander Bell", dueDate: "2024-12-17" },
-    { no: "25", name: "User Guide Documentation", displayName: "Yvonne Martinez", dueDate: "2025-01-12" },
-    { no: "26", name: "Supply Chain Analysis", displayName: "Zachary Parker", dueDate: "2025-02-01" },
-    { no: "27", name: "Brand Awareness Campaign", displayName: "Amy Carter", dueDate: "2025-01-08" },
-    { no: "28", name: "Quality Assurance Testing", displayName: "Ben Roberts", dueDate: "2024-11-14" },
-    { no: "29", name: "Business Intelligence Dashboard", displayName: "Chris Taylor", dueDate: "2025-01-22" },
-    { no: "30", name: "AI Integration Project", displayName: "Diana White", dueDate: "2025-02-10" },
-  ];
-  
-  
+  // ฟังก์ชัน fetch ข้อมูลโปรเจกต์จาก API
+  const fetchProjects = async () => {
+    try {
+      const response = await fetch(`http://localhost:8888/dashboard/project`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) throw new Error("Failed to fetch projects");
+      const data = await response.json();
+      setProjects(data);
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
 
   const handleSearchChange = (e) => {
     setSearchProject(e.target.value);
     setPage(1); 
   };
 
+  // ฟังก์ชันเรียก fetchProjects เมื่อมีโปรเจกต์ใหม่สร้างเสร็จ
+  const onProjectCreated = () => {
+    fetchProjects();
+  };
 
-  const filteredProjects = mockProjects.filter((project) =>
-    project.name.toLowerCase().includes(searchProject.toLowerCase()) ||
-    project.displayName.toLowerCase().includes(searchProject.toLowerCase())
+  // ฟิลเตอร์โปรเจกต์ตามคำค้นหา
+  const filteredProjects = projects.filter((project) =>
+    (project.project?.projectName || "").normalize("NFC").toLowerCase().includes(searchProject.normalize("NFC").toLowerCase()) ||
+    (project.user?.displayName || "").normalize("NFC").toLowerCase().includes(searchProject.normalize("NFC").toLowerCase())
   );
 
- 
   const currentProjects = filteredProjects.slice(
     (page - 1) * itemsPerPage,
     page * itemsPerPage
@@ -84,14 +76,15 @@ export default function ProjectListPage() {
       <div className="flex flex-col min-h-screen p-8 w-[95%] mx-auto bg-gray-100">
         <div className="flex justify-between items-center">
           <div className="text-black text-[32px] font-semibold leading-[48px]">All My Project</div>
-          <CreateProjectModal className="text-center text-base font-semibold leading-relaxed" />
+          <CreateProjectModal className="text-center text-base font-semibold leading-relaxed" 
+           onProjectCreated={onProjectCreated} />
         </div>
 
         {/* Search Input */}
         <div className="mt-8 mb-4">
           <Input
             type="text"
-            value={searchProject}
+            value={searchProject} 
             onChange={handleSearchChange}
             placeholder="Search by project name or displayname...."
             className="w-3/5 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
@@ -113,12 +106,16 @@ export default function ProjectListPage() {
             {currentProjects.map((project, index) => (
               <tr key={index} className="bg-white hover:bg-gray-50 transition-all duration-150 rounded-lg shadow-md my-2">
                 <td className="p-6 text-center text-gray-600">{(page - 1) * itemsPerPage + index + 1}</td>
-                <td className="p-6 text-center text-gray-800 font-medium">{project.name}</td>
-                <td className="p-6 text-center text-gray-600">{project.displayName}</td>
-                <td className="p-6 text-center text-gray-600">{project.dueDate}</td>
+                <td className="p-6 text-center text-gray-800 font-medium">{project.project?.projectName}</td>
+                <td className="p-6 text-center text-gray-600">{project.user?.displayName}</td>
+                <td className="p-6 text-center text-gray-600"> {moment(project.project?.createdAt).format('LLL')}</td>
                 <td className="p-6 text-center">
-                  <button className="px-4 py-2 bg-[#ffe066] text-[#333333] rounded-md">Go to Project</button>
-                </td>
+  <Link to={`/project/${project.project?.id}`}>
+    <button className="px-4 py-2 bg-[#ffe066] text-[#333333] rounded-md">
+      Go to Project
+    </button>
+  </Link>
+</td>
               </tr>
             ))}
           </tbody>
