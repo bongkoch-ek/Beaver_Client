@@ -126,7 +126,7 @@ const ProjectPage = () => {
 
         {
           activityLogs.length > 0 ?
-            <div className="px-10 py-8 bg-white rounded-[32px] flex-col justify-center items-start gap-6 inline-flex">
+            <div className="px-10 py-8  rounded-[32px] flex-row justify-start items-start gap-6 inline-flex">
               {
                 activityLogs.map((el, index) => (<ProjectCard project={el} />))
               }

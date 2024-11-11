@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '../../components/ui/button';
-import { Input } from "../../components/ui/input"; 
+import { Input } from "../../components/ui/input";
 import {
   Dialog,
   DialogContent,
@@ -13,16 +13,21 @@ import useUserStore from '../stores/userStore';
 import { toast } from 'react-toastify';
 import { Upload } from 'lucide-react';
 import UploadFileProject from './UploadFileProject';
+import { useNavigate } from 'react-router-dom';
 
 
 const initialState = {
-  projectName : "",
-  images : []
+  projectName: "",
+  images: []
 }
 
 const CreateProjectModal = () => {
+  const navigate = useNavigate()
   const token = useUserStore((state) => state.token);
   const actionCreateProject = useDashboardStore((state) => state.actionCreateProject);
+  const newProject = useDashboardStore((state) => state.newProject)
+  const actionCreateActivityLog = useDashboardStore(state => state.actionCreateActivityLog)
+
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState({
     projectName: '',
@@ -33,12 +38,13 @@ const CreateProjectModal = () => {
   const openModal = () => {
     setIsOpen(true);
   };
-  
-    const closeModal = () => {
+
+  const closeModal = () => {
     setIsOpen(false);
-    setInput({ projectName: '' ,
+    setInput({
+      projectName: '',
       images: []
-    }); 
+    });
     setError('');
   };
 
@@ -48,31 +54,35 @@ const CreateProjectModal = () => {
       setError('Project name is required');
       return;
     }
-  
+
     try {
       const projectData = {
         projectName: input.projectName,
         images: input?.images,
       };
-  
+
       const res = await actionCreateProject(projectData, token);
-      
+
       if (res && res.message) {
-        console.log(res.message); 
-        toast.success(res.message); 
+        console.log(res.message);
+        toast.success(res.message);
       } else {
         console.log('No message in response');
       }
       setIsOpen(false);
       setInput(initialState);
-      closeModal(); 
+      closeModal();
+
+      await actionCreateActivityLog(res.project.id, token)
+      navigate('detail')
+
     } catch (err) {
       console.log(err);
       setError('Failed to create project. Please try again.');
     }
   };
-  
-  
+
+
 
   const handleInputChange = (e) => {
     setInput({
@@ -80,14 +90,14 @@ const CreateProjectModal = () => {
       projectName: e.target.value,
       images: input?.images,
     });
-    setError(''); 
+    setError('');
   };
 
 
   return (
     <div>
-      <Button 
-        className="h-[42px] px-4 py-2 bg-[#ffe066] rounded-lg justify-center items-center gap-2 inline-flex text-[#333333] hover:bg-yellow-400" 
+      <Button
+        className="h-[42px] px-4 py-2 bg-[#ffe066] rounded-lg justify-center items-center gap-2 inline-flex text-[#333333] hover:bg-yellow-400"
         onClick={openModal}
       >
         Create New Project
@@ -96,7 +106,7 @@ const CreateProjectModal = () => {
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="fixed inset-0 flex items-center justify-center rounded-lg gap-16 h-[400px] max-w-3xl m-auto">
           <div className="flex flex-col gap-6 p-8 items-center justify-center border-2 border-gray-400 rounded-[32px] h-[240px] w-[180px]">
-         
+
             <UploadFileProject input={input} setInput={setInput} />
           </div>
 
@@ -105,7 +115,7 @@ const CreateProjectModal = () => {
               <Label htmlFor="projectName" className={`text-sm font-medium text-[#333333] mb-1 flex ${error ? 'text-red-500' : 'text-[#333333]'}`}>
                 Project Name
               </Label>
-              <Input 
+              <Input
                 id="projectName"
                 name="projectName"
                 type="text"
@@ -117,12 +127,12 @@ const CreateProjectModal = () => {
               {error && <span className="text-red-500 text-sm mt-1">{error}</span>}
             </div>
             <DialogFooter>
-              <Button 
-                onClick={handleCreateProject} 
+              <Button
+                onClick={handleCreateProject}
                 className="bg-[#ffe066] text-black px-4 py-2 rounded-[8px] hover:bg-yellow-400"
               >
                 Create New Project
-                <VectorIcon className="p-0"/>
+                <VectorIcon className="p-0" />
               </Button>
             </DialogFooter>
           </div>

@@ -31,9 +31,9 @@ const dashboardStore = (set, get) => ({
         },
       });
       const newProject = response.data.project;
-
+      console.log(newProject)
       set((state) => ({
-        projects: [...state.projects, newProject],
+        project: newProject,
         loading: false,
       }));
 
@@ -113,6 +113,7 @@ const dashboardStore = (set, get) => ({
         },
       })
       set({ loading: false, project: response.data })
+      console.log(response.data)
       return response
     }
     catch (error) {
