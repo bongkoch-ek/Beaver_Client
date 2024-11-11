@@ -4,7 +4,6 @@ import { ProjectImg2 } from "../icons";
 export default function ProjectCard(props) {
 
   const { project } = props
-console.log(project)
 
   const sliceStr = (str) => {
     if (str.length > 15) {
@@ -18,7 +17,6 @@ console.log(project)
   const inprogress = project.project.list?.filter(item => item.status === "INPROGRESS").length;
   const done = project.project.list?.filter(item => item.status === "DONE").length;
   const late = project.project.list?.filter(item => item.status === "LATE").length;
-  console.log(inprogress)
 
   return (
     <div className='bg-white rounded-xl p-4 w-60 h-64 hover:shadow-md hover:-translate-y-1'>
