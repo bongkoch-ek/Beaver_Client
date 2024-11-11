@@ -101,3 +101,6 @@ export const deleteTask = async (token, taskId) => {
     header
   );
 };
+
+
+export const searchFilters = async (arg) => await axios.post('http://localhost:8000/product/search/filters',arg)

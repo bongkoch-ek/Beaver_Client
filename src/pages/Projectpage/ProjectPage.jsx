@@ -5,39 +5,27 @@ import useDashboardStore from "@/src/stores/dashboardStore";
 import useUserStore from "@/src/stores/userStore";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const ProjectPage = () => {
-  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const token = useUserStore((state) => state.token);
   const actionGetTodayTask = useDashboardStore(
     (state) => state.actionGetTodayTask
   );
-  const actionGetProjectById = useDashboardStore(
-    (state) => state.actionGetProjectById
+  const actionGetActivityLog = useDashboardStore(
+    (state) => state.actionGetActivityLog
   );
-  const actionGetActivityLog = useDashboardStore(state => state.actionGetActivityLog)
-  const actionCreateActivityLog = useDashboardStore(state => state.actionCreateActivityLog)
   const task = useDashboardStore((state) => state.task);
-  const activityLogs  = useDashboardStore((state) => state.activityLogs );
+  const activityLogs = useDashboardStore((state) => state.activityLogs);
+
   useEffect(() => {
     async function fetchData() {
       await actionGetTodayTask(token);
-      await actionGetActivityLog(token)
+      await actionGetActivityLog(token);
     }
-    fetchData()
-  }, [])
-
-  async function hdlClickProject(projectId) {
-    await actionGetProjectById(projectId, token);
-    await actionCreateActivityLog(projectId, token)
-    navigate("detail", {
-      state: {
-        projectId: projectId,
-      },
-    });
-  }
+    fetchData();
+  }, []);
 
   return (
     <div className="bg-gray-100">
@@ -49,12 +37,9 @@ const ProjectPage = () => {
         </a>
       </div>
 
-      <div className="flex flex-col  min-h-screen p-8 w-[95%] mx-auto bg-gray-100">
-        {/* Header */}
-        <div className="flex items-center text-gray-600 text-[16px] mb-6"></div>
-
+      <div className="flex flex-col min-h-screen p-8 w-[95%] mx-auto bg-gray-100">
         <div className="flex justify-between items-center ">
-          <div className="text-black text-[32px] font-semibold  leading-[48px]">
+          <div className="text-black text-[32px] font-semibold leading-[48px]">
             Project
           </div>
           <div>
@@ -62,7 +47,7 @@ const ProjectPage = () => {
               text="Create New Project"
               type="button"
               onClick={() => setIsOpen(true)}
-            ></PrimaryButton>
+            />
             {isOpen && (
               <CreateProjectModal isOpen={isOpen} setIsOpen={setIsOpen} />
             )}
@@ -70,48 +55,44 @@ const ProjectPage = () => {
         </div>
 
         {/* Today Lists Section */}
-        <div>
-          <div className="flex justify-between mt-[32px]">
-            <p className="text-[24px] font-normal mb-[20px]">Today Lists</p>
-            <p className="text-right text-[#767676] text-lg font-normal  leading-[30px]">
-              29 / 10 / 2567
-            </p>
-          </div>
+        <div className="flex justify-between mt-[32px]">
+          <p className="text-[24px] font-normal mb-[20px]">Today Lists</p>
+          <p className="text-right text-[#767676] text-lg font-normal leading-[30px]">
+            {moment().format("DD / MM / YYYY")}
+          </p>
         </div>
 
         {task.length > 0 ? (
           <div className="bg-white rounded-2xl mt-[20px]">
-            <div className="flex flex-col w-full gap-1  rounded-3xl ">
+            <div className="flex flex-col w-full gap-1 rounded-3xl">
               {task.map((el, index) => (
                 <div key={index}>
-                  <div className=" flex justify-between  h-[150px] ">
-                    <div className="flex flex-col text-[16px] justify-center gap-[16px] pl-[40px] pt=[px]">
+                  <div className="flex justify-between h-[150px]">
+                    <div className="flex flex-col text-[16px] justify-center gap-[16px] pl-[40px]">
                       <div>
                         <p>{el.title}</p>
                       </div>
 
                       <div className="flex flex-col gap-[10px]">
                         <p className="text-[14px]">
-                          Status :
+                          Status:{" "}
                           <span className="text-[#767676]"> {el.priority}</span>
                         </p>
                         <p className="text-[14px]">
-                          Due Date :{" "}
+                          Due Date:{" "}
                           <span className="text-[#767676]">
-                            {" "}
                             {moment(el.dueDate).format("DD/MM/YYYY")}
                           </span>
                         </p>
                       </div>
                     </div>
 
-                    <div className="flex items-center pr-[40px] ">
-                      <button
-                        className="px-4 py-2 bg-[#ffe066] text-[#333333] rounded-md"
-                        onClick={() => hdlClickProject(el.list?.projectId)}
-                      >
-                        Go to Project
-                      </button>
+                    <div className="flex items-center pr-[40px]">
+                      <Link to={`/project/${el.list?.projectId}`}>
+                        <button className="px-4 py-2 bg-[#ffe066] text-[#333333] rounded-md">
+                          Go to Project
+                        </button>
+                      </Link>
                     </div>
                   </div>
                   {index + 1 !== task.length && (
@@ -121,7 +102,7 @@ const ProjectPage = () => {
               ))}
 
               <div className="flex justify-end pt-[24px] pr-16 pb-8">
-                <a href="#">See all</a>
+                <Link to="/project/list">See all</Link>
               </div>
             </div>
           </div>
@@ -130,32 +111,30 @@ const ProjectPage = () => {
             <div className="text-right text-[#767676] text-lg font-normal font-['IBM Plex Sans Thai'] leading-[30px]">
               No tasks due today.
             </div>
+            <div className="flex justify-end pt-[24px] pr-16 pb-8">
+              <Link to="/project/list">See all</Link>
+            </div>
           </div>
         )}
 
         {/* Recently Section */}
-        <p className="text-black text-2xl font-normal leading-9  mt-[40px] mb-[20px]">
+        <p className="text-black text-2xl font-normal leading-9 mt-[40px] mb-[20px]">
           Recently
         </p>
 
-
-        {
-          activityLogs.length > 0 ?
-            <div className="px-10 py-8  rounded-[32px] flex-row justify-start items-start gap-6 inline-flex">
-              {
-                activityLogs.map((el, index) => (<ProjectCard project={el} />))
-              }
-
+        {activityLogs.length > 0 ? (
+          <div className="px-10 py-8 rounded-[32px] flex-row justify-start items-start gap-6 inline-flex">
+            {activityLogs.map((el, index) => (
+              <ProjectCard key={index} project={el} />
+            ))}
+          </div>
+        ) : (
+          <div className="h-40 px-10 py-8 bg-white rounded-[32px] flex-col justify-center items-center gap-6 inline-flex">
+            <div className="text-right text-[#767676] text-lg font-normal font-['IBM Plex Sans Thai'] leading-[30px]">
+              No recent activity.
             </div>
-            :
-            <div className="h-40 px-10 py-8 bg-white rounded-[32px] flex-col justify-center items-center gap-6 inline-flex">
-              <div className="text-right text-[#767676] text-lg font-normal font-['IBM Plex Sans Thai'] leading-[30px]">
-                No tasks due today.
-              </div>
-            </div>
-
-        }
-
+          </div>
+        )}
       </div>
     </div>
   );

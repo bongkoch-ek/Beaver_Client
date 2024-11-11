@@ -53,11 +53,11 @@ export default function TaskLane() {
   //     column: "Late",
   //   },
   // ];
-  
-  const updatedList = newProject.map((item) => {
+
+  const updatedList = newProject?.map((item) => {
     return {
       ...item,
-      task: item.task.map((t) => ({
+      task: item.task?.map((t) => ({
         ...t,
         status: item.status, // Inserting the status into each task object
       })),
@@ -76,7 +76,7 @@ export default function TaskLane() {
 
   const hdlTaskMove = (taskId, newStatus) => {
     setTaskCard((prev) => {
-      return prev.map((task) =>
+      return prev?.map((task) =>
         task.id === taskId ? { ...task, status: newStatus } : task
       );
     });
