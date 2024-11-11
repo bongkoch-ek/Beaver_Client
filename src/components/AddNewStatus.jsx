@@ -89,13 +89,13 @@ const AddNewStatus = () => {
                       To do
                     </SelectItem>
                     <SelectItem
-                      value="In Progress"
+                      value="INPROGRESS"
                       className="font-normal text-[14px]"
                     >
                       In Progress
                     </SelectItem>
                     <SelectItem
-                      value="Done"
+                      value="DONE"
                       className="font-normal text-[14px]"
                     >
                       Done
