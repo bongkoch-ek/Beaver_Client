@@ -20,6 +20,7 @@ const ProjectPage = () => {
   const actionGetActivityLog = useDashboardStore(state => state.actionGetActivityLog)
   const actionCreateActivityLog = useDashboardStore(state => state.actionCreateActivityLog)
   const task = useDashboardStore((state) => state.task);
+  const activityLogs  = useDashboardStore((state) => state.activityLogs );
   useEffect(() => {
     async function fetchData() {
       await actionGetTodayTask(token);
