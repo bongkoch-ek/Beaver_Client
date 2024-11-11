@@ -30,7 +30,7 @@ const router = createBrowserRouter([
     path: "/project",
     element: <ProtectRoute element={<ProjectLayout />} />,
     children: [
-      { path: "", element: <ProjectPage /> },
+      { index: true, element: <ProjectPage /> },
       { path: "list", element: <ProjectListPage /> },
       { path: "detail", element: <ProjectDetailPage /> },
     ],
@@ -42,3 +42,5 @@ const AppRoutes = () => {
 };
 
 export default AppRoutes;
+
+
