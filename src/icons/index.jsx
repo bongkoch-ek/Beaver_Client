@@ -451,3 +451,103 @@ export function CloseIconForBadge(props) {
     </svg>
   )
 }
+
+export function ProjectImg2(props) {
+  return (
+    <svg
+      viewBox="0 0 128 128"
+      data-name="Layer 1"
+      id="Layer_1"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="#000"
+      {...props}
+    >
+      <g id="SVGRepo_iconCarrier">
+        <defs>
+          <style>
+            {
+              ".cls-15,.cls-5{opacity:.3}.cls-16,.cls-3,.cls-4,.cls-5{fill:none;stroke-linecap:round}.cls-3,.cls-4{stroke:#4bc190}.cls-16,.cls-3,.cls-4,.cls-5{stroke-linejoin:round}.cls-3,.cls-5{stroke-width:2.42px}.cls-4{stroke-width:2.5px}.cls-5{stroke:#356cb6}.cls-10,.cls-15{fill:#f85565}.cls-14{fill:#393c54}.cls-16{stroke:#393c54;stroke-width:2px}"
+            }
+          </style>
+        </defs>
+        <circle cx={64} cy={64} r={60} fill="#ffd8c9" />
+        <circle cx={64} cy={64} r={48} opacity={0.3} fill="#fff" />
+        <path className="cls-3" d="M38.77 76.14L42.77 79 38.77 81.86" />
+        <path className="cls-3" d="M38.77 60.14L42.77 63 38.77 65.86" />
+        <path className="cls-3" d="M38.77 44.14L42.77 47 38.77 49.86" />
+        <path className="cls-4" d="M46.67 29.5L47.5 34.5 42.5 33.67" />
+        <path className="cls-3" d="M89.53 76.14L85.53 79 89.53 81.86" />
+        <path className="cls-3" d="M89.53 60.14L85.53 63 89.53 65.86" />
+        <path className="cls-3" d="M90.53 44.14L86.53 47 90.53 49.86" />
+        <path className="cls-4" d="M81.63 29.5L80.79 34.5 85.79 33.67" />
+        <path className="cls-5" d="M89.53 76.14L85.53 79 89.53 81.86" />
+        <path className="cls-5" d="M89.53 60.14L85.53 63 89.53 65.86" />
+        <path className="cls-5" d="M90.53 44.14L86.53 47 90.53 49.86" />
+        <path
+          stroke="#356cb6"
+          strokeWidth="2.5px"
+          strokeLinejoin="round"
+          fill="none"
+          strokeLinecap="round"
+          opacity={0.3}
+          d="M81.63 29.5L80.79 34.5 85.79 33.67"
+        />
+        <path
+          d="M64 109a22 22 0 01-22-22V49a22 22 0 0144 0v38a22 22 0 01-22 22z"
+          fill="#4bc190"
+        />
+        <path
+          d="M48 49a16 16 0 0116-16"
+          opacity={0.2}
+          stroke="#fff"
+          strokeMiterlimit={10}
+          strokeWidth="4px"
+          fill="none"
+          strokeLinecap="round"
+        />
+        <path
+          d="M76.27 30.73A22 22 0 0180 43v31a22 22 0 01-34.27 18.27A22 22 0 0064 102c12.15 0 22-2.85 22-15V49a22 22 0 00-9.73-18.27z"
+          fill="#356cb6"
+          opacity={0.3}
+        />
+        <path
+          className="cls-10"
+          d="M63.5 21.17a3.29 3.29 0 00-4.88.24 3.38 3.38 0 00.31 4.52l4 4a.78.78 0 001.1 0l4-4a3.38 3.38 0 00.31-4.52 3.29 3.29 0 00-4.84-.24z"
+        />
+        <path d="M40 119a60 60 0 0047 .45L90 93H37z" fill="#8f5653" />
+        <rect height={11} rx={2} width={62} x={33} y={88} fill="#b56b63" />
+        <path
+          d="M93 88H35a2 2 0 00-2 2v3a2 2 0 012-2h58a2 2 0 012 2v-3a2 2 0 00-2-2z"
+          fill="#db7a72"
+          opacity={0.5}
+        />
+        <path
+          className="cls-14"
+          d="M71.55 66.34a1 1 0 01.94 1.08 8.54 8.54 0 01-17 0 1 1 0 01.94-1.08z"
+        />
+        <path
+          className="cls-10"
+          d="M64 69a9.08 9.08 0 00-6.6 2.84 8.47 8.47 0 0013.2 0A9.08 9.08 0 0064 69z"
+        />
+        <ellipse className="cls-15" cx={53} cy={63.31} rx={3} ry={2.02} />
+        <ellipse className="cls-15" cx={75} cy={63.31} rx={3} ry={2.02} />
+        <ellipse className="cls-14" cx={75} cy={58.25} rx={2} ry={2.02} />
+        <path
+          className="cls-14"
+          d="M57.65 57.16c-.61-2.73-2.84-2.46-5.54-1.84s-4.82 1.35-4.21 4.08a5 5 0 109.75-2.24z"
+        />
+        <path className="cls-16" d="M55 56.23L83 37.01" />
+        <path className="cls-16" d="M49 58.25L42 58.25" />
+        <path
+          stroke="#515570"
+          strokeWidth="2px"
+          opacity={0.2}
+          strokeLinejoin="round"
+          fill="none"
+          strokeLinecap="round"
+          d="M61 78L67 78"
+        />
+      </g>
+    </svg>
+  )
+}
