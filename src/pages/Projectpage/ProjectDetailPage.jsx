@@ -1,25 +1,18 @@
-import ProjectDetail from "@/src/components/ProjectDetail";
-import ProjectTask from "@/src/components/ProjectTask";
+import React, { useEffect } from "react";
+import { useParams } from "react-router-dom";
 import useDashboardStore from "@/src/stores/dashboardStore";
 import useUserStore from "@/src/stores/userStore";
-import React, { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import ProjectDetail from "@/src/components/ProjectDetail";
+import ProjectTask from "@/src/components/ProjectTask";
 
 export default function ProjectDetailPage() {
-  const user = useUserStore((state) => state.user);
+  const { projectId } = useParams(); // รับ projectId จาก URL
   const token = useUserStore((state) => state.token);
-  const actionGetProjectById = useDashboardStore(
-    (state) => state.actionGetProjectById
-  );
+  const actionGetProjectById = useDashboardStore((state) => state.actionGetProjectById);
 
   useEffect(() => {
-    actionGetProjectById(projectId, token);
-  }, []);
-
-  const location = useLocation();
-  const { projectId } = location.state;
-
-  const project = useDashboardStore((state) => state.project);
+    actionGetProjectById(projectId, token); // ใช้ projectId เพื่อ fetch ข้อมูลโปรเจกต์
+  }, [projectId, token]);
 
   return (
     <div>
