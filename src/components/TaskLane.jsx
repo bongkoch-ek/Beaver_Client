@@ -56,10 +56,10 @@ export default function TaskLane() {
   //   },
   // ];
 
-  const updatedList = newProject.map((item) => {
+  const updatedList = newProject?.map((item) => {
     return {
       ...item,
-      task: item.task.map((t) => ({
+      task: item.task?.map((t) => ({
         ...t,
         status: item.status, // Inserting the status into each task object
       })),
@@ -71,7 +71,7 @@ export default function TaskLane() {
 
   const hdlTaskMove = (taskId, newStatus) => {
     setTaskCard((prev) => {
-      return prev.map((task) =>
+      return prev?.map((task) =>
         task.id === taskId ? { ...task, status: newStatus } : task
       );
     });
@@ -79,7 +79,7 @@ export default function TaskLane() {
 
   return (
     <div className="self-stretch justify-start items-start gap-4 inline-flex ">
-      {updatedList.map((item) => (
+      {updatedList?.map((item) => (
         <div key={item.id} className="flex gap-4 items-start">
           <StatusColums
             taskCard={taskCard}

@@ -20,14 +20,14 @@ const initialState = {
   images: []
 }
 
-const CreateProjectModal = () => {
+const CreateProjectModal = ({ isOpen, setIsOpen }) => {
   const navigate = useNavigate()
   const token = useUserStore((state) => state.token);
   const actionCreateProject = useDashboardStore((state) => state.actionCreateProject);
   const newProject = useDashboardStore((state) => state.newProject)
   const actionCreateActivityLog = useDashboardStore(state => state.actionCreateActivityLog)
 
-  const [isOpen, setIsOpen] = useState(false);
+  // const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState({
     projectName: "",
     images: [],
@@ -66,7 +66,7 @@ const CreateProjectModal = () => {
       closeModal();
 
       await actionCreateActivityLog(res.project.id, token)
-      navigate('detail')
+      navigate(`/project/${res.project?.id}`)
 
     } catch (err) {
       console.log(err);
