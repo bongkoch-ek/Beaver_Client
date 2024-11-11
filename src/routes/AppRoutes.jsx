@@ -12,7 +12,7 @@ import ProjectList from "../components/ProjectList";
 import ProjectDetailPage from "../pages/Projectpage/ProjectDetailPage";
 import Profile from "../pages/Profile";
 import ProjectListPage from "../pages/Projectpage/ProjectListPage";
-
+import ProtectRoute from "./ProtectRoute";
 
 const router = createBrowserRouter([
   {
@@ -21,20 +21,18 @@ const router = createBrowserRouter([
     children: [
       { path: "", element: <Home /> },
       { path: "login", element: <Login /> },
-      {path: "profile", element: <Profile/>},
+      { path: "profile", element: <Profile /> },
       { path: "register", element: <Register /> },
       { path: "*", element: <ErrorPage /> },
     ],
   },
   {
     path: "/project",
-    element: <ProjectLayout />,
+    element: <ProtectRoute element={<ProjectLayout />} />,
     children: [
       { path: "", element: <ProjectPage /> },
       { path: "list", element: <ProjectListPage /> },
-
       { path: "detail", element: <ProjectDetailPage /> },
-
     ],
   },
 ]);

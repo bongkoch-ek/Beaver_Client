@@ -25,3 +25,9 @@ userService.actionLoginGoogle = (profile) => {
 
 
 export default userService
+
+export const currentUser = async (token) => await axios.post("http://localhost:8888/auth/current-user",{},{
+    headers:{
+        Authorization: `Bearer ${token}`
+    }
+})
