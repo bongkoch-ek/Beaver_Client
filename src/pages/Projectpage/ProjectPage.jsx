@@ -1,25 +1,37 @@
+import PrimaryButton from "@/src/components/common/PrimaryButton";
 import CreateProjectModal from "@/src/components/CreateProjectModal";
 import useDashboardStore from "@/src/stores/dashboardStore";
 import useUserStore from "@/src/stores/userStore";
 import moment from "moment";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const ProjectPage = () => {
-  
-  const navigate = useNavigate()
-  const token = useUserStore(state => state.token)
-  const actionGetTodayTask = useDashboardStore(state => state.actionGetTodayTask)
-  const actionGetProjectById = useDashboardStore(state => state.actionGetProjectById)
-  const actionActivityLog = useDashboardStore(state => state.actionActivityLog)
-  const task = useDashboardStore(state => state.task)
-  useEffect(() => { actionGetTodayTask(token) }, [])
-  console.log(task)
+  const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+  const token = useUserStore((state) => state.token);
+  const actionGetTodayTask = useDashboardStore(
+    (state) => state.actionGetTodayTask
+  );
+  const actionGetProjectById = useDashboardStore(
+    (state) => state.actionGetProjectById
+  );
+  const actionActivityLog = useDashboardStore(
+    (state) => state.actionActivityLog
+  );
+  const task = useDashboardStore((state) => state.task);
+  useEffect(() => {
+    actionGetTodayTask(token);
+  }, []);
 
   async function hdlClickProject(projectId) {
-    await actionGetProjectById(projectId, token)
-    await actionActivityLog(projectId, token)
-    navigate('detail')
+    await actionGetProjectById(projectId, token);
+    await actionActivityLog(projectId, token);
+    navigate("detail", {
+      state: {
+        projectId: projectId,
+      },
+    });
   }
 
   return (
@@ -40,8 +52,15 @@ const ProjectPage = () => {
           <div className="text-black text-[32px] font-semibold  leading-[48px]">
             Project
           </div>
-          <div className="">
-            <CreateProjectModal className="text-center  text-base font-semibold  leading-relaxed " />
+          <div>
+            <PrimaryButton
+              text="Create New Project"
+              type="button"
+              onClick={() => setIsOpen(true)}
+            ></PrimaryButton>
+            {isOpen && (
+              <CreateProjectModal isOpen={isOpen} setIsOpen={setIsOpen} />
+            )}
           </div>
         </div>
 
@@ -60,9 +79,7 @@ const ProjectPage = () => {
             <div className="flex flex-col w-full gap-1  rounded-3xl ">
               {task.map((el, index) => (
                 <div key={index}>
-                  <div
-                    className=" flex justify-between  h-[150px] "
-                  >
+                  <div className=" flex justify-between  h-[150px] ">
                     <div className="flex flex-col text-[16px] justify-center gap-[16px] pl-[40px] pt=[px]">
                       <div>
                         <p>{el.title}</p>
@@ -71,23 +88,23 @@ const ProjectPage = () => {
                       <div className="flex flex-col gap-[10px]">
                         <p className="text-[14px]">
                           Status :
-                          <span className="text-[#767676]">
-                            {" "}
-                            {el.priority}
-                          </span>
+                          <span className="text-[#767676]"> {el.priority}</span>
                         </p>
                         <p className="text-[14px]">
                           Due Date :{" "}
                           <span className="text-[#767676]">
                             {" "}
-                            {moment(el.dueDate).format('DD/MM/YYYY')}
+                            {moment(el.dueDate).format("DD/MM/YYYY")}
                           </span>
                         </p>
                       </div>
                     </div>
 
                     <div className="flex items-center pr-[40px] ">
-                      <button className="px-4 py-2 bg-[#ffe066] text-[#333333] rounded-md" onClick={() => hdlClickProject(el.list?.projectId)}>
+                      <button
+                        className="px-4 py-2 bg-[#ffe066] text-[#333333] rounded-md"
+                        onClick={() => hdlClickProject(el.list?.projectId)}
+                      >
                         Go to Project
                       </button>
                     </div>
