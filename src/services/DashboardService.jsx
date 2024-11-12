@@ -113,3 +113,19 @@ export const getProjectById = async (token, projectId) => {
 };
 
 export const searchFilters = async (arg) => await axios.post('http://localhost:8000/product/search/filters',arg)
+
+
+//// Update
+
+export const updateStatusMember = async (token, id, status) => {
+    const header = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    const data = { status }; 
+  
+    return await axios.patch(
+      `http://localhost:8888/dashboard/status-member/${id}`, 
+      data,
+      header
+    );
+  };
