@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import DropTaskIndicator from "./DropTaskIndicator";
 import { toast } from "react-toastify";
@@ -32,9 +32,15 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import useDashboardStore from "../stores/dashboardStore";
 
 export default function Task({ item, hdlDragStart }) {
   const token = useUserStore((state) => state.token);
+  const actionGetTask = useDashboardStore(state => state.actionGetTask)
+  const actionClearTaskId = useDashboardStore(state => state.actionClearTaskId)
+
+  const [taskId, setTaskId] = useState(0)
+
   const handleEdit = (e) => {
     e.stopPropagation();
     console.log("Edit task:", item.id);
@@ -61,9 +67,20 @@ export default function Task({ item, hdlDragStart }) {
     }
   };
 
+  const hdlTaskClick = (e) => {
+    e.stopPropagation()
+    setTaskId(item.id)
+  }
+  
+  const hdlOnOpen = async (e) => {
+    actionClearTaskId()
+    setTaskId(item.id)
+    // await actionGetTask(taskId, token)
+  }
+
   return (
     <>
-      <Dialog>
+      <Dialog onOpenChange={hdlOnOpen}>
         <motion.div
           key={item.id}
           layout
@@ -72,7 +89,7 @@ export default function Task({ item, hdlDragStart }) {
           className="cursor-grab hover:opacity-70 transition-opacity duration-200 w-full active:cursor-grabbing self-stretch h-full p-4 bg-[#cde9fd] rounded-lg flex-col justify-start items-start gap-5 flex"
         >
           <DialogTrigger asChild>
-            <div className="flex flex-col w-full gap-5">
+            <div className="flex flex-col w-full gap-5" onClick={(e) => hdlTaskClick(e)}>
               <div className="self-stretch justify-between items-center gap-2 inline-flex">
                 <div className="grow shrink basis-0 text-black text-sm font-normal font-['IBM Plex Sans Thai'] leading-[23px] cursor-pointer">
                   {item.title}
@@ -109,10 +126,10 @@ export default function Task({ item, hdlDragStart }) {
                             <div className="flex flex-col items-center gap-6">
                               <AlertDialogHeader className="text-center">
                                 <AlertDialogTitle className="text-2xl font-semibold text-black text-center">
-                                Are you sure you want to delete?
+                                  Are you sure you want to delete?
                                 </AlertDialogTitle>
                                 <AlertDialogDescription className="text-sm font-[400px] text-red-500 text-center mt-1">
-                                This task cannot be recovered again.
+                                  This task cannot be recovered again.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <div className="flex w-[240px] h-[100px] justify-center flex-col gap-4 ">
@@ -126,7 +143,7 @@ export default function Task({ item, hdlDragStart }) {
                                   onClick={confirmDelete}
                                   className="flex justify-center items-center w-full gap-2  px-4 py-2 bg-[#E53935]  text-white rounded-[8px] hover:bg-red-600"
                                 >
-                                  <Trash2Icon className="w-[20] h-[20]"/>
+                                  <Trash2Icon className="w-[20] h-[20]" />
                                   Delete
                                 </AlertDialogAction>
                                 {/* </AlertDialogAction> */}
@@ -154,7 +171,16 @@ export default function Task({ item, hdlDragStart }) {
             </div>
           </DialogTrigger>
         </motion.div>
-        <EditTaskModal />
+
+        <DialogContent>
+          <DialogHeader hidden>
+            <DialogTitle>edit task</DialogTitle>
+            <DialogDescription>
+              this is manage task.
+            </DialogDescription>
+          </DialogHeader>
+          <EditTaskModal taskId={taskId} item={item} />
+        </DialogContent>
       </Dialog>
     </>
   );

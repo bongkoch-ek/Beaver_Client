@@ -21,6 +21,7 @@ const useDashboardStore = create(
       column: [],
       images: [],
       task: [],
+      taskById: [],
       list: [],
       users: [],
       activityLogs: [],
@@ -28,6 +29,9 @@ const useDashboardStore = create(
       currentUser: null,
       error: null,
 
+      actionClearTaskId: async () => {
+        set({ taskById: [] })
+      },
       actionCreateProject: async (projectData, token) => {
         set({ loading: true, error: null });
         try {
@@ -68,6 +72,7 @@ const useDashboardStore = create(
               },
             }
           );
+          console.log(response.data)
           set({ loading: false, projects: response.data });
           return response;
         } catch (error) {
@@ -226,15 +231,11 @@ const useDashboardStore = create(
 
       actionCreateActivityLog: async (projectId, token) => {
         try {
-          const response = await axios.post(
-            "http://localhost:8888/dashboard/create-activitylog",
-            { projectId },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+          const response = await axios.post('http://localhost:8888/dashboard/create-activitylog', { projectId }, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
 
           return response.data;
         } catch (error) {
@@ -297,7 +298,42 @@ const useDashboardStore = create(
         } catch (error) {
           throw error;
         }
-      }},
+      },
+      actionGetTask: async (taskId, token) => {
+        try {
+          set({ loading: true, error: null });
+          const response = await axios.get(`http://localhost:8888/dashboard/task/${taskId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          set({ loading: false, taskById: response.data })
+          return response.data;
+        } catch (error) {
+          throw error;
+        }
+      },
+
+      actionUpdateTask: async (id, form, token) => {
+        set({ isLoading: true });
+
+        try {
+          const response = await axios.patch(`http://localhost:8888/dashboard/task/${id}`, form, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          set({ isLoading: false, taskById: response.data });
+          return response.data;
+        } catch (err) {
+          set({ isLoading: false });
+          toast.error("Failed to update task");
+          throw err;
+        }
+      }
+    }),
+
     {
       name: "project-store",
       storage: createJSONStorage(() => localStorage),
@@ -305,8 +341,7 @@ const useDashboardStore = create(
         project: state.project,
       }),
     }
-  ))
-); 
+  )); 
 
 
 export default useDashboardStore;

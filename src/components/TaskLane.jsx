@@ -15,6 +15,10 @@ export default function TaskLane() {
 
   const newProject = project?.list;
 
+  // useEffect(() => {
+  //   actionGetProjectById(1,token)
+  // })
+// console.log(project , "projecttt")
   // DATA FOR TESTING FEATURE DRAG AND DROP
   // const DEFAULT_TASKS = [
   //   // To do
