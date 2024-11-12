@@ -36,16 +36,27 @@ import { CloseIconForBadge } from "../icons";
 import { actionGetAllComment } from "../services/DashboardService";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import useUserStore from "../stores/userStore";
+import useDashboardStore from "../stores/dashboardStore";
 
-export function EditTaskModal() {
+export function EditTaskModal(props) {
+  const { item, taskId } = props
   const token = useUserStore(state => state.token)
+  const actionGetTask = useDashboardStore(state => state.actionGetTask)
+  const taskById = useDashboardStore(state => state.taskById)
+
+  // useEffect(() => {
+  //   async function fetch() {
+  //     await actionGetTask(taskId, token)
+  //   }
+  //   fetch()
+  // }, []);
 
   const [dueDate, setDueDate] = useState(new Date());
   const [startDate, setStartDate] = useState(new Date());
-  const [priority, setPriority] = useState("Medium");
-  const [taskName, setTaskName] = useState("Task_Name");
+  const [priority, setPriority] = useState(taskById.priority);
+  const [taskName, setTaskName] = useState(taskById.title);
   const [isEditing, setIsEditing] = useState(false);
-  const [tempTaskName, setTempTaskName] = useState(taskName);
+  const [tempTaskName, setTempTaskName] = useState(taskById.title);
   const [url, setUrl] = useState("");
   const [txt, setTxt] = useState("");
   const [isFocused, setIsFocused] = useState(false);
@@ -74,7 +85,7 @@ export function EditTaskModal() {
         timestamp: new Date(),
         userId: "current_user_id"  //รับค่า userId
       };
-      
+
       setPostedComments([...postedComments, newComment]);
       setTxt("");
       setIsFocusedComment(false);
@@ -100,21 +111,16 @@ export function EditTaskModal() {
     setTempTaskName(taskName);
   };
 
-  useEffect(() => {
-    const fetchComments = async () => {
-      try {
-        const response = await actionGetAllComment(token);
-        setPostedComments(response.data);
-      } catch (err) {
-        console.error("Error fetching comments:", err);
-      }
-    };
-
-    fetchComments();
-  }, []);
-
+  
+  
+  console.log(taskById)
+  // console.log(item)
   return (
     <DialogContent className="max-w-3xl w-[856px] max-h-[70vh] p-12 bg-white rounded-2xl flex flex-col gap-5 m-auto overflow-y-auto ">
+      <DialogHeader>
+        <DialogTitle hidden>Edit task</DialogTitle>
+      </DialogHeader>
+      
       <div className="flex flex-col space-y-8 ">
         {/* ชื่อ Task */}
         <div className="flex items-center gap-2">
@@ -142,7 +148,7 @@ export function EditTaskModal() {
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              <span className="text-lg font-semibold">{taskName}</span>
+              <span className="text-lg font-semibold">{taskById.title}</span>
               <button
                 onClick={hdlEdit}
                 className="w-7 h-7 p-2 bg-black/20 rounded-[360px] justify-center items-center gap-2 inline-flex"
@@ -181,13 +187,12 @@ export function EditTaskModal() {
                   )}
 
                   <p
-                    className={`text-sm font-semibold ${
-                      priority === "High"
-                        ? "text-[#e53935]"
-                        : priority === "Medium"
+                    className={`text-sm font-semibold ${priority === "High"
+                      ? "text-[#e53935]"
+                      : priority === "Medium"
                         ? "text-[#fdc730]"
                         : "text-[#5db9f8]"
-                    }`}
+                      }`}
                   >
                     {priority}
                   </p>
@@ -195,7 +200,7 @@ export function EditTaskModal() {
               </PopoverTrigger>
               <PopoverContent className="w-auto p-2">
                 <div className="flex flex-col space-y-2">
-                <Button
+                  <Button
                     variant="ghost"
                     className="text-[#e53935] text-sm font-semibold flex items-center "
                     onClick={() => setPriority("High")}
@@ -220,9 +225,9 @@ export function EditTaskModal() {
                     <ChevronsDown className="text-[#5db9f8]" />
                     <span>Low</span>
                   </Button>
-              
 
-               
+
+
                 </div>
               </PopoverContent>
             </Popover>
@@ -323,7 +328,7 @@ export function EditTaskModal() {
               onBlur={() => setIsFocused(false)}
               className="w-full focus:border-blue-300"
             />
-            {(isFocused || url ) && (
+            {(isFocused || url) && (
               <div className="mt-2 w-[120px] h-[30px]  flex gap-[10px]">
                 <Button
                   onClick={handlePost}
@@ -339,27 +344,27 @@ export function EditTaskModal() {
                 </Button>
               </div>
             )}
-            
+
             {/* Badge สำหรับ URL ที่โพสต์แล้ว */}
             <ScrollArea className="h-[50px] w-full rounded-md mt-3">
-            <div className="flex  flex-wrap gap-2 ">
-              {postedUrls.map((postedUrl, index) => (
-                <Badge 
-                  key={index}
-                  variant="outline"
-                  className="rounded-[16px] px-2 py-1 text-[#333333] font-normal bg-gray-300 hover:bg-gray-200 "
-                >
-                  {postedUrl}
-                  <CloseIconForBadge 
-                    className="w-5 h-5 ml-4 cursor-pointer" 
-                    onClick={() => {
-                      const newUrls = postedUrls.filter((_, i) => i !== index);
-                      setPostedUrls(newUrls);
-                    }}
-                  />
-                </Badge>
-              ))}
-            </div>
+              <div className="flex  flex-wrap gap-2 ">
+                {postedUrls.map((postedUrl, index) => (
+                  <Badge
+                    key={index}
+                    variant="outline"
+                    className="rounded-[16px] px-2 py-1 text-[#333333] font-normal bg-gray-300 hover:bg-gray-200 "
+                  >
+                    {postedUrl}
+                    <CloseIconForBadge
+                      className="w-5 h-5 ml-4 cursor-pointer"
+                      onClick={() => {
+                        const newUrls = postedUrls.filter((_, i) => i !== index);
+                        setPostedUrls(newUrls);
+                      }}
+                    />
+                  </Badge>
+                ))}
+              </div>
             </ScrollArea>
           </div>
         </div>
@@ -372,7 +377,7 @@ export function EditTaskModal() {
               <div className="bg-gray-500 min-w-[40px] min-h-[40px] rounded-full justify-center items-center">
                 {/* UserPicture */}
               </div>
-              <Input 
+              <Input
                 placeholder="Comment..."
                 value={txt}
                 type="text"
@@ -382,7 +387,7 @@ export function EditTaskModal() {
                 className="w-full focus-within:border-blue-300"
               />
             </div>
-            
+
             {(isFocusedComment || txt) && (
               <div className="flex gap-2 justify-start ml-[50px]">
                 <Button
@@ -409,9 +414,9 @@ export function EditTaskModal() {
               <div key={index} className="flex items-center gap-3">
                 <div className="bg-gray-500 w-[40px] h-[40px] rounded-full overflow-hidden">
                   {comment.userPicture ? (
-                    <img 
-                      src={comment.userPicture} 
-                      alt="User" 
+                    <img
+                      src={comment.userPicture}
+                      alt="User"
                       className="w-full h-full object-cover"
                     />
                   ) : (

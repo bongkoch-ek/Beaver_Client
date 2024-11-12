@@ -18,12 +18,16 @@ const useDashboardStore = create(
       project: [],
       column: [],
       task: [],
+      taskById: [],
       list: [],
       activityLogs: [],
       isLoading: false,
       currentUser: null,
       error: null,
 
+      actionClearTaskId: async () => {
+        set({ taskById: [] })
+      },
       actionCreateProject: async (projectData, token) => {
         set({ loading: true, error: null });
         try {
@@ -38,7 +42,7 @@ const useDashboardStore = create(
             project: newProject,
             loading: false,
           }));
-    
+
           return response.data;
         } catch (error) {
           set({
@@ -203,18 +207,18 @@ const useDashboardStore = create(
 
       actionCreateActivityLog: async (projectId, token) => {
         try {
-          const response = await axios.post('http://localhost:8888/dashboard/create-activitylog', {projectId}, {
+          const response = await axios.post('http://localhost:8888/dashboard/create-activitylog', { projectId }, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           });
-    
+
           return response.data;
         } catch (error) {
           throw error;
         }
       },
-    
+
       actionGetActivityLog: async (token) => {
         try {
           set({ loading: true, error: null });
@@ -224,6 +228,21 @@ const useDashboardStore = create(
             },
           });
           set({ loading: false, activityLogs: response.data.data.activityLog })
+          return response.data;
+        } catch (error) {
+          throw error;
+        }
+      },
+
+      actionGetTask: async (taskId, token) => {
+        try {
+          set({ loading: true, error: null });
+          const response = await axios.get(`http://localhost:8888/dashboard/task/${taskId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          set({ loading: false, taskById: response.data })
           return response.data;
         } catch (error) {
           throw error;
