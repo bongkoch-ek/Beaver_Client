@@ -20,8 +20,8 @@ export const updateProject = async (token, projectId, form) => {
   const header = {
     headers: { Authorization: `Bearer ${token}` },
   };
-  return await axios.put(
-    `http://localhost:8888/user/update-project/${projectId}`,
+  return await axios.patch(
+    `http://localhost:8888/dashboard/project/${projectId}`,
     form,
     header
   );
@@ -88,6 +88,13 @@ export const getUser = async (token) => {
     headers: { Authorization: `Bearer ${token}` },
   };
   return await axios.get("http://localhost:8888/user/get-user", header);
+};
+
+export const getAllUser = async (token) => {
+  const header = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  return await axios.get("http://localhost:8888/dashboard/getuser", header);
 };
 
 

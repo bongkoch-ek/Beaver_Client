@@ -65,14 +65,14 @@ export default function TaskLane() {
   });
   console.log(updatedList,"=====Upda")
   
-  const newTask = updatedList.flatMap((item) => item.task);
+  const newTask = updatedList?.flatMap((item) => item.task);
   const [taskCard, setTaskCard] = useState(newTask);
   console.log(taskCard, "taskCard");
   useEffect(() => {
     actionGetProjectById(project?.id, token);
   }, [taskCard]);
 
-  const uniqueColumns = [...new Set(taskCard.map((task) => task.status))];
+  const uniqueColumns = [...new Set(taskCard?.map((task) => task.status))];
 
   const hdlTaskMove = (taskId, newStatus) => {
     setTaskCard((prev) => {
