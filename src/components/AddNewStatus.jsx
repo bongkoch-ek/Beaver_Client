@@ -2,32 +2,46 @@ import React, { useState } from "react";
 import { AddMemberIcon, PlusIcon } from "../icons";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectLabel, SelectGroup } from "@/components/ui/select"
-import useDashboardStore from '../stores/dashboardStore'
-import useUserStore from '../stores/userStore'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  SelectLabel,
+  SelectGroup,
+} from "@/components/ui/select";
+import useDashboardStore from "../stores/dashboardStore";
+import useUserStore from "../stores/userStore";
 import { Cross2Icon } from "@radix-ui/react-icons";
 
-const AddNewStatus = () => {
-  const [isOpen, setIsOpen] = useState(false)
+const AddNewStatus = ({ setAllList }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [text, setText] = useState("");
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
 
-  const actionCreateColumn = useDashboardStore(state => state.actionCreateColumn)
-  const project = useDashboardStore(state => state.project)
-  const token = useUserStore(state => state.token)
+  const actionCreateColumn = useDashboardStore(
+    (state) => state.actionCreateColumn
+  );
+  const project = useDashboardStore((state) => state.project);
+  const actionGetProjectById = useDashboardStore(
+    (state) => state.actionGetProjectById
+  );
+  const token = useUserStore((state) => state.token);
 
-  const data = { name: text, projectId: project.id, status: status }
-  const handleSubmit = async() => {
+  const data = { name: text, projectId: project.id, status: status };
+  const handleSubmit = async () => {
     if (!text.trim()) {
       setError("Please select status type");
       return;
     }
 
-    await actionCreateColumn(data,token)
-    console.log({ text, status });
+    await actionCreateColumn(data, token);
+    await actionGetProjectById(project?.id, token);
+    console.log(data);
     setError("");
-    setIsOpen(false)
+    setIsOpen(false);
   };
 
   const handleTextChange = (e) => {
@@ -38,9 +52,7 @@ const AddNewStatus = () => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <button
-          className="bg-[#F5F5F5] rounded-[16px] justify-center items-center p-2 hover:bg-slate-200 flex"
-        >
+        <button className="bg-[#F5F5F5] rounded-[16px] justify-center items-center p-2 hover:bg-slate-200 flex">
           <PlusIcon className="w-[24px] h-[24px] " />
         </button>
       </DialogTrigger>
@@ -118,7 +130,10 @@ const AddNewStatus = () => {
           </div>
         </div>
         <div className="absolute right-4 top-4  opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground bg-red-600 rounded-full p-2">
-          <Cross2Icon onClick={()=>setIsOpen(false)} className="h-4 w-4 text-white" />
+          <Cross2Icon
+            onClick={() => setIsOpen(false)}
+            className="h-4 w-4 text-white"
+          />
           <span className="sr-only">Close</span>
         </div>
       </DialogContent>

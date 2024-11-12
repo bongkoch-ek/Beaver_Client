@@ -5,7 +5,8 @@ import ProjectDetail from "@/src/components/ProjectDetail";
 import ProjectTask from "@/src/components/ProjectTask";
 import ProjectSchedule from "../../pages/Projectpage/ProjectSchedule";
 import { getProjectById } from "../../services/DashboardService";
-import ProjectDashboard from "./ProjectDashboard";
+import { ProjectDashboard } from "./ProjectDashboard";
+
 
 export default function ProjectDetailPage() {
   const { projectId } = useParams();
