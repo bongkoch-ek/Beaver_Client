@@ -22,9 +22,8 @@ const AddMemberModal = () => {
   const { projectId } = useParams();
   const token = useUserStore((state) => state.token);
   const [isOpen, setIsOpen] = useState(false);
-  const actionGetAllUsers = useDashboardStore((state) => state.actionGetAllUser);
   const actionSearchFilters = useDashboardStore((state) => state.actionSearchFilters);
-  const users = useDashboardStore((state) => state.users);
+  const users = useDashboardStore((state) => state.users); 
   const formRef = useRef(null);
   const [text, setText] = useState("");
   const [form, setForm] = useState({
@@ -39,33 +38,39 @@ const AddMemberModal = () => {
   useEffect(() => {
     const delay = setTimeout(async () => {
       if (text) {
-        const results = await actionSearchFilters({ query: text });
-        setSearchResults(results || []);
-      } else if (!users.length) {
-        await actionGetAllUsers(token);
-        setSearchResults(users);
+        const results = await actionSearchFilters(token, { query: text });
+        console.log("Search Results:", results);
+        setSearchResults(results || []); 
       } else {
-        setSearchResults(users);
+        setSearchResults([]);
       }
     }, 300);
-
+  
     return () => clearTimeout(delay);
-  }, [text, token, actionGetAllUsers, actionSearchFilters]);
+  }, [text, token, actionSearchFilters]);
 
   const handleSelectUser = (selectedUser) => {
-    setForm((prev) => ({ ...prev, email: selectedUser.email, userId: selectedUser.id }));
-    setText(selectedUser.email);
-    setSearchResults([]);
+    setForm((prev) => ({
+      ...prev,
+      email: selectedUser.email,
+      userId: selectedUser.id,
+    }));
+    setText(selectedUser.email); 
+    setSearchResults([]); 
+    console.log("Selected User:", selectedUser); 
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!form.email.trim() || !form.userId) {
       setError("Email and User ID are required");
+      console.log("Form Error - Missing email or userId", form); 
       return;
     }
 
     try {
+      console.log("Submitting form:", form);
       const addMemberPromise = addMember(token, form);
       const sendEmailPromise = emailjs.sendForm(
         import.meta.env.VITE_EMAILJS_SERVICE_ID,
@@ -77,10 +82,8 @@ const AddMemberModal = () => {
       await Promise.all([addMemberPromise, sendEmailPromise]);
 
       toast.success(`Member added and invitation sent to ${form.email}`);
-      setError("");
-      setIsOpen(false);
-      setForm({ projectId, email: "", role: "MEMBER", userId: null });
-      setText("");
+      resetForm(); 
+
     } catch (error) {
       console.error("Error adding member or sending email:", error);
       setError("Failed to add member or send email. Please try again.");
@@ -88,10 +91,22 @@ const AddMemberModal = () => {
     }
   };
 
+  const resetForm = () => {
+    setForm({
+      projectId: Number(projectId),
+      email: "",
+      role: "MEMBER",
+      userId: null,
+    });
+    setText("");
+    setSearchResults([]);
+    setError("");
+  };
+
   const handleChange = (e) => {
     setText(e.target.value);
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-    setError("");
+    setForm((prev) => ({ ...prev, email: "", userId: null }));
+    setError(""); 
   };
 
   return (

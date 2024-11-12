@@ -44,14 +44,8 @@ const EditImageProjectModal = ({ projectId, currentName, onUpdate }) => {
       };
   
       const res = await actionUpdateProject(token, projectId, projectData);
-  
-      if (res && res.message) {
-        toast.success(res.message);
-      } else {
-        toast.success("Project updated successfully!");
-      }
-  
-      // Trigger onUpdate to refresh project details in parent component
+
+
       if (onUpdate) onUpdate();
       
       closeModal();
