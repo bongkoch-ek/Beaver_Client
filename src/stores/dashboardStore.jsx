@@ -268,7 +268,6 @@ const useDashboardStore = create(
             },
           });
           set({ loading: false, users: response.data })
-          console.log(response.data)
           return response.data;
         } catch (error) {
           throw error;

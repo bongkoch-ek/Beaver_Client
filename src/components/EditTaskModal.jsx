@@ -37,6 +37,7 @@ import {
   X,
   Check,
   ChevronDownIcon,
+  CircleX,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { CloseIconForBadge } from "../icons";
@@ -47,11 +48,12 @@ import useDashboardStore from "../stores/dashboardStore";
 import { SelectIcon } from "@radix-ui/react-select";
 
 export function EditTaskModal(props) {
-  const { item, taskId } = props
+  const { item, taskId, projectId } = props
   const token = useUserStore(state => state.token)
   const actionGetTask = useDashboardStore(state => state.actionGetTask)
   const taskById = useDashboardStore(state => state.taskById)
   const actionUpdateTask = useDashboardStore(state => state.actionUpdateTask)
+  const actionGetProjectById = useDashboardStore(state => state.actionGetProjectById)
 
   useEffect(() => {
     async function fetch() {
@@ -62,10 +64,8 @@ export function EditTaskModal(props) {
 
   const [dueDate, setDueDate] = useState(new Date());
   const [startDate, setStartDate] = useState(new Date());
-  const [priority, setPriority] = useState(taskById.priority);
   const [taskName, setTaskName] = useState(taskById.title);
   const [isEditing, setIsEditing] = useState(false);
-  const [tempTaskName, setTempTaskName] = useState(taskById.title);
   const [url, setUrl] = useState("");
   const [txt, setTxt] = useState("");
   const [isFocused, setIsFocused] = useState(false);
@@ -81,18 +81,23 @@ export function EditTaskModal(props) {
     priority: item.priority,
     listId: item.listId
   });
-  console.log(item)
-  console.log(input, "input")
 
-  const hdlChange = (e) => {
-    setInput((prv) => ({ ...prv, [e.target.name]: e.target.value }));
-    console.log(input)
-  };
+  useEffect(() => {
+    async function fetchData() {
+      await actionUpdateTask(taskId, input, token)
+      await actionGetProjectById(projectId, token)
+    }
+    fetchData()
+  }, [input])
+
+  // const hdlChange = (e) => {
+  //   setTaskName(e.target.value)
+  //   console.log(input)
+  // };
 
 
-  const hdlPriorityChange = (e) => {
-    setInput((prv) => ({ ...prv, [e.target.name]: e.target.value }));
-    actionUpdateTask(taskId, input, token)
+  const hdlPriorityChange = async (e) => {
+    setInput((prv) => ({ ...prv, priority: e }));
   }
 
   const handlePost = () => {
@@ -133,18 +138,16 @@ export function EditTaskModal(props) {
 
   const hdlSave = (e) => {
     e.preventDefault()
-    setTaskName(tempTaskName);
     setIsEditing(false);
-    console.log(input)
-    actionUpdateTask(taskId, input, token)
+    setInput((prv) => ({ ...prv, title: taskName }));
+    // actionUpdateTask(taskId, input, token)
   };
 
   const hdlCancle = () => {
     setIsEditing(false);
-    setTempTaskName(taskName);
   };
 
-  // console.log(taskById)
+  // console.log(item)
   return (
     <DialogContent className="max-w-3xl w-[856px] max-h-[70vh] p-12 bg-white rounded-2xl flex flex-col gap-5 m-auto overflow-y-auto ">
       <DialogHeader>
@@ -160,8 +163,7 @@ export function EditTaskModal(props) {
                   name="title"
                   type="text"
                   defaultValue={taskById.title}
-                  // value={tempTaskName}
-                  onChange={hdlChange}
+                  onChange={(e) => setTaskName(e.target.value)}
                   className="border-none outline-none w-full"
                   autoFocus
                 />
@@ -202,11 +204,11 @@ export function EditTaskModal(props) {
             {/* Priority */}
             <div className="flex gap-4 items-center">
               <p className="text-[#333333] text-sm font-semibold">Priority:</p>
-              <Select onValueChange={hdlChange} name="priority">
+              <Select onValueChange={hdlPriorityChange} defaultValue={item.priority}>
                 <SelectTrigger className="w-[180px] rounded-full">
                   <SelectValue placeholder="Priority" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent >
                   <SelectItem value="HIGH"> <div className="flex items-center text-sm font-semibold text-[#e53935]"><ChevronsUp className="h-5" /> High</div></SelectItem>
                   <SelectItem value="MEDIUM"><div className="flex items-center text-sm font-semibold text-[#fdc730]"> <Equal className="h-5 text-[#fdc730]" /> Medium</div></SelectItem>
                   <SelectItem value="LOW"><div className="flex items-center text-sm font-semibold text-[#5db9f8]"><ChevronsDown className="h-5 text-[#5db9f8]" /> Low</div></SelectItem>
@@ -230,11 +232,11 @@ export function EditTaskModal(props) {
                       variant="outline"
                       className={cn(
                         "flex items-center py-1 bg-white shadow rounded-2xl",
-                        !startDate && "text-gray-500"
+                        !item.startDate && "text-gray-500"
                       )}
                     >
                       <CalendarIcon className="text-gray-600" />
-                      {startDate ? (
+                      {item.startDate ? (
                         format(startDate, "PPP")
                       ) : (
                         <span>Pick a date</span>
@@ -263,15 +265,21 @@ export function EditTaskModal(props) {
                       variant="outline"
                       className={cn(
                         "flex items-center py-1 bg-white shadow rounded-2xl",
-                        !dueDate && "text-gray-500"
+                        !item.dueDate && "text-gray-500"
                       )}
                     >
-                      <CalendarIcon className=" text-gray-600" />
-                      {dueDate ? (
-                        format(dueDate, "PPP")
+                      
+                      {/* <CalendarIcon className=" text-gray-600" /> */}
+                      {item.dueDate ? (
+                        format(item.dueDate, "PPP")
                       ) : (
                         <span>Pick a date</span>
                       )}
+                      {item.dueDate ? 
+                      <CircleX className=" text-gray-600" /> 
+                      :
+                        <CalendarIcon className=" text-gray-600" />
+                      }
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
