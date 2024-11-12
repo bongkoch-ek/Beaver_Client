@@ -5,10 +5,11 @@ import { toast } from "react-toastify";
 import {
   createProject,
   createTask,
+  deleteList,
   updateProject,
+  updateTask,
 } from "../services/DashboardService";
 import io from "socket.io-client";
-import { act } from "react";
 
 const useDashboardStore = create(
   persist(
@@ -27,18 +28,22 @@ const useDashboardStore = create(
       actionCreateProject: async (projectData, token) => {
         set({ loading: true, error: null });
         try {
-          const response = await axios.post('http://localhost:8888/user/create-project', projectData, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          const response = await axios.post(
+            "http://localhost:8888/user/create-project",
+            projectData,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
           const newProject = response.data.project;
-          console.log(newProject)
+          console.log(newProject);
           set((state) => ({
             project: newProject,
             loading: false,
           }));
-    
+
           return response.data;
         } catch (error) {
           set({
@@ -161,6 +166,23 @@ const useDashboardStore = create(
         }
       },
 
+      actionDeleteColumn: async (token, listId) => {
+        set({ loading: true, error: null });
+        try {
+          const response = await deleteList(token, listId);
+          console.log(response);
+          set((state) => ({
+            projects: state.column.filter((item) => item.id !== listId),
+          }));
+        } catch (error) {
+          set({
+            loading: false,
+            error: error.response?.data || "Something went wrong",
+          });
+          throw error;
+        }
+      },
+
       actionGetTodayTask: async (token) => {
         set({ loading: true, error: null });
         try {
@@ -203,33 +225,57 @@ const useDashboardStore = create(
 
       actionCreateActivityLog: async (projectId, token) => {
         try {
-          const response = await axios.post('http://localhost:8888/dashboard/create-activitylog', {projectId}, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-    
+          const response = await axios.post(
+            "http://localhost:8888/dashboard/create-activitylog",
+            { projectId },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
           return response.data;
         } catch (error) {
           throw error;
         }
       },
-    
+
       actionGetActivityLog: async (token) => {
         try {
           set({ loading: true, error: null });
-          const response = await axios.get('http://localhost:8888/dashboard/activitylog', {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          set({ loading: false, activityLogs: response.data.data.activityLog })
+          const response = await axios.get(
+            "http://localhost:8888/dashboard/activitylog",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          set({ loading: false, activityLogs: response.data.data.activityLog });
           return response.data;
         } catch (error) {
           throw error;
         }
-      }
+      },
+      actionMoveTask: async (token, taskId, listId) => {
+        try {
+          set({ loading: true, error: null });
+          const response = await updateTask(token, taskId, { listId });
+          set((state) => ({
+            task: state.task.map((item) =>
+              item.id === taskId ? { ...item, listId } : item
+            ),
+            isLoading: false,
+          }));
+          toast.success("Task Updated Successfully");
+          return response.data;
+        } catch (error) {
+          throw error;
+        }
+      },
     }),
+
     {
       name: "project-store",
       storage: createJSONStorage(() => localStorage),

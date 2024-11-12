@@ -9,7 +9,6 @@ const ProjectDetail = (props) => {
   // const { projectName, projectId } = project;
  
   const project = useDashboardStore(state => state.project)
-  console.log(project)
 
   return (
     <div>
