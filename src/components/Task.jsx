@@ -69,7 +69,7 @@ export default function Task({ item, hdlDragStart }) {
           layout
           draggable="true"
           onDragStart={(e) => hdlDragStart(e, item)}
-          className="cursor-grab w-full active:cursor-grabbing self-stretch h-full p-4 bg-[#cde9fd] rounded-lg flex-col justify-start items-start gap-5 shadow flex"
+          className="cursor-grab hover:opacity-70 transition-opacity duration-200 w-full active:cursor-grabbing self-stretch h-full p-4 bg-[#cde9fd] rounded-lg flex-col justify-start items-start gap-5 flex"
         >
           <DialogTrigger asChild>
             <div className="flex flex-col w-full gap-5">
