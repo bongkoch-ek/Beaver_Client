@@ -27,7 +27,7 @@ const EditMemberPopOver = () => {
   const [isOpen, setIsOpen] = useState(false);
   const token = useUserStore((state) => state.token);
   const project = useDashboardStore((state) => state.project);
-
+  const test = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   // const handleDeleteMember = async (userId) => {
   //   try {
   //     await deleteMember(token, {
@@ -44,7 +44,7 @@ const EditMemberPopOver = () => {
   // };
 
   return (
-    <div>
+    <>
       <button 
         onClick={() => setIsOpen(true)}
         className="flex hover:bg-slate-300 rounded-full"
@@ -53,26 +53,36 @@ const EditMemberPopOver = () => {
       </button>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md rounded-xl">
           <DialogHeader>
             <DialogTitle className="text-2xl font-semibold mb-4">
                 Manage access
             </DialogTitle>
           </DialogHeader>
 
-          <div className="flex flex-col gap-3">
-            {project?.members?.map((member) => (
+          <div className="flex flex-col">
+          {/* project?.members? */}
+            {test.map((member) => (
               <div 
-                key={member.user.id}
-                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                key={member}
+                
+                className="flex items-center justify-between p-3 bg-gray-50 rounded-md hover:bg-slate-200"
               >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
-                    {member.user?.displayName?.charAt(0) || 'U'}
+                {/* key={member.user.id} */}
+                <div className="flex items-center gap-3 rounded-md">
+                  <div className="w-10 h-10 bg-red-300 rounded-full flex items-center justify-center">
+                    {/* {member.user?.displayName?.charAt(0) || 'U'} */}
+                    T
                   </div>
                   <div>
-                    <p className="font-medium">{member.user?.displayName}</p>
-                    <p className="text-sm text-gray-500">{member.user?.email}</p>
+                    <p className="font-medium">
+                      {/* {member.user?.displayName} */}
+                      Test
+                      </p>
+                    <p className="text-sm text-gray-500">
+                      {/* {member.user?.email} */}
+                      test@test.com
+                    </p>
                   </div>
                 </div>
 
@@ -82,7 +92,7 @@ const EditMemberPopOver = () => {
                       <Trash2Icon className="w-5 h-5" />
                     </button>
                   </AlertDialogTrigger>
-                  <AlertDialogContent>
+                  <AlertDialogContent className="rounded-xl">
                     <AlertDialogHeader>
                       <AlertDialogTitle>
                         Confirm delete member?
@@ -109,7 +119,7 @@ const EditMemberPopOver = () => {
           </div>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   );
 };
 
