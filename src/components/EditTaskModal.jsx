@@ -89,6 +89,7 @@ export function EditTaskModal(props) {
     console.log(input)
   };
 
+
   const hdlPriorityChange = (e) => {
     setInput((prv) => ({ ...prv, [e.target.name]: e.target.value }));
     actionUpdateTask(taskId, input, token)
@@ -205,7 +206,7 @@ export function EditTaskModal(props) {
                 <SelectTrigger className="w-[180px] rounded-full">
                   <SelectValue placeholder="Priority" />
                 </SelectTrigger>
-                <SelectContent onChange={hdlChange}>
+                <SelectContent>
                   <SelectItem value="HIGH"> <div className="flex items-center text-sm font-semibold text-[#e53935]"><ChevronsUp className="h-5" /> High</div></SelectItem>
                   <SelectItem value="MEDIUM"><div className="flex items-center text-sm font-semibold text-[#fdc730]"> <Equal className="h-5 text-[#fdc730]" /> Medium</div></SelectItem>
                   <SelectItem value="LOW"><div className="flex items-center text-sm font-semibold text-[#5db9f8]"><ChevronsDown className="h-5 text-[#5db9f8]" /> Low</div></SelectItem>
