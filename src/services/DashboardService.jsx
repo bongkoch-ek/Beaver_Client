@@ -119,10 +119,6 @@ export const deleteTask = async (token, taskId) => {
   );
 };
 
-<<<<<<< HEAD
-export const searchFilters = async (arg) =>
-  await axios.post("http://localhost:8000/product/search/filters", arg);
-=======
 export const getProjectById = async (token, projectId) => {
   const header = {
     headers: { Authorization: `Bearer ${token}` },
@@ -133,7 +129,7 @@ export const getProjectById = async (token, projectId) => {
   );
 };
 
-export const searchFilters = async (arg) => await axios.post('http://localhost:8000/product/search/filters',arg)
+// export const searchFilters = async (arg) => await axios.post('http://localhost:8000/product/search/filters',arg)
 
 
 //// Update
@@ -150,4 +146,3 @@ export const updateStatusMember = async (token, id, status) => {
       header
     );
   };
->>>>>>> develop
