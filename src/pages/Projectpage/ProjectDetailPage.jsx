@@ -1,23 +1,48 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import useDashboardStore from "@/src/stores/dashboardStore";
 import useUserStore from "@/src/stores/userStore";
 import ProjectDetail from "@/src/components/ProjectDetail";
 import ProjectTask from "@/src/components/ProjectTask";
+import ProjectSchedule from "../../pages/Projectpage/ProjectSchedule";
+import { getProjectById } from "../../services/DashboardService";
+import ProjectDashboard from "./ProjectDashboard";
 
 export default function ProjectDetailPage() {
-  const { projectId } = useParams(); // รับ projectId จาก URL
+  const { projectId } = useParams();
   const token = useUserStore((state) => state.token);
-  const actionGetProjectById = useDashboardStore((state) => state.actionGetProjectById);
+  const [fetchProject, setFetchProject] = useState([]);
+  const [activeTab, setActiveTab] = useState("task");
 
   useEffect(() => {
-    actionGetProjectById(projectId, token); // ใช้ projectId เพื่อ fetch ข้อมูลโปรเจกต์
-  }, [projectId, token]);
+    async function fetchData() {
+      try {
+        const response = await getProjectById(token, projectId);
+        setFetchProject(response);
+      } catch (error) {
+        console.error("Error fetching project data:", error);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  const renderContent = () => {
+    switch ( activeTab ) {
+      case "task":
+        return <ProjectTask />;
+      case "dashboard":
+        return <ProjectDashboard />;
+      case "schedule":
+        return <ProjectSchedule />;
+      default:
+        return <ProjectTask />;
+    }
+  };
 
   return (
     <div>
-      <ProjectDetail />
-      <ProjectTask />
+      <ProjectDetail fetchProject={fetchProject} activeTab={activeTab} setActiveTab={setActiveTab} />
+      {renderContent()}
     </div>
   );
 }
