@@ -68,6 +68,7 @@ const useDashboardStore = create(
               },
             }
           );
+          console.log(response.data)
           set({ loading: false, projects: response.data });
           return response;
         } catch (error) {
@@ -131,6 +132,7 @@ const useDashboardStore = create(
               },
             }
           );
+          console.log(response)
           set({ loading: false, project: response?.data });
           // return response
         } catch (error) {

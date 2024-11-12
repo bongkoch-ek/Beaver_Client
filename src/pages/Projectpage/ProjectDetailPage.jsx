@@ -6,6 +6,7 @@ import ProjectTask from "@/src/components/ProjectTask";
 import ProjectSchedule from "../../pages/Projectpage/ProjectSchedule";
 import { getProjectById } from "../../services/DashboardService";
 import { ProjectDashboard } from "./ProjectDashboard";
+import useDashboardStore from "@/src/stores/dashboardStore";
 
 
 export default function ProjectDetailPage() {
@@ -13,12 +14,14 @@ export default function ProjectDetailPage() {
   const token = useUserStore((state) => state.token);
   const [fetchProject, setFetchProject] = useState([]);
   const [activeTab, setActiveTab] = useState("task");
+  const actionGetProjectById = useDashboardStore(state => state.actionGetProjectById)
 
   useEffect(() => {
     async function fetchData() {
       try {
         const response = await getProjectById(token, projectId);
         setFetchProject(response);
+        await actionGetProjectById(projectId,token)
       } catch (error) {
         console.error("Error fetching project data:", error);
       }
