@@ -97,6 +97,34 @@ const ProjectDetail = (props) => {
             </span>
           </p>
         </div>
+
+      </div>
+
+      {/* Tab Menu */}
+      <div className="flex justify-center gap-9 h-[50px] mt-[80px]">
+        <button
+          className={`w-[360px] ${activeTab === "task" ? "bg-[#FFE066] border-[#ffea98]" : "bg-[#00000026] "
+            } rounded-2xl border-4 text-[#333333] text-[18px] font-semibold`}
+          onClick={() => setActiveTab("task")}
+        >
+          Task
+        </button>
+        <button
+          className={`w-[360px] ${activeTab === "dashboard" ? "bg-[#FFE066] border-[#ffea98]" : "bg-[#00000026] "
+            } rounded-2xl border-4 text-[#333333] text-[18px] font-semibold`}
+          onClick={() => setActiveTab("dashboard")}
+        >
+          Dashboard
+        </button>
+
+        <button
+          className={`w-[360px] ${activeTab === "schedule" ? "bg-[#FFE066] border-[#ffea98]" : "bg-[#00000026] "
+            } rounded-2xl border-4 text-[#333333] text-[18px] font-semibold`}
+          onClick={() => setActiveTab("schedule")}
+        >
+          Schedule
+        </button>
+
       </div>
     </div>
   );
