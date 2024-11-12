@@ -1,13 +1,10 @@
-import React from "react";
-
-import { useState } from 'react'
+import React, { useState } from "react";
 import { BeaverLogo, HidePasssword, OpenPassword } from "../icons";
 import Input from "../components/common/Input";
 import validate from "../utils/validator";
 import useUserStore from "../stores/userStore";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
-
 
 const Register = () => {
   const navigate = useNavigate();
@@ -20,6 +17,8 @@ const Register = () => {
     confirmPassword: "",
   });
   const [formErrors, setFormErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const actionRegister = useUserStore((state) => state.actionRegister);
 
@@ -34,7 +33,7 @@ const Register = () => {
     const error = validate.validateRegister(input);
     if (error) {
       setFormErrors(error);
-      toast.error("Please check your form inputs."); 
+      toast.error("Please check your form inputs.");
       return;
     }
     try {
@@ -42,9 +41,9 @@ const Register = () => {
       toast.success("Registration successful!");
       navigate("/login");
     } catch (err) {
-      const errMsg = err.response?.data?.err
+      const errMsg = err.response?.data?.err;
       toast.error(errMsg);
-      console.log(err.response.data.err); 
+      console.log(err.response.data.err);
     }
   };
 
@@ -83,7 +82,6 @@ const Register = () => {
                 />
               </div>
               <div>
-
                 <Input
                   label="Last name"
                   placeholder="Last name"
@@ -96,7 +94,7 @@ const Register = () => {
               </div>
             </div>
           </div>
-  
+
           {/* User Info Section */}
           <div className="mt-10 mb-8">
             <h3 className="text-[#333333] text-lg font-normal font-['IBM Plex Sans Thai'] mb-3">
@@ -126,19 +124,26 @@ const Register = () => {
                 />
               </div>
               <div className="relative w-full">
-                <Input type="password" 
-                label="Password" 
-                placeholder="Password" 
-                name="password" 
-                value={input.password} 
-                onChange={hdlChange} 
-                isError={formErrors.password ? true : false} 
-                errMessage={formErrors.password || ""}/>
-              </div>   
-
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  label="Password"
+                  placeholder="Password"
+                  name="password"
+                  value={input.password}
+                  onChange={hdlChange}
+                  isError={formErrors.password ? true : false}
+                  errMessage={formErrors.password || ""}
+                />
+                <div
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <HidePasssword /> : <OpenPassword />}
+                </div>
+              </div>
               <div className="relative w-full">
                 <Input
-                  type="password"
+                  type={showConfirmPassword ? "text" : "password"}
                   label="Confirm Password"
                   placeholder="Confirm password"
                   name="confirmPassword"
@@ -147,14 +152,21 @@ const Register = () => {
                   isError={formErrors.confirmPassword ? true : false}
                   errMessage={formErrors.confirmPassword || ""}
                 />
+                <div
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  {showConfirmPassword ? <HidePasssword /> : <OpenPassword />}
+                </div>
               </div>
             </div>
           </div>
 
           {/* Register Button */}
           <div className="flex justify-center mt-10">
-            <button 
-            className="w-full max-w-xs px-4 py-2 bg-[#ffe066] text-[#333333] rounded-lg font-semibold font-['IBM Plex Sans Thai'] hover:bg-yellow-400 transition duration-300">
+            <button
+              className="w-full max-w-xs px-4 py-2 bg-[#ffe066] text-[#333333] rounded-lg font-semibold font-['IBM Plex Sans Thai'] hover:bg-yellow-400 transition duration-300"
+            >
               Register
             </button>
           </div>
