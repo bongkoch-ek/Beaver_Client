@@ -31,12 +31,12 @@ export function ProjectDashboard() {
   return (
     <div className="flex bg-gray-100 w-[90%] mx-auto pt-[40px]">
       <div className=" w-full px-10 py-16 bg-white rounded-[64px] flex-col justify-start items-start gap-16 inline-flex">
-
+      <div className="text-[30px] mx-auto">Project Status Overview</div>
             {/* <TaskMember /> */}
 
-        <Card className="w-full flex flex-col items-center overflow-hidden shadow-none border-none">
+        <Card className="w-full flex ml-[140px] items-center overflow-hidden shadow-none border-none">
           <CardHeader className="text-center pb-4">
-            <CardTitle className='text-[30px]'>Project Status Overview</CardTitle>
+            {/* <CardTitle></CardTitle> */}
 
           </CardHeader>
 
@@ -62,7 +62,7 @@ export function ProjectDashboard() {
           </CardContent>
 
           {/* Custom Legend */}
-          <CardFooter className="flex justify-center gap-8 text-[18px]">
+          <CardFooter className="w-full flex flex-col justify-center gap-8 text-[26px]">
             {dataWithPercentages.map((entry) => (
               <div
                 key={entry.Status}
