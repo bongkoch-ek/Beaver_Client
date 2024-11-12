@@ -119,5 +119,35 @@ export const deleteTask = async (token, taskId) => {
   );
 };
 
+<<<<<<< HEAD
 export const searchFilters = async (arg) =>
   await axios.post("http://localhost:8000/product/search/filters", arg);
+=======
+export const getProjectById = async (token, projectId) => {
+  const header = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  return await axios.get(
+    `http://localhost:8888/dashboard/project/${projectId}`,
+    header
+  );
+};
+
+export const searchFilters = async (arg) => await axios.post('http://localhost:8000/product/search/filters',arg)
+
+
+//// Update
+
+export const updateStatusMember = async (token, id, status) => {
+    const header = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    const data = { status }; 
+  
+    return await axios.patch(
+      `http://localhost:8888/dashboard/status-member/${id}`, 
+      data,
+      header
+    );
+  };
+>>>>>>> develop
