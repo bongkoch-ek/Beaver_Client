@@ -550,4 +550,44 @@ export function ProjectImg2(props) {
       </g>
     </svg>
   )
+} 
+
+
+export function EditMember(props) {
+  return (
+    <svg
+      width={40}
+      height={40}
+      viewBox="0 0 40 40"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <rect
+        x={1}
+        y={1}
+        width={38}
+        height={38}
+        rx={19}
+        fill="#000"
+        fillOpacity={0.15}
+      />
+      <rect
+        x={1}
+        y={1}
+        width={38}
+        height={38}
+        rx={19}
+        stroke="#fff"
+        strokeWidth={2}
+      />
+      <path
+        d="M29.174 14.812a2.82 2.82 0 00-3.986-3.987l-13.346 13.35a2 2 0 00-.5.83l-1.321 4.351a.5.5 0 00.623.622l4.353-1.32a2 2 0 00.83-.497l13.347-13.349zM23 13l4 4"
+        stroke="#fff"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
 }
