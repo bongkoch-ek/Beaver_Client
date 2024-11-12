@@ -65,14 +65,14 @@ export default function TaskLane() {
   });
   console.log(updatedList,"=====Upda")
   
-  const newTask = updatedList.flatMap((item) => item.task);
+  const newTask = updatedList?.flatMap((item) => item.task);
   const [taskCard, setTaskCard] = useState(newTask);
   console.log(taskCard, "taskCard");
   useEffect(() => {
     actionGetProjectById(project?.id, token);
   }, [taskCard]);
 
-  const uniqueColumns = [...new Set(taskCard.map((task) => task.status))];
+  const uniqueColumns = [...new Set(taskCard?.map((task) => task.status))];
 
   const hdlTaskMove = (taskId, newStatus) => {
     setTaskCard((prev) => {
@@ -84,7 +84,7 @@ export default function TaskLane() {
 
   return (
     <div className="self-stretch justify-start items-start gap-4 inline-flex max-w-[1588px]">
-      {uniqueColumns.map((item) => (
+      {uniqueColumns?.map((item) => (
         <div key={item} className="flex gap-4 items-start">
           <StatusColums
             listId={project.id}

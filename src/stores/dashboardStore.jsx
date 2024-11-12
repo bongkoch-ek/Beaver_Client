@@ -247,6 +247,25 @@ const useDashboardStore = create(
         } catch (error) {
           throw error;
         }
+      },
+
+      actionUpdateTask: async (id, form, token) => {
+        set({ isLoading: true });
+
+        try {
+          const response = await axios.patch(`http://localhost:8888/dashboard/task/${id}`, form, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          set({ isLoading: false, taskById: response.data });
+          return response.data;
+        } catch (err) {
+          set({ isLoading: false });
+          toast.error("Failed to update task");
+          throw err;
+        }
       }
     }),
     {

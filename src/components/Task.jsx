@@ -75,7 +75,7 @@ export default function Task({ item, hdlDragStart }) {
   const hdlOnOpen = async (e) => {
     actionClearTaskId()
     setTaskId(item.id)
-    await actionGetTask(taskId, token)
+    // await actionGetTask(taskId, token)
   }
 
   return (
@@ -172,7 +172,7 @@ export default function Task({ item, hdlDragStart }) {
           </DialogTrigger>
         </motion.div>
 
-        <DialogContent >
+        <DialogContent>
           <DialogHeader hidden>
             <DialogTitle>edit task</DialogTitle>
             <DialogDescription>
