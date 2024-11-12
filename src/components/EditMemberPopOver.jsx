@@ -21,27 +21,45 @@ import {
 } from "@/components/ui/dialog";
 import { Trash2Icon } from "lucide-react";
 import { toast } from "react-toastify";
+import { Input } from "@/components/ui/input";
+import { SearchIcon } from "../icons";
+import { ScrollArea } from "@/components/ui/scroll-area";
 // import { deleteMember } from "../services/DashboardService";
 
 const EditMemberPopOver = () => {
   const [isOpen, setIsOpen] = useState(false);
   const token = useUserStore((state) => state.token);
   const project = useDashboardStore((state) => state.project);
-  const test = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  // const handleDeleteMember = async (userId) => {
-  //   try {
-  //     await deleteMember(token, {
-  //       projectId: project.id,
-  //       userId: userId
-  //     });
-  //     toast.success("สมาชิกถูกลบออกจากโปรเจคแล้ว");
-  //     // อัพเดท project state หลังจากลบสมาชิก
-  //     useDashboardStore.getState().fetchProject(project.id);
-  //   } catch (err) {
-  //     console.error("ลบสมาชิกไม่สำเร็จ:", err);
-  //     toast.error("ไม่สามารถลบสมาชิกได้");
-  //   }
-  // };
+  const [searchQuery, setSearchQuery] = useState("");
+
+  
+  const test = [
+    { user: { id: 1, displayName: "Alice", email: "alice@example.com" } },
+    { user: { id: 2, displayName: "Bob", email: "bob@example.com" } },
+    { user: { id: 3, displayName: "Charlie", email: "charlie@example.com" } },
+    { user: { id: 4, displayName: "David", email: "david@example.com" } },
+    { user: { id: 5, displayName: "Eve", email: "eve@example.com" } },
+  ];
+
+  const filteredMembers = test.filter(member =>
+    member.user?.displayName?.toLowerCase().includes(searchQuery.toLowerCase())
+  ) || [];
+  // member.user?.email?.toLowerCase().includes(searchQuery.toLowerCase())
+
+  const handleDeleteMember = async (userId) => {
+    try {
+      await deleteMember(token, {
+        projectId: project.id,
+        userId: userId
+      });
+      toast.success("member deleted");
+      // อัพเดท project state หลังจากลบสมาชิก
+      // useDashboardStore.getState().fetchProject(project.id);
+    } catch (err) {
+      console.error("delete member failed:", err);
+      toast.error("delete member failed");
+    }
+  };
 
   return (
     <>
@@ -60,62 +78,84 @@ const EditMemberPopOver = () => {
             </DialogTitle>
           </DialogHeader>
 
-          <div className="flex flex-col">
-          {/* project?.members? */}
-            {test.map((member) => (
-              <div 
-                key={member}
-                
-                className="flex items-center justify-between p-3 bg-gray-50 rounded-md hover:bg-slate-200"
-              >
-                {/* key={member.user.id} */}
-                <div className="flex items-center gap-3 rounded-md">
-                  <div className="w-10 h-10 bg-red-300 rounded-full flex items-center justify-center">
-                    {/* {member.user?.displayName?.charAt(0) || 'U'} */}
-                    T
-                  </div>
-                  <div>
-                    <p className="font-medium">
-                      {/* {member.user?.displayName} */}
-                      Test
-                      </p>
-                    <p className="text-sm text-gray-500">
-                      {/* {member.user?.email} */}
-                      test@test.com
-                    </p>
-                  </div>
-                </div>
+          {/* Search Input */}
+          <div className="mb-4 relative">
+            <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+              <SearchIcon className="text-gray-400" />
+            </div>
+            <Input
+              type="text"
+              placeholder="Search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-3 py-2 rounded-md "
+            />
+          </div>
 
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <button className="p-2 text-red-500 hover:bg-red-50 rounded-full">
-                      <Trash2Icon className="w-5 h-5" />
-                    </button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent className="rounded-xl">
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        Confirm delete member?
-                      </AlertDialogTitle>
-                      <AlertDialogDescription>
-                        This action cannot be undone. Member will be removed from the project immediately.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <div className="flex justify-end gap-3 mt-4">
-                      <AlertDialogCancel className="bg-gray-100">
-                        Cancel
-                      </AlertDialogCancel>
-                      <AlertDialogAction
-                        // onClick={() => handleDeleteMember(member.user.id)}
-                        className="bg-red-500 text-white hover:bg-red-600"
-                      >
-                        Delete
-                      </AlertDialogAction>
+          <div className="flex flex-col">
+            <ScrollArea className="h-[300px] w-full pr-4">
+              <div className="flex flex-col gap-2">
+                {filteredMembers.map((member) => (
+                  <div 
+                    key={member.user.id}
+                    className="flex items-center justify-between p-3 bg-gray-50 rounded-md hover:bg-gray-100"
+                  >
+                    {/* key={member.user.id} */}
+                    <div className="flex items-center gap-3 rounded-md">
+                      <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
+                        {member.user?.displayName?.charAt(0) || 'U'}
+                        {/* T */}
+                      </div>
+                      <div>
+                        <p className="font-medium">
+                          {member.user?.displayName}
+                          {/* Test */}
+                          </p>
+                        <p className="text-sm text-gray-500">
+                          {member.user?.email}
+                          {/* test@test.com */}
+                        </p>
+                      </div>
                     </div>
-                  </AlertDialogContent>
-                </AlertDialog>
+
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <button className="p-2 text-red-500 hover:bg-red-100 rounded-full">
+                          <Trash2Icon className="w-5 h-5" />
+                        </button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="rounded-xl">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Confirm delete member?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone. Member will be removed from the project immediately.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <div className="flex justify-end gap-3 mt-4">
+                          <AlertDialogCancel className="bg-gray-100">
+                            Cancel
+                          </AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => handleDeleteMember(member.user.id)}
+                            className="bg-red-500 text-white hover:bg-red-600"
+                          >
+                            Delete
+                          </AlertDialogAction>
+                        </div>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                ))}
               </div>
-            ))}
+            </ScrollArea>
+
+            {filteredMembers.length === 0 && (
+              <div className="flex  justify-center relative -top-1/2 text-gray-500">
+                No member found.
+              </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>
