@@ -6,6 +6,7 @@ import useUserStore from "@/src/stores/userStore";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 const ProjectPage = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -111,9 +112,12 @@ const ProjectPage = () => {
             <div className="text-right text-[#767676] text-lg font-normal font-['IBM Plex Sans Thai'] leading-[30px]">
               No tasks due today.
             </div>
-            <div className="flex justify-end pt-[24px] pr-16 pb-8">
-              <Link to="/project/list">See all</Link>
-            </div>
+       
+              <Link 
+              className="flex justify-end"
+              to="/project/list">See all
+              </Link>
+       
           </div>
         )}
 
@@ -122,22 +126,32 @@ const ProjectPage = () => {
           Recently
         </p>
 
-        {activityLogs.length > 0 ? (
-          <div className="px-10 py-8 rounded-[32px] flex-row justify-start items-start gap-6 inline-flex">
-            {activityLogs.map((el, index) => (
-              <ProjectCard key={index} project={el} />
-            ))}
-          </div>
-        ) : (
-          <div className="h-40 px-10 py-8 bg-white rounded-[32px] flex-col justify-center items-center gap-6 inline-flex">
-            <div className="text-right text-[#767676] text-lg font-normal font-['IBM Plex Sans Thai'] leading-[30px]">
-              No recent activity.
+        <ScrollArea className="w-full overflow-x-auto">
+          <div className="bg-slate-100 rounded-[32px] flex flex-col  justify-center items-center  ">
+            {activityLogs.length > 0 ? (
+              <div className="flex flex-row flex-nowrap gap-6">
+                {activityLogs.map((el, index) => (
+                  <ProjectCard key={index} project={el} />
+                ))}
+              </div>
+            ) : (
+              <div className="w-full h-40 px-10 py-8 bg-white rounded-[32px] flex-col justify-center items-center gap-6 inline-flex">
+              <div className="text-right text-[#767676] text-lg font-normal leading-[30px]">
+                No recent activity.
+              </div>
             </div>
+            )}
           </div>
-        )}
+
+          <br />
+          <br />
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
       </div>
     </div>
   );
 };
 
 export default ProjectPage;
+
+
