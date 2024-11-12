@@ -78,7 +78,7 @@ const AddMemberModal = () => {
         </button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-[480px] m-auto inset-0 h-[360px]">
+      <DialogContent className="max-w-[480px] h-[360px]">
         <form
           ref={formRef}
           onSubmit={(e) => handleSubmit(e)}

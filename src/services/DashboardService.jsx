@@ -4,9 +4,9 @@ import axios from "axios";
 
 export const createProject = async (formData, userId) => {
   const header = {
-    headers: { 
-      'Content-Type': 'multipart/form-data',
-      Authorization: `Bearer ${token}` 
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${token}`,
     },
   };
   return await axios.post(
@@ -38,6 +38,17 @@ export const createTask = async (token, form) => {
   );
 };
 
+export const updateTask = async (token, taskId, form) => {
+  const header = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  return await axios.patch(
+    `http://localhost:8888/dashboard/task/${taskId}`,
+    form,
+    header
+  );
+};
+
 export const createList = async (token, form) => {
   const header = {
     headers: { Authorization: `Bearer ${token}` },
@@ -45,6 +56,16 @@ export const createList = async (token, form) => {
   return await axios.post(
     "http://localhost:8888/dashboard/create-list",
     form,
+    header
+  );
+};
+
+export const deleteList = async (token, listId) => {
+  const header = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  return await axios.delete(
+    `http://localhost:8888/dashboard/list/${listId}`,
     header
   );
 };
@@ -71,17 +92,14 @@ export const addMember = async (token, memberData) => {
   );
 };
 
-
-
 //// READ
 
 export const actionGetAllComment = async (token) => {
-    const header = {
-      headers: { Authorization: `Bearer ${token}` },
-    };
-    return await axios.get("http://localhost:8888/dashboard/comment", header);
+  const header = {
+    headers: { Authorization: `Bearer ${token}` },
   };
-
+  return await axios.get("http://localhost:8888/dashboard/comment", header);
+};
 
 export const getUser = async (token) => {
   const header = {
@@ -89,7 +107,6 @@ export const getUser = async (token) => {
   };
   return await axios.get("http://localhost:8888/user/get-user", header);
 };
-
 
 //// Del
 export const deleteTask = async (token, taskId) => {
@@ -112,7 +129,7 @@ export const getProjectById = async (token, projectId) => {
   );
 };
 
-export const searchFilters = async (arg) => await axios.post('http://localhost:8000/product/search/filters',arg)
+// export const searchFilters = async (arg) => await axios.post('http://localhost:8000/product/search/filters',arg)
 
 
 //// Update
