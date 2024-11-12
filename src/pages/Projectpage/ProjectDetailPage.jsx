@@ -11,24 +11,25 @@ import { ProjectDashboard } from "./ProjectDashboard";
 export default function ProjectDetailPage() {
   const { projectId } = useParams();
   const token = useUserStore((state) => state.token);
-  const [fetchProject, setFetchProject] = useState([]);
+  const [fetchProject, setFetchProject] = useState(null); // Use `null` initially to check if data is loaded
   const [activeTab, setActiveTab] = useState("task");
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await getProjectById(token, projectId);
-        setFetchProject(response);
-      } catch (error) {
-        console.error("Error fetching project data:", error);
-      }
+  // Fetch project data
+  const fetchData = async () => {
+    try {
+      const response = await getProjectById(token, projectId);
+      setFetchProject(response);
+    } catch (error) {
+      console.error("Error fetching project data:", error);
     }
+  };
 
+  useEffect(() => {
     fetchData();
-  }, []);
+  }, [projectId]); // Run when `projectId` changes
 
   const renderContent = () => {
-    switch ( activeTab ) {
+    switch (activeTab) {
       case "task":
         return <ProjectTask />;
       case "dashboard":
@@ -42,8 +43,19 @@ export default function ProjectDetailPage() {
 
   return (
     <div>
-      <ProjectDetail fetchProject={fetchProject} activeTab={activeTab} setActiveTab={setActiveTab} />
-      {renderContent()}
+      {fetchProject ? ( // Check if `fetchProject` is loaded
+        <>
+          <ProjectDetail
+            fetchProject={fetchProject}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            refreshProjectData={fetchData} // Pass down the refresh function
+          />
+          {renderContent()}
+        </>
+      ) : (
+        <p>Loading project data...</p> // Display loading text while data is fetching
+      )}
     </div>
   );
 }
