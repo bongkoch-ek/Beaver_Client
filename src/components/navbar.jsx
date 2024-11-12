@@ -29,7 +29,7 @@ const Navbar = () => {
   
 
   return (
-    <div className="flex bg-gray-100 p-8">
+    <div className="flex bg-gray-100 p-8 ">
       {/* Navbar */}
       <div className="w-full rounded-lg py-4 bg-white shadow-md ">
         <div className=" mx-auto flex justify-between items-center px-6">
