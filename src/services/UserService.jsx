@@ -23,7 +23,6 @@ userService.actionLoginGoogle = (profile) => {
     return axios.post("http://localhost:8888/auth/login-google", profile)
 }
 
-
 export default userService
 
 export const currentUser = async (token) => await axios.post("http://localhost:8888/auth/current-user",{},{
