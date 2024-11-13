@@ -3,6 +3,7 @@ import useUserStore from "../stores/userStore";
 import { currentUser } from "../services/UserService";
 import LoadingToRedirect from "./LoadingToRedirect";
 import { Navigate } from "react-router-dom";
+import LoadingPage from "../pages/LoadingPage";
 
 
 const ProtectRoute = ({ element }) => {
@@ -26,7 +27,9 @@ const ProtectRoute = ({ element }) => {
   }, []);
 
   if(ok === null){
-    return <div>Loading...</div>
+    return <div>
+        <LoadingPage />
+    </div>
 }
 
 if(!ok){

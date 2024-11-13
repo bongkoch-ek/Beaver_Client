@@ -260,25 +260,22 @@ const useDashboardStore = create(
           throw error;
         }
       },
-      actionGetAllUser : async (token) => {
+      actionGetAllUsers: async (token) => {
         try {
-          const response = await axios.get('http://localhost:8888/dashboard/getuser', {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          set({ loading: false, users: response.data })
-          return response.data;
-        } catch (error) {
-          throw error;
-        }
-      },
-      actionSearchFilters: async (arg) => {
-        try {
-          const res = await searchFilters(arg);
+          const res = await getAllUsers(token);
           set({ users: res.data });
         } catch (err) {
           console.log(err);
+        }
+      },
+      actionSearchFilters: async (token, arg) => {
+        try {
+          const res = await searchFilters(token, arg);
+          console.log("Response from searchFilters:", res.data); 
+          set({ users: res.data });
+          return res.data; 
+        } catch (err) {
+          console.log("Error in actionSearchFilters:", err);
         }
       },
     

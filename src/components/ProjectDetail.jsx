@@ -4,6 +4,7 @@ import useDashboardStore from "../stores/dashboardStore";
 import useUserStore from "../stores/userStore";
 import { ProjectImg } from "../icons";
 import { useParams } from "react-router-dom";
+import moment from "moment";
 
 const ProjectDetail = (props) => {
   const { projectId } = useParams();
@@ -12,7 +13,6 @@ const ProjectDetail = (props) => {
   const actionGetProjectById = useDashboardStore((state) => state.actionGetProjectById);
   const [projectData, setProjectData] = useState({});
 
-  // Fetch project data if not available on mount
   const fetchInitialProjectData = async () => {
     if (!fetchProject?.data) {
       try {
@@ -26,12 +26,11 @@ const ProjectDetail = (props) => {
     }
   };
 
-  // Refresh project data after update
   const refreshProject = async () => {
     try {
       const response = await actionGetProjectById(projectId, token);
       console.log("Full response from actionGetProjectById:", response);
-      setProjectData(response); // Directly set the fetched project data
+      setProjectData(response); 
     } catch (error) {
       console.error("Failed to refresh project data:", error);
     }
@@ -77,7 +76,7 @@ const ProjectDetail = (props) => {
             <EditImageProjectModal
               projectId={projectData?.id}
               currentName={projectData?.projectName}
-              onUpdate={refreshProject} // Pass refresh function
+              onUpdate={refreshProject} 
             />
           </div>
         </div>
@@ -93,7 +92,7 @@ const ProjectDetail = (props) => {
           <p className="text-[14px] text-black">
             Created Date:{" "}
             <span className="text-[#767676]">
-              {projectData?.createdAt || "No Date"}
+              {moment(projectData?.createdAt).format('LL') || "No Date"}
             </span>
           </p>
         </div>

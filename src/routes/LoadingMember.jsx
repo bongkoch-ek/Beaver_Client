@@ -1,6 +1,7 @@
 import Error401Page from "../pages/Error401Page";
 import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import LoadingPage from "../pages/LoadingPage";
 
 const LoadingToRedirect = () => {
     const [count, setCount] = useState(3);
@@ -25,7 +26,7 @@ const LoadingToRedirect = () => {
   
     return (
       <div>
-        Loading . . . {count}{" "}
+        <LoadingPage /> {count}{" "}
       </div>
     );
   };
