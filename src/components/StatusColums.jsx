@@ -88,7 +88,7 @@ export default function StatusColums({
 
     if (container) {
       container.addEventListener("scroll", hdlScroll);
-      setIsOverflow(container.scrollHeight > container.clientHeight); // Check initial overflow
+      setIsOverflow(container.scrollHeight > container.clientHeight); 
     }
 
     return () => {
@@ -96,8 +96,8 @@ export default function StatusColums({
         container.removeEventListener("scroll", hdlScroll);
       }
     };
-  }, [taskCard]); // Re-run when taskCard changes
-
+  }, [taskCard]); 
+console.log(status, "status")
   useEffect(() => {
     socket.on("move_task", (data) => {
       setTaskCard((prv) =>
@@ -170,7 +170,7 @@ export default function StatusColums({
 
   const hdlDragEnd = async (e) => {
     const taskId = e.dataTransfer.getData("taskId");
-    console.log("Dragged taskId:", taskId); // Check the taskId being dragged
+    console.log("Dragged taskId:", taskId);
 
     setIsActive(false);
     clearIndicator();
@@ -278,7 +278,7 @@ export default function StatusColums({
         >
           <div className="self-stretch h-full flex-col justify-start items-start gap-6 flex">
             <div className="w-full flex justify-center">
-              {!isCreate && (
+              {!isCreate && status =="TODO" &&(
                 <button
                   onClick={hdlTypeNewTask}
                   className="text-center text-[#333333] text-base font-normal hover:bg-[#00000026] hover:text-white hover:font-semibold w-full p-0.5 rounded-md leading-relaxed"

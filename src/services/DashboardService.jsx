@@ -137,7 +137,20 @@ export const getProjectById = async (token, projectId) => {
   );
 };
 
-export const searchFilters = async (arg) => await axios.post('http://localhost:8000/product/search/filters',arg)
+export const searchFilters = async (token, arg) => {
+    try {
+      const res = await axios.post('http://localhost:8888/dashboard/search', arg, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("Backend searchFilters response:", res.data); // Debugging log for backend response
+      return res; // Return the full Axios response to access `data`
+    } catch (err) {
+      console.log("Error in searchFilters API call:", err);
+      throw err; // Throw error to be handled in the store
+    }
+  };
 
 
 //// Update
