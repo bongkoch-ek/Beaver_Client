@@ -117,7 +117,7 @@ const AddMemberModal = () => {
         </button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-[480px] m-auto inset-0 h-[400px]">
+      <DialogContent className="max-w-[480px] h-[400px]">
         <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-6 p-6">
           <div className="flex justify-between items-center">
             <h2 className="text-2xl font-normal">Add new member</h2>

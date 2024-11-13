@@ -1,8 +1,6 @@
 import React from "react";
 
 const DropTaskIndicator = ({ beforeId, column }) => {
-  // console.log(id, "IDDDDDDDDDDDD")
-  // console.log(column, "Cloummmmmmmmmm")
   return (
     <div
       data-before={beforeId || "-1"}

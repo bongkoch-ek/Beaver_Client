@@ -13,23 +13,22 @@ import {
   NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
 import profileIcon from "../pictures/Beaver401.png";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const user = useUserStore((state) => state.user);
-  const actionLogout = useUserStore((state)=>state.actionLogout)
+  const actionLogout = useUserStore((state) => state.actionLogout);
   const [isOpen, setIsopen] = useState(false);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const hdlLogout = () =>{
-    actionLogout()
-    navigate("/login")
-  }
-  
+  const hdlLogout = () => {
+    actionLogout();
+    navigate("/login");
+  };
 
   return (
-    <div className="flex bg-gray-100 p-8 ">
+    <div className="flex bg-transparent p-8 ">
       {/* Navbar */}
       <div className="w-full rounded-lg py-4 bg-white shadow-md ">
         <div className=" mx-auto flex justify-between items-center px-6">
@@ -40,15 +39,27 @@ const Navbar = () => {
               <span className="text-[#FFE066] font-bold text-xl">Beaver</span>
             </div>
 
-            <a href="/" className="hover:underline hover:text-yellow-400">
+            <NavLink
+              to="/"
+              end
+              className={({ isActive }) =>
+                ` hover:border-[#ffe066]/50 px-4 py-2 hover:border-b-4 transition-all duration-200 border-[#ffe066] font-normal text-[16px] text-black ${
+                  isActive ? "border-b-4 border-[#ffe066] font-semibold" : ""
+                }`
+              }
+            >
               Home
-            </a>
-            <a
-              href="/project"
-              className="hover:underline hover:text-yellow-400"
+            </NavLink>
+            <NavLink
+              to="/project"
+              className={({ isActive }) =>
+                ` hover:border-[#ffe066]/50 px-4 py-2 hover:border-b-4 transition-all duration-200 border-[#ffe066] font-normal text-[16px] text-black ${
+                  isActive ? "border-b-4 border-[#ffe066] font-semibold" : ""
+                }`
+              }
             >
               Project
-            </a>
+            </NavLink>
           </div>
 
           {user ? (
@@ -69,7 +80,9 @@ const Navbar = () => {
                       <NavigationMenuLink className="w-32 cursor-pointer text-[#767676] hover:font-semibold">
                         <Link to="/profile">Profile</Link>
                       </NavigationMenuLink>
-                      <NavigationMenuLink className="w-32 cursor-pointer text-[#767676] hover:font-semibold"><span onClick={hdlLogout}>Log out</span></NavigationMenuLink>
+                      <NavigationMenuLink className="w-32 cursor-pointer text-[#767676] hover:font-semibold">
+                        <span onClick={hdlLogout}>Log out</span>
+                      </NavigationMenuLink>
                     </NavigationMenuContent>
                   </NavigationMenuItem>
                 </NavigationMenuList>
@@ -88,18 +101,28 @@ const Navbar = () => {
             </div>
           ) : (
             <div className="flex space-x-8 text-gray-700">
-              <a
-                href="/register"
-                className="hover:underline hover:text-yellow-400"
+              <NavLink
+                to="/register"
+                end
+                className={({ isActive }) =>
+                  ` hover:border-[#ffe066]/50 px-4 py-2 hover:border-b-4 transition-all duration-200 border-[#ffe066] font-normal text-[16px] text-black ${
+                    isActive ? "border-b-4 border-[#ffe066] font-semibold" : ""
+                  }`
+                }
               >
                 Register
-              </a>
-              <a
-                href="/login"
-                className="hover:underline hover:text-yellow-400"
+              </NavLink>
+              <NavLink
+                to="/login"
+                end
+                className={({ isActive }) =>
+                  ` hover:border-[#ffe066]/50 px-4 py-2 hover:border-b-4 transition-all duration-200 border-[#ffe066] font-normal text-[16px] text-black ${
+                    isActive ? "border-b-4 border-[#ffe066] font-semibold" : ""
+                  }`
+                }
               >
                 Login
-              </a>
+              </NavLink>
             </div>
           )}
         </div>

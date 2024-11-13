@@ -90,7 +90,7 @@ const ProjectPage = () => {
 
                     <div className="flex items-center pr-[40px]">
                       <Link to={`/project/${el.list?.projectId}`}>
-                        <button className="px-4 py-2 bg-[#ffe066] text-[#333333] rounded-md">
+                        <button className="px-4 py-2 bg-[#ffe066] hover:bg-[#e8cc5d] hover:duration-200 text-[#333333] rounded-md">
                           Go to Project
                         </button>
                       </Link>

@@ -50,7 +50,7 @@ import { toast } from "react-toastify";
 import moment from "moment";
 
 export function EditTaskModal(props) {
-  const { item, taskId, projectId } = props
+  const { item, taskId, projectId, isEditing, setIsEditing } = props
   const token = useUserStore(state => state.token)
   const actionGetTask = useDashboardStore(state => state.actionGetTask)
   const taskById = useDashboardStore(state => state.taskById)
@@ -66,7 +66,6 @@ export function EditTaskModal(props) {
   const [dueDate, setDueDate] = useState(new Date(item.dueDate));
   const [startDate, setStartDate] = useState(new Date(item.startDate));
   const [taskName, setTaskName] = useState(taskById.title);
-  const [isEditing, setIsEditing] = useState(false);
   const [url, setUrl] = useState("");
   const [txt, setTxt] = useState("");
   const [isFocused, setIsFocused] = useState(false);
