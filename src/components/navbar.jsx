@@ -52,7 +52,6 @@ const Navbar = () => {
             </NavLink>
             <NavLink
               to="/project"
-              end
               className={({ isActive }) =>
                 ` hover:border-[#ffe066]/50 px-4 py-2 hover:border-b-4 transition-all duration-200 border-[#ffe066] font-normal text-[16px] text-black ${
                   isActive ? "border-b-4 border-[#ffe066] font-semibold" : ""
