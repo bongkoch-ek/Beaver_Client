@@ -153,13 +153,11 @@ export function EditTaskModal(props) {
   }
   const hdlDelStartDate = (e) => {
     e.stopPropagation()
-    e.preventDefault()
     setStartDate(new Date())
     setInput((prv) => ({ ...prv, startDate: null }))
   }
   const hdlDelDueDate = (e) => {
     e.stopPropagation()
-    e.preventDefault()
     setStartDate(new Date())
     setInput((prv) => ({ ...prv, dueDate: null }))
   }
