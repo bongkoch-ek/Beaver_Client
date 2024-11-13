@@ -4,7 +4,7 @@ import Input from "../components/common/Input";
 import validate from "../utils/validator";
 import useUserStore from "../stores/userStore";
 import { useNavigate } from "react-router-dom";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -137,9 +137,7 @@ const Register = () => {
                 <div
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
                   onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? <HidePasssword /> : <OpenPassword />}
-                </div>
+                ></div>
               </div>
               <div className="relative w-full">
                 <Input
@@ -155,18 +153,14 @@ const Register = () => {
                 <div
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                >
-                  {showConfirmPassword ? <HidePasssword /> : <OpenPassword />}
-                </div>
+                ></div>
               </div>
             </div>
           </div>
 
           {/* Register Button */}
           <div className="flex justify-center mt-10">
-            <button
-              className="w-full max-w-xs px-4 py-2 bg-[#ffe066] text-[#333333] rounded-lg font-semibold font-['IBM Plex Sans Thai'] hover:bg-yellow-400 transition duration-300"
-            >
+            <button className="w-full max-w-xs px-4 py-2 bg-[#ffe066] text-[#333333] rounded-lg font-semibold font-['IBM Plex Sans Thai'] hover:bg-yellow-400 transition duration-300">
               Register
             </button>
           </div>
