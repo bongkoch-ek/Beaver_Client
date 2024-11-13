@@ -6,11 +6,6 @@ import useUserStore from "../stores/userStore";
 import useDashboardStore from "../stores/dashboardStore";
 
 export default function TaskLane() {
-  const user = useUserStore((state) => state.user);
-  const token = useUserStore((state) => state.token);
-  const actionGetProjectById = useDashboardStore(
-    (state) => state.actionGetProjectById
-  );
   const project = useDashboardStore((state) => state.project);
 
   const newProject = project?.list;
@@ -92,9 +87,18 @@ export default function TaskLane() {
     });
   };
 
+  const sortedList = allList?.sort((a, b) => {
+    const statusOrder = {
+      TODO: 1,
+      INPROGRESS: 2,
+      DONE: 3
+    };
+    return statusOrder[a.status] - statusOrder[b.status];
+  });
+
   return (
     <div className="self-stretch justify-start items-start gap-4 inline-flex max-w-">
-      {allList?.map((item) => (
+      {sortedList?.map((item) => (
         <StatusColums
           key={item?.id}
           item={item}

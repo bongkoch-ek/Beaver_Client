@@ -15,7 +15,7 @@ import useDashboardStore from "../stores/dashboardStore";
 import useUserStore from "../stores/userStore";
 import { Cross2Icon } from "@radix-ui/react-icons";
 
-const AddNewStatus = ({ setAllList }) => {
+const AddNewStatus = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [text, setText] = useState("");
   const [status, setStatus] = useState("");
@@ -31,6 +31,7 @@ const AddNewStatus = ({ setAllList }) => {
   const token = useUserStore((state) => state.token);
 
   const data = { name: text, projectId: project.id, status: status };
+
   const handleSubmit = async () => {
     if (!text.trim()) {
       setError("Please select status type");
@@ -39,8 +40,8 @@ const AddNewStatus = ({ setAllList }) => {
 
     await actionCreateColumn(data, token);
     await actionGetProjectById(project?.id, token);
-    console.log(data);
     setError("");
+    setText("")
     setIsOpen(false);
   };
 
