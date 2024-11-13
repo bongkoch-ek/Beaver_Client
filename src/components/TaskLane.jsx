@@ -91,7 +91,6 @@ export default function TaskLane() {
       );
     });
   };
-  console.log(allList)
 
   return (
     <div className="self-stretch justify-start items-start gap-4 inline-flex max-w-">
