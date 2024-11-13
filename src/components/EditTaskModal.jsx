@@ -163,10 +163,7 @@ export function EditTaskModal(props) {
   }
 
   return (
-    <DialogContent className="max-w-3xl w-[856px] max-h-[70vh] p-12 bg-white rounded-2xl flex flex-col gap-5 m-auto overflow-y-auto ">
-      <DialogHeader>
-        <DialogTitle hidden>Edit task</DialogTitle>
-      </DialogHeader>
+    <div className="max-w-full w-full max-h-full p-6 bg-white flex flex-col gap-5 m-auto overflow-y-auto ">
       <form>
         <div className="flex flex-col space-y-8 ">
           {/* ชื่อ Task */}
@@ -449,6 +446,6 @@ export function EditTaskModal(props) {
           </ScrollArea>
         </div>
       </form>
-    </DialogContent>
+    </div>
   );
 }
