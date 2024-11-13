@@ -152,6 +152,21 @@ export const searchFilters = async (token, arg) => {
     }
   };
 
+  export const deleteMember = async (token, data) => {
+    const { projectId, userId } = data;
+    return await axios.delete(
+      `http://localhost:8888/dashboard/member`, 
+      {
+        headers: { 
+          Authorization: `Bearer ${token}` 
+        },
+        data: {
+          projectId,
+          userId
+        }
+      }
+    );
+  };
 
 //// Update
 
@@ -167,3 +182,4 @@ export const updateStatusMember = async (token, id, status) => {
       header
     );
   };
+
