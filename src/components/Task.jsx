@@ -122,7 +122,7 @@ export default function Task({ item, hdlDragStart,projectId }) {
                               Delete
                             </button>
                           </AlertDialogTrigger>
-                          <AlertDialogContent className="bg-white rounded-[16px] p-6 w-[450px] inset-0 m-auto h-[270px]">
+                          <AlertDialogContent className="bg-white rounded-[16px] p-6 w-[450px] m-auto h-[270px]">
                             <div className="flex flex-col items-center gap-6">
                               <AlertDialogHeader className="text-center">
                                 <AlertDialogTitle className="text-2xl font-semibold text-black text-center">
