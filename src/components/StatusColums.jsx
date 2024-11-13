@@ -352,7 +352,7 @@ console.log(status, "status")
                         beforeId={item.id}
                         column={item.status}
                       />
-                      <Task item={item} hdlDragStart={hdlDragStart} />
+                      <Task item={item} hdlDragStart={hdlDragStart} projectId={project.id}/>
                     </div>
                   ))}
                   <DropTaskIndicator column={status} />

@@ -37,6 +37,7 @@ import {
   X,
   Check,
   ChevronDownIcon,
+  CircleX,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { CloseIconForBadge } from "../icons";
@@ -47,11 +48,12 @@ import useDashboardStore from "../stores/dashboardStore";
 import { SelectIcon } from "@radix-ui/react-select";
 
 export function EditTaskModal(props) {
-  const { item, taskId } = props
+  const { item, taskId, projectId } = props
   const token = useUserStore(state => state.token)
   const actionGetTask = useDashboardStore(state => state.actionGetTask)
   const taskById = useDashboardStore(state => state.taskById)
   const actionUpdateTask = useDashboardStore(state => state.actionUpdateTask)
+  const actionGetProjectById = useDashboardStore(state => state.actionGetProjectById)
 
   useEffect(() => {
     async function fetch() {
@@ -60,12 +62,10 @@ export function EditTaskModal(props) {
     fetch()
   }, []);
 
-  const [dueDate, setDueDate] = useState(new Date());
-  const [startDate, setStartDate] = useState(new Date());
-  const [priority, setPriority] = useState(taskById.priority);
+  const [dueDate, setDueDate] = useState(new Date(item.dueDate));
+  const [startDate, setStartDate] = useState(new Date(item.startDate));
   const [taskName, setTaskName] = useState(taskById.title);
   const [isEditing, setIsEditing] = useState(false);
-  const [tempTaskName, setTempTaskName] = useState(taskById.title);
   const [url, setUrl] = useState("");
   const [txt, setTxt] = useState("");
   const [isFocused, setIsFocused] = useState(false);
@@ -81,18 +81,23 @@ export function EditTaskModal(props) {
     priority: item.priority,
     listId: item.listId
   });
-  console.log(item)
-  console.log(input, "input")
 
-  const hdlChange = (e) => {
-    setInput((prv) => ({ ...prv, [e.target.name]: e.target.value }));
-    console.log(input)
-  };
+  useEffect(() => {
+    async function fetchData() {
+      await actionUpdateTask(taskId, input, token)
+      await actionGetProjectById(projectId, token)
+    }
+    fetchData()
+  }, [input])
+
+  // const hdlChange = (e) => {
+  //   setTaskName(e.target.value)
+  //   console.log(input)
+  // };
 
 
-  const hdlPriorityChange = (e) => {
-    setInput((prv) => ({ ...prv, [e.target.name]: e.target.value }));
-    actionUpdateTask(taskId, input, token)
+  const hdlPriorityChange = async (e) => {
+    setInput((prv) => ({ ...prv, priority: e }));
   }
 
   const handlePost = () => {
@@ -133,18 +138,32 @@ export function EditTaskModal(props) {
 
   const hdlSave = (e) => {
     e.preventDefault()
-    setTaskName(tempTaskName);
     setIsEditing(false);
-    console.log(input)
-    actionUpdateTask(taskId, input, token)
+    setInput((prv) => ({ ...prv, title: taskName }));
+    // actionUpdateTask(taskId, input, token)
   };
 
-  const hdlCancle = () => {
-    setIsEditing(false);
-    setTempTaskName(taskName);
-  };
+  const hdlStartDate = (e) => {
+    setStartDate(e)
+    setInput((prv) => ({ ...prv, startDate: e }));
+  }
+  const hdlDueDate = (e) => {
+    setDueDate(e)
+    setInput((prv) => ({ ...prv, dueDate: e }));
+  }
+  const hdlDelStartDate = (e) => {
+    e.stopPropagation()
+    e.preventDefault()
+    setStartDate(new Date())
+    setInput((prv) => ({ ...prv, startDate: null }))
+  }
+  const hdlDelDueDate = (e) => {
+    e.stopPropagation()
+    e.preventDefault()
+    setStartDate(new Date())
+    setInput((prv) => ({ ...prv, dueDate: null }))
+  }
 
-  // console.log(taskById)
   return (
     <DialogContent className="max-w-3xl w-[856px] max-h-[70vh] p-12 bg-white rounded-2xl flex flex-col gap-5 m-auto overflow-y-auto ">
       <DialogHeader>
@@ -160,8 +179,7 @@ export function EditTaskModal(props) {
                   name="title"
                   type="text"
                   defaultValue={taskById.title}
-                  // value={tempTaskName}
-                  onChange={hdlChange}
+                  onChange={(e) => setTaskName(e.target.value)}
                   className="border-none outline-none w-full"
                   autoFocus
                 />
@@ -172,7 +190,7 @@ export function EditTaskModal(props) {
                   <Check className="w-3.5 h-3.5 relative" />
                 </button>
                 <button
-                  onClick={hdlCancle}
+                  onClick={() => setIsEditing(false)}
                   className="w-7 h-7 p-2 bg-[#e53935]/20 rounded-[360px] justify-center items-center gap-2 inline-flex"
                 >
                   <X className="text-red-500" size={24} />
@@ -202,11 +220,11 @@ export function EditTaskModal(props) {
             {/* Priority */}
             <div className="flex gap-4 items-center">
               <p className="text-[#333333] text-sm font-semibold">Priority:</p>
-              <Select onValueChange={hdlChange} name="priority">
+              <Select onValueChange={hdlPriorityChange} defaultValue={item.priority}>
                 <SelectTrigger className="w-[180px] rounded-full">
                   <SelectValue placeholder="Priority" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent >
                   <SelectItem value="HIGH"> <div className="flex items-center text-sm font-semibold text-[#e53935]"><ChevronsUp className="h-5" /> High</div></SelectItem>
                   <SelectItem value="MEDIUM"><div className="flex items-center text-sm font-semibold text-[#fdc730]"> <Equal className="h-5 text-[#fdc730]" /> Medium</div></SelectItem>
                   <SelectItem value="LOW"><div className="flex items-center text-sm font-semibold text-[#5db9f8]"><ChevronsDown className="h-5 text-[#5db9f8]" /> Low</div></SelectItem>
@@ -230,22 +248,29 @@ export function EditTaskModal(props) {
                       variant="outline"
                       className={cn(
                         "flex items-center py-1 bg-white shadow rounded-2xl",
-                        !startDate && "text-gray-500"
+                        !item.startDate && "text-gray-500"
                       )}
                     >
-                      <CalendarIcon className="text-gray-600" />
-                      {startDate ? (
-                        format(startDate, "PPP")
+                      {
+                        !item.startDate && <CalendarIcon className=" text-gray-600" />
+                      }
+                      {item.startDate ? (
+                        format(item.startDate, "PPP")
                       ) : (
                         <span>Pick a date</span>
                       )}
+                      {item.startDate &&
+                      <div onClick={hdlDelStartDate}>
+                        <CircleX className=" text-gray-600 "  />
+                      </div>
+                      }
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
                     <Calendar
                       mode="single"
                       selected={startDate}
-                      onSelect={setStartDate}
+                      onSelect={hdlStartDate}
                       initialFocus
                     />
                   </PopoverContent>
@@ -263,22 +288,29 @@ export function EditTaskModal(props) {
                       variant="outline"
                       className={cn(
                         "flex items-center py-1 bg-white shadow rounded-2xl",
-                        !dueDate && "text-gray-500"
+                        !item.dueDate && "text-gray-500"
                       )}
                     >
-                      <CalendarIcon className=" text-gray-600" />
-                      {dueDate ? (
-                        format(dueDate, "PPP")
+                      {
+                        !item.dueDate && <CalendarIcon className=" text-gray-600" />
+                      }
+                      {item.dueDate ? (
+                        format(item.dueDate, "PPP")
                       ) : (
                         <span>Pick a date</span>
                       )}
+                      {item.dueDate &&
+                        <div onClick={hdlDelDueDate}>
+                        <CircleX className=" text-gray-600 "  />
+                      </div>
+                      }
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
                     <Calendar
                       mode="single"
                       selected={dueDate}
-                      onSelect={setDueDate}
+                      onSelect={hdlDueDate}
                       initialFocus
                     />
                   </PopoverContent>

@@ -34,7 +34,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import useDashboardStore from "../stores/dashboardStore";
 
-export default function Task({ item, hdlDragStart }) {
+export default function Task({ item, hdlDragStart,projectId }) {
   const token = useUserStore((state) => state.token);
   const actionGetTask = useDashboardStore(state => state.actionGetTask)
   const actionClearTaskId = useDashboardStore(state => state.actionClearTaskId)
@@ -179,7 +179,7 @@ export default function Task({ item, hdlDragStart }) {
               this is manage task.
             </DialogDescription>
           </DialogHeader>
-          <EditTaskModal taskId={taskId} item={item} />
+          <EditTaskModal taskId={taskId} item={item} projectId={projectId}/>
         </DialogContent>
       </Dialog>
     </>
