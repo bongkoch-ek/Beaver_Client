@@ -10,6 +10,7 @@ import {
   updateProject,
   updateStatusMember,
   updateTask,
+  deleteTask,
 } from "../services/DashboardService";
 import io from "socket.io-client";
 
@@ -26,12 +27,13 @@ const useDashboardStore = create(
       list: [],
       users: [],
       activityLogs: [],
+      webLink: [],
       isLoading: false,
       currentUser: null,
       error: null,
 
       actionClearTaskId: async () => {
-        set({ taskById: [] })
+        set({ taskById: [] });
       },
       actionCreateProject: async (projectData, token) => {
         set({ loading: true, error: null });
@@ -73,7 +75,7 @@ const useDashboardStore = create(
               },
             }
           );
-          console.log(response.data)
+          console.log(response.data);
           set({ loading: false, projects: response.data });
           return response;
         } catch (error) {
@@ -93,7 +95,7 @@ const useDashboardStore = create(
             projects: state.projects.map((p) =>
               p.id === projectId ? { ...p, ...form } : p
             ),
-            images: form.images || state.images, 
+            images: form.images || state.images,
             isLoading: false,
           }));
           toast.success("Project updated successfully!");
@@ -104,7 +106,6 @@ const useDashboardStore = create(
           throw err;
         }
       },
-      
 
       actionCreateTask: async (token, form) => {
         set({ isLoading: true });
@@ -125,6 +126,24 @@ const useDashboardStore = create(
           throw err;
         }
       },
+      actionDeleteTask: async (token, taskId) => {
+        set({ isLoading: true });
+
+        try {
+          const result = await deleteTask(token, taskId);
+
+          set((state) => ({
+            task: state.task.filter((item) => item.id !== taskId),
+          }));
+
+          toast.success("Task deleted successfully!");
+          return result.data;
+        } catch (err) {
+          set({ isLoading: false });
+          toast.error("Failed to delete task");
+          throw err;
+        }
+      },
       actionGetProjectById: async (projectId, token) => {
         try {
           const response = await axios.get(
@@ -136,7 +155,7 @@ const useDashboardStore = create(
           const project = response.data;
           set({
             project,
-            images: project.images, 
+            images: project.images,
           });
           return project;
         } catch (error) {
@@ -173,11 +192,40 @@ const useDashboardStore = create(
         }
       },
 
+      actionEditColumn: async (data, token, listId) => {
+        set({ loading: true, error: null });
+        try {
+          const response = await axios.patch(
+            `http://localhost:8888/dashboard/list/${listId}`,
+            data,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          const editColumn = response.data;
+          console.log(editColumn, "editt");
+
+          // set((state) => ({
+          //   projects: [...state.column, newColumn],
+          //   loading: false,
+          // }));
+
+          return response.data;
+        } catch (error) {
+          set({
+            loading: false,
+            error: error.response?.data || "Something went wrong",
+          });
+          throw error;
+        }
+      },
+
       actionDeleteColumn: async (token, listId) => {
         set({ loading: true, error: null });
         try {
           const response = await deleteList(token, listId);
-          console.log(response);
           set((state) => ({
             projects: state.column.filter((item) => item.id !== listId),
           }));
@@ -232,11 +280,15 @@ const useDashboardStore = create(
 
       actionCreateActivityLog: async (projectId, token) => {
         try {
-          const response = await axios.post('http://localhost:8888/dashboard/create-activitylog', { projectId }, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          const response = await axios.post(
+            "http://localhost:8888/dashboard/create-activitylog",
+            { projectId },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
 
           return response.data;
         } catch (error) {
@@ -272,15 +324,15 @@ const useDashboardStore = create(
       actionSearchFilters: async (token, arg) => {
         try {
           const res = await searchFilters(token, arg);
-          console.log("Response from searchFilters:", res.data); 
+          console.log("Response from searchFilters:", res.data);
           set({ users: res.data });
-          return res.data; 
+          return res.data;
         } catch (err) {
           console.log("Error in actionSearchFilters:", err);
         }
       },
-    
-    actionMoveTask: async (token, taskId, listId) => {
+
+      actionMoveTask: async (token, taskId, listId) => {
         try {
           set({ loading: true, error: null });
           const response = await updateTask(token, taskId, { listId });
@@ -299,12 +351,15 @@ const useDashboardStore = create(
       actionGetTask: async (taskId, token) => {
         try {
           set({ loading: true, error: null });
-          const response = await axios.get(`http://localhost:8888/dashboard/task/${taskId}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          set({ loading: false, taskById: response.data })
+          const response = await axios.get(
+            `http://localhost:8888/dashboard/task/${taskId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          set({ loading: false, taskById: response.data });
           return response.data;
         } catch (error) {
           throw error;
@@ -315,11 +370,15 @@ const useDashboardStore = create(
         set({ isLoading: true });
 
         try {
-          const response = await axios.patch(`http://localhost:8888/dashboard/task/${id}`, form, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          const response = await axios.patch(
+            `http://localhost:8888/dashboard/task/${id}`,
+            form,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
 
           set({ isLoading: false, taskById: response.data });
           return response.data;
@@ -329,6 +388,44 @@ const useDashboardStore = create(
           throw err;
         }
       },
+
+      actionCreateLink: async (form, token) => {
+        set({ isLoading: true });
+
+        try {
+          const response = await axios.post(`http://localhost:8888/dashboard/create-weblink`, form, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          set({ isLoading: false ,webLink : response.data});
+          return response.data;
+        } catch (err) {
+          set({ isLoading: false });
+          toast.error("Failed to upload link");
+          throw err;
+        }
+      },
+
+      actionDeleteLink: async ( token, id) => {
+        set({ isLoading: true });
+        try {
+          console.log(token)
+          const response = await axios.delete(`http://localhost:8888/dashboard/weblink/${id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          set({ isLoading: false});
+          return response.data;
+        } catch (err) {
+          set({ isLoading: false });
+          toast.error("Failed to delete link");
+          throw err;
+        }
+      },
+      
       actionUpdateStatusMember: async (id, status, token) => {
         set({ isLoading: true });
         try {
@@ -351,7 +448,7 @@ const useDashboardStore = create(
         project: state.project,
       }),
     }
-  )); 
-
+  )
+);
 
 export default useDashboardStore;

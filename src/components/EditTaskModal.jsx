@@ -42,18 +42,21 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { CloseIconForBadge } from "../icons";
 import { actionGetAllComment } from "../services/DashboardService";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import useUserStore from "../stores/userStore";
 import useDashboardStore from "../stores/dashboardStore";
 import { SelectIcon } from "@radix-ui/react-select";
+import { toast } from "react-toastify";
 
 export function EditTaskModal(props) {
-  const { item, taskId, projectId } = props
+  const { item, taskId, projectId, isEditing, setIsEditing } = props
   const token = useUserStore(state => state.token)
   const actionGetTask = useDashboardStore(state => state.actionGetTask)
   const taskById = useDashboardStore(state => state.taskById)
   const actionUpdateTask = useDashboardStore(state => state.actionUpdateTask)
   const actionGetProjectById = useDashboardStore(state => state.actionGetProjectById)
+  const actionCreateLink = useDashboardStore(state => state.actionCreateLink)
+  const actionDeleteLink = useDashboardStore(state => state.actionDeleteLink)
 
   useEffect(() => {
     async function fetch() {
@@ -65,12 +68,11 @@ export function EditTaskModal(props) {
   const [dueDate, setDueDate] = useState(new Date(item.dueDate));
   const [startDate, setStartDate] = useState(new Date(item.startDate));
   const [taskName, setTaskName] = useState(taskById.title);
-  const [isEditing, setIsEditing] = useState(false);
   const [url, setUrl] = useState("");
   const [txt, setTxt] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [isFocusedComment, setIsFocusedComment] = useState(false);
-  const [postedUrls, setPostedUrls] = useState([]);
+  const [postedUrls, setPostedUrls] = useState(taskById.webLink);
   const [postedComments, setPostedComments] = useState([]);
   const [userPicture, setUserPicture] = useState("");
   const [input, setInput] = useState({
@@ -90,21 +92,16 @@ export function EditTaskModal(props) {
     fetchData()
   }, [input])
 
-  // const hdlChange = (e) => {
-  //   setTaskName(e.target.value)
-  //   console.log(input)
-  // };
-
-
   const hdlPriorityChange = async (e) => {
     setInput((prv) => ({ ...prv, priority: e }));
   }
 
-  const handlePost = () => {
+  const handlePost = async () => {
     if (url.trim()) {
-      setPostedUrls([...postedUrls, url]);
       setUrl("");
       setIsFocused(false);
+      await actionCreateLink({ taskId: taskId, url: url }, token)
+      await actionGetTask(taskId, token)
     }
   };
 
@@ -161,6 +158,7 @@ export function EditTaskModal(props) {
     setStartDate(new Date())
     setInput((prv) => ({ ...prv, dueDate: null }))
   }
+
 
   return (
     <div className="max-w-full w-full max-h-full p-6 bg-white flex flex-col gap-5 m-auto overflow-y-auto ">
@@ -255,9 +253,9 @@ export function EditTaskModal(props) {
                         <span>Pick a date</span>
                       )}
                       {item.startDate &&
-                      <div onClick={hdlDelStartDate}>
-                        <CircleX className=" text-gray-600 "  />
-                      </div>
+                        <div onClick={hdlDelStartDate}>
+                          <CircleX className=" text-gray-600 " />
+                        </div>
                       }
                     </Button>
                   </PopoverTrigger>
@@ -296,8 +294,8 @@ export function EditTaskModal(props) {
                       )}
                       {item.dueDate &&
                         <div onClick={hdlDelDueDate}>
-                        <CircleX className=" text-gray-600 "  />
-                      </div>
+                          <CircleX className=" text-gray-600 " />
+                        </div>
                       }
                     </Button>
                   </PopoverTrigger>
@@ -354,9 +352,37 @@ export function EditTaskModal(props) {
               )}
 
               {/* Badge สำหรับ URL ที่โพสต์แล้ว */}
-              <ScrollArea className="h-[50px] w-full rounded-md mt-3">
+              {
+                taskById.webLink &&
+
+                <ScrollArea className="pt-2 w-full rounded-md overflow-x-auto">
+                  <div className="flex flex-row flex-nowrap gap-2 items-center pb-4">
+                    {taskById?.webLink?.map((postedUrl, index) => (
+                      <Badge
+                        key={index}
+                        variant="outline"
+                        className="rounded-[16px] px-2 py-1 text-[#333333] font-normal bg-gray-300 hover:bg-gray-200 "
+                      >
+                        <a href={postedUrl.url}>{postedUrl.url}</a>
+
+                        <CircleX
+                          className="w-5 h-5 ml-4 cursor-pointer"
+                          onClick={async (e) => {
+                            e.preventDefault
+                            await actionDeleteLink(token, postedUrl.id)
+                            await actionGetTask(taskId, token)
+                          }}
+                        />
+                      </Badge>
+                    ))}
+                  </div>
+                  <ScrollBar className="" orientation="horizontal" />
+                </ScrollArea>
+
+              }
+              {/* <ScrollArea className="h-[50px] w-full rounded-md ">
                 <div className="flex  flex-wrap gap-2 ">
-                  {postedUrls.map((postedUrl, index) => (
+                  {postedUrls?.map((postedUrl, index) => (
                     <Badge
                       key={index}
                       variant="outline"
@@ -373,12 +399,12 @@ export function EditTaskModal(props) {
                     </Badge>
                   ))}
                 </div>
-              </ScrollArea>
+              </ScrollArea> */}
             </div>
           </div>
 
           {/* คอมเมนต์ */}
-          <div className="justify-start p-1 flex flex-col gap-2">
+          <div className="justify-start  flex flex-col gap-2">
             <p className="text-sm font-semibold">Comment</p>
             <div className="flex flex-col gap-2">
               <div className="flex gap-2">

@@ -29,7 +29,7 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col relative">
+    <div className="min-h-screen  flex flex-col relative">
       {isMouseMove && (
         <div className="flex flex-col items-center justify-center flex-grow bg-gray-100 relative">
           <div className="text-center p-10 bg-white/75 rounded-xl shadow-lg relative z-10 max-w-[50%]">

@@ -23,21 +23,26 @@ const DeleteStatusModal = ({
   item,
   isDisabled,
   setIsDisabled,
+  setIsEditedColumn,
+  isEditedColumn,
 }) => {
   return (
     <div>
       <Dialog>
         <Popover>
           <AlertDialog>
-            <PopoverTrigger asChild>
-              <button className="flex w-[28px] relative h-[28px] mb-1 hover:bg-slate-300 rounded-full cursor-pointer">
-                <ThreePointIcon />
-              </button>
-            </PopoverTrigger>
+            {!isEditedColumn && (
+              <PopoverTrigger asChild>
+                <button className="flex w-[28px] relative h-[28px] mb-1 hover:bg-slate-300 rounded-full cursor-pointer">
+                  <ThreePointIcon />
+                </button>
+              </PopoverTrigger>
+            )}
+
             <PopoverContent className="absolute top-1.5 -left-4 w-40 p-2 bg-white rounded-lg z-20 shadow-md">
               <div className="flex flex-col space-y-1 rounded-[8px]">
                 <button
-                  // onClick={handleEdit}
+                  onClick={() => setIsEditedColumn(true)}
                   className="flex items-center gap-2 w-full p-2 text-sm text-gray-700 hover:bg-gray-100 rounded-[8px]"
                 >
                   <PencilIcon className="w-4 h-4" />
@@ -67,7 +72,10 @@ const DeleteStatusModal = ({
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <div className="flex w-[240px] h-[100px] justify-center flex-col gap-4 ">
-                  <AlertDialogCancel className="flex justify-center items-center w-full px-4 py-2 border border-[#91959A] rounded-[8px] hover:bg-gray-100 text-[#91959A]">
+                  <AlertDialogCancel
+                    onClick={() => setIsDisabled(false)}
+                    className="flex justify-center items-center w-full px-4 py-2 border border-[#91959A] rounded-[8px] hover:bg-gray-100 text-[#91959A]"
+                  >
                     Cancel
                   </AlertDialogCancel>
                   <AlertDialogAction
