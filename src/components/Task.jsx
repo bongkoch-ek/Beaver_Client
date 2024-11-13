@@ -236,10 +236,10 @@ export default function Task({ item, hdlDragStart, projectId }) {
           )}
         </motion.div>
 
-        <DialogContent>
+        <DialogContent className="max-w-3xl w-[856px] max-h-[70vh] bg-white rounded-2xl flex flex-col gap-5  overflow-y-auto ">
           <DialogHeader hidden>
-            <DialogTitle>edit task</DialogTitle>
-            <DialogDescription>this is manage task.</DialogDescription>
+            <DialogTitle hidden>edit task</DialogTitle>
+            <DialogDescription hidden>this is manage task.</DialogDescription>
           </DialogHeader>
           <EditTaskModal
             taskId={taskId}

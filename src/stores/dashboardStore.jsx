@@ -8,6 +8,7 @@ import {
   searchFilters,
   deleteList,
   updateProject,
+  updateStatusMember,
   updateTask,
   deleteTask,
 } from "../services/DashboardService";
@@ -26,6 +27,7 @@ const useDashboardStore = create(
       list: [],
       users: [],
       activityLogs: [],
+      webLink: [],
       isLoading: false,
       currentUser: null,
       error: null,
@@ -386,6 +388,57 @@ const useDashboardStore = create(
           throw err;
         }
       },
+
+      actionCreateLink: async (form, token) => {
+        set({ isLoading: true });
+
+        try {
+          const response = await axios.post(`http://localhost:8888/dashboard/create-weblink`, form, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          set({ isLoading: false ,webLink : response.data});
+          return response.data;
+        } catch (err) {
+          set({ isLoading: false });
+          toast.error("Failed to upload link");
+          throw err;
+        }
+      },
+
+      actionDeleteLink: async ( token, id) => {
+        set({ isLoading: true });
+        try {
+          console.log(token)
+          const response = await axios.delete(`http://localhost:8888/dashboard/weblink/${id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          set({ isLoading: false});
+          return response.data;
+        } catch (err) {
+          set({ isLoading: false });
+          toast.error("Failed to delete link");
+          throw err;
+        }
+      },
+      
+      actionUpdateStatusMember: async (id, status, token) => {
+        set({ isLoading: true });
+        try {
+          const result = await updateStatusMember(token, id, status);
+          set({ isLoading: false });
+          toast.success("Member status updated successfully!");
+          return result.data;
+        } catch (err) {
+          set({ isLoading: false });
+          toast.error("Failed to update member status");
+          throw err;
+        }
+      }
     }),
 
     {

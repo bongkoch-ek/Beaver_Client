@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useUserStore from "../stores/userStore";
 import useDashboardStore from "../stores/dashboardStore";
 import { EditMember } from "../icons";
@@ -24,27 +24,29 @@ import { toast } from "react-toastify";
 import { Input } from "@/components/ui/input";
 import { SearchIcon } from "../icons";
 import { ScrollArea } from "@/components/ui/scroll-area";
-// import { deleteMember } from "../services/DashboardService";
+// import { deleteMember, searchFilters } from "../services/DashboardService";
 
 const EditMemberPopOver = () => {
   const [isOpen, setIsOpen] = useState(false);
   const token = useUserStore((state) => state.token);
   const project = useDashboardStore((state) => state.project);
   const [searchQuery, setSearchQuery] = useState("");
+  const actionSearchFilters = useDashboardStore((state) => state.actionSearchFilters);
+  const users = useDashboardStore((state) => state.users);
+  const [searchResults, setSearchResults] = useState([]);
 
-  
-  const test = [
-    { user: { id: 1, displayName: "Alice", email: "alice@example.com" } },
-    { user: { id: 2, displayName: "Bob", email: "bob@example.com" } },
-    { user: { id: 3, displayName: "Charlie", email: "charlie@example.com" } },
-    { user: { id: 4, displayName: "David", email: "david@example.com" } },
-    { user: { id: 5, displayName: "Eve", email: "eve@example.com" } },
-  ];
+  useEffect(() => {
+    const delay = setTimeout(async () => {
+      if (searchQuery) {
+        const results = await actionSearchFilters(token, { query: searchQuery });
+        setSearchResults(results || []);
+      } else {
+        setSearchResults([]);
+      }
+    }, 300);
 
-  const filteredMembers = test.filter(member =>
-    member.user?.displayName?.toLowerCase().includes(searchQuery.toLowerCase())
-  ) || [];
-  // member.user?.email?.toLowerCase().includes(searchQuery.toLowerCase())
+    return () => clearTimeout(delay);
+  }, [searchQuery, token, actionSearchFilters]);
 
   const handleDeleteMember = async (userId) => {
     try {
@@ -93,28 +95,21 @@ const EditMemberPopOver = () => {
           </div>
 
           <div className="flex flex-col">
-            <ScrollArea className="h-[300px] w-full pr-4">
-              <div className="flex flex-col gap-2">
-                {filteredMembers.map((member) => (
+            <ScrollArea className="min-h-[300px] w-full pr-4">
+              <div className="flex flex-col gap-2 ">
+                {searchResults.map((member) => (
                   <div 
-                    key={member.user.id}
-                    className="flex items-center justify-between p-3 bg-gray-50 rounded-md hover:bg-gray-100"
+                    key={member.id}
+                    className="flex max-w-[42px] items-center justify-between p-3 bg-gray-50 rounded-md hover:bg-gray-100"
                   >
                     {/* key={member.user.id} */}
                     <div className="flex items-center gap-3 rounded-md">
                       <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
-                        {member.user?.displayName?.charAt(0) || 'U'}
-                        {/* T */}
+                        {member.displayName?.charAt(0) || 'U'}
                       </div>
                       <div>
-                        <p className="font-medium">
-                          {member.user?.displayName}
-                          {/* Test */}
-                          </p>
-                        <p className="text-sm text-gray-500">
-                          {member.user?.email}
-                          {/* test@test.com */}
-                        </p>
+                        <p className="font-medium">{member.displayName}</p>
+                        <p className="text-sm text-gray-500">{member.email}</p>
                       </div>
                     </div>
 
@@ -138,7 +133,7 @@ const EditMemberPopOver = () => {
                             Cancel
                           </AlertDialogCancel>
                           <AlertDialogAction
-                            onClick={() => handleDeleteMember(member.user.id)}
+                            onClick={() => handleDeleteMember(member.id)}
                             className="bg-red-500 text-white hover:bg-red-600"
                           >
                             Delete
@@ -151,8 +146,8 @@ const EditMemberPopOver = () => {
               </div>
             </ScrollArea>
 
-            {filteredMembers.length === 0 && (
-              <div className="flex  justify-center relative -top-1/2 text-gray-500">
+            {searchResults.length === 0 && (
+              <div className="flex justify-center relative -top-1/2 text-gray-500">
                 No member found.
               </div>
             )}
