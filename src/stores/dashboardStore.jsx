@@ -8,6 +8,7 @@ import {
   searchFilters,
   deleteList,
   updateProject,
+  updateStatusMember,
   updateTask,
 } from "../services/DashboardService";
 import io from "socket.io-client";
@@ -325,6 +326,19 @@ const useDashboardStore = create(
         } catch (err) {
           set({ isLoading: false });
           toast.error("Failed to update task");
+          throw err;
+        }
+      },
+      actionUpdateStatusMember: async (id, status, token) => {
+        set({ isLoading: true });
+        try {
+          const result = await updateStatusMember(token, id, status);
+          set({ isLoading: false });
+          toast.success("Member status updated successfully!");
+          return result.data;
+        } catch (err) {
+          set({ isLoading: false });
+          toast.error("Failed to update member status");
           throw err;
         }
       }
