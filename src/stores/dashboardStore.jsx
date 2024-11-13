@@ -27,6 +27,7 @@ const useDashboardStore = create(
       users: [],
       activityLogs: [],
       webLink: [],
+      comments: [],
       isLoading: false,
       currentUser: null,
       error: null,
@@ -380,7 +381,46 @@ const useDashboardStore = create(
           toast.error("Failed to update member status");
           throw err;
         }
-      }
+      },
+
+      actionComment: async (form, token) => {
+        set({ isLoading: true });
+
+        try {
+          const response = await axios.post(`http://localhost:8888/dashboard/create-comment`, form, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          set({ isLoading: false});
+          return response.data;
+        } catch (err) {
+          set({ isLoading: false });
+          toast.error("Failed to comment");
+          throw err;
+        }
+      },
+
+      actionGetCommentByTaskId: async (id, token) => {
+        set({ isLoading: true });
+
+        try {
+          const response = await axios.get(`http://localhost:8888/dashboard/comment/${id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          set({ isLoading: false, comments: response.data});
+          return response.data;
+        } catch (err) {
+          set({ isLoading: false });
+          toast.error("Failed to get comment");
+          throw err;
+        }
+      },
+      
     }),
 
     {

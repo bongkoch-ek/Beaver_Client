@@ -97,7 +97,7 @@ export default function StatusColums({
       }
     };
   }, [taskCard]); 
-console.log(status, "status")
+// console.log(status, "status")
   useEffect(() => {
     socket.on("move_task", (data) => {
       setTaskCard((prv) =>
