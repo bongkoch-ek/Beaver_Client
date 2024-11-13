@@ -144,11 +144,11 @@ export const searchFilters = async (token, arg) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("Backend searchFilters response:", res.data); // Debugging log for backend response
-      return res; // Return the full Axios response to access `data`
+      console.log("Backend searchFilters response:", res.data); 
+      return res; 
     } catch (err) {
       console.log("Error in searchFilters API call:", err);
-      throw err; // Throw error to be handled in the store
+      throw err;
     }
   };
 

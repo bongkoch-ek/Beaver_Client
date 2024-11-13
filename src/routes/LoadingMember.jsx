@@ -25,7 +25,7 @@ const LoadingMember = ({ id }) => {
   }, [token, id, actionUpdateStatusMember]);
 
   if (redirect) {
-    return <Navigate to={`/project/${id}`} />;
+    return <Navigate to={`/project`} />;
   }
 
   return (

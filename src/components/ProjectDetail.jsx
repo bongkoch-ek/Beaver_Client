@@ -29,7 +29,7 @@ const ProjectDetail = (props) => {
   const refreshProject = async () => {
     try {
       const response = await actionGetProjectById(projectId, token);
-      console.log("Full response from actionGetProjectById:", response);
+      console.log("response from actionGetProjectById:", response);
       setProjectData(response); 
     } catch (error) {
       console.error("Failed to refresh project data:", error);

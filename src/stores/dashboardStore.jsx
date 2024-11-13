@@ -51,7 +51,7 @@ const useDashboardStore = create(
           console.log(newProject);
           set((state) => ({
             project: newProject,
-            images: newProject.images, // Store the images in the state
+            images: newProject.images, 
             loading: false,
           }));
           return response.data;
