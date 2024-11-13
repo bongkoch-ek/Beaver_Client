@@ -45,7 +45,7 @@ export default function TaskMember() {
           {showAllMembers && (
             <ScrollArea className="max-w-[calc(100vw-470px)]">
               <div className="flex gap-4 pr-4 flex-nowrap">
-                {test.map((member, index) => (
+                {project?.groupProject?.map((member, index) => (
                   <div 
                     key={index} 
                     className="px-2 py-1.5 bg-black/20 rounded-2xl justify-center items-center gap-2 flex
@@ -57,11 +57,11 @@ export default function TaskMember() {
                   >
                     <div className="w-7 h-7 bg-white rounded-3xl flex-col justify-center items-center gap-2 inline-flex">
                       <div className="self-stretch text-center text-[#333333] text-[16px] leading-[30px]">
-                        {member.user?.fullName?.charAt(0) || 'U'}
+                        {member.user?.displayName?.charAt(0) || 'U'}
                       </div>
                     </div>
                     <p className="text-[#333333] text-lg font-normal leading-[30px]">
-                      {member.user?.fullName || 'Username'}
+                      {member.user?.displayName || 'Username'}
                     </p>
                   </div>
                 ))}
