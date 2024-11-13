@@ -62,7 +62,7 @@ const Login = () => {
       const res = await actionLoginGoogle(codeResponse);
       console.log("check res function hdlLogin google : ", res.data);
       console.log(codeResponse)
-      navigate("/home");
+      navigate("/");
     },
     onError: (err) => {
       console.log(err);
