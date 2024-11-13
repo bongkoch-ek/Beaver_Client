@@ -13,6 +13,7 @@ import ProjectDetailPage from "../pages/Projectpage/ProjectDetailPage";
 import Profile from "../pages/Profile";
 import ProjectListPage from "../pages/Projectpage/ProjectListPage";
 import ProtectRoute from "./ProtectRoute";
+import LoadingMember from "./LoadingMember";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,7 @@ const router = createBrowserRouter([
       { index: true, element: <ProjectPage /> },
       { path: "list", element: <ProjectListPage /> },
       { path: ":projectId", element: <ProjectDetailPage /> },
+      { path: "loading", element: <LoadingMember /> },
     ],
   },
 ]);
