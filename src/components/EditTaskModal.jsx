@@ -62,8 +62,8 @@ export function EditTaskModal(props) {
     fetch()
   }, []);
 
-  const [dueDate, setDueDate] = useState(new Date());
-  const [startDate, setStartDate] = useState(new Date());
+  const [dueDate, setDueDate] = useState(new Date(item.dueDate));
+  const [startDate, setStartDate] = useState(new Date(item.startDate));
   const [taskName, setTaskName] = useState(taskById.title);
   const [isEditing, setIsEditing] = useState(false);
   const [url, setUrl] = useState("");
@@ -143,11 +143,27 @@ export function EditTaskModal(props) {
     // actionUpdateTask(taskId, input, token)
   };
 
-  const hdlCancle = () => {
-    setIsEditing(false);
-  };
+  const hdlStartDate = (e) => {
+    setStartDate(e)
+    setInput((prv) => ({ ...prv, startDate: e }));
+  }
+  const hdlDueDate = (e) => {
+    setDueDate(e)
+    setInput((prv) => ({ ...prv, dueDate: e }));
+  }
+  const hdlDelStartDate = (e) => {
+    e.stopPropagation()
+    e.preventDefault()
+    setStartDate(new Date())
+    setInput((prv) => ({ ...prv, startDate: null }))
+  }
+  const hdlDelDueDate = (e) => {
+    e.stopPropagation()
+    e.preventDefault()
+    setStartDate(new Date())
+    setInput((prv) => ({ ...prv, dueDate: null }))
+  }
 
-  // console.log(item)
   return (
     <DialogContent className="max-w-3xl w-[856px] max-h-[70vh] p-12 bg-white rounded-2xl flex flex-col gap-5 m-auto overflow-y-auto ">
       <DialogHeader>
@@ -174,7 +190,7 @@ export function EditTaskModal(props) {
                   <Check className="w-3.5 h-3.5 relative" />
                 </button>
                 <button
-                  onClick={hdlCancle}
+                  onClick={() => setIsEditing(false)}
                   className="w-7 h-7 p-2 bg-[#e53935]/20 rounded-[360px] justify-center items-center gap-2 inline-flex"
                 >
                   <X className="text-red-500" size={24} />
@@ -235,19 +251,26 @@ export function EditTaskModal(props) {
                         !item.startDate && "text-gray-500"
                       )}
                     >
-                      <CalendarIcon className="text-gray-600" />
+                      {
+                        !item.startDate && <CalendarIcon className=" text-gray-600" />
+                      }
                       {item.startDate ? (
-                        format(startDate, "PPP")
+                        format(item.startDate, "PPP")
                       ) : (
                         <span>Pick a date</span>
                       )}
+                      {item.startDate &&
+                      <div onClick={hdlDelStartDate}>
+                        <CircleX className=" text-gray-600 "  />
+                      </div>
+                      }
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
                     <Calendar
                       mode="single"
                       selected={startDate}
-                      onSelect={setStartDate}
+                      onSelect={hdlStartDate}
                       initialFocus
                     />
                   </PopoverContent>
@@ -268,17 +291,18 @@ export function EditTaskModal(props) {
                         !item.dueDate && "text-gray-500"
                       )}
                     >
-                      
-                      {/* <CalendarIcon className=" text-gray-600" /> */}
+                      {
+                        !item.dueDate && <CalendarIcon className=" text-gray-600" />
+                      }
                       {item.dueDate ? (
                         format(item.dueDate, "PPP")
                       ) : (
                         <span>Pick a date</span>
                       )}
-                      {item.dueDate ? 
-                      <CircleX className=" text-gray-600" /> 
-                      :
-                        <CalendarIcon className=" text-gray-600" />
+                      {item.dueDate &&
+                        <div onClick={hdlDelDueDate}>
+                        <CircleX className=" text-gray-600 "  />
+                      </div>
                       }
                     </Button>
                   </PopoverTrigger>
@@ -286,7 +310,7 @@ export function EditTaskModal(props) {
                     <Calendar
                       mode="single"
                       selected={dueDate}
-                      onSelect={setDueDate}
+                      onSelect={hdlDueDate}
                       initialFocus
                     />
                   </PopoverContent>
