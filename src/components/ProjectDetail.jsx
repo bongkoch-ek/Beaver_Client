@@ -10,7 +10,9 @@ const ProjectDetail = (props) => {
   const { projectId } = useParams();
   const { fetchProject, setActiveTab, activeTab } = props;
   const token = useUserStore((state) => state.token);
-  const actionGetProjectById = useDashboardStore((state) => state.actionGetProjectById);
+  const actionGetProjectById = useDashboardStore(
+    (state) => state.actionGetProjectById
+  );
   const [projectData, setProjectData] = useState({});
 
   const fetchInitialProjectData = async () => {
@@ -30,7 +32,7 @@ const ProjectDetail = (props) => {
     try {
       const response = await actionGetProjectById(projectId, token);
       console.log("Full response from actionGetProjectById:", response);
-      setProjectData(response); 
+      setProjectData(response);
     } catch (error) {
       console.error("Failed to refresh project data:", error);
     }
@@ -76,7 +78,7 @@ const ProjectDetail = (props) => {
             <EditImageProjectModal
               projectId={projectData?.id}
               currentName={projectData?.projectName}
-              onUpdate={refreshProject} 
+              onUpdate={refreshProject}
             />
           </div>
         </div>
@@ -92,38 +94,45 @@ const ProjectDetail = (props) => {
           <p className="text-[14px] text-black">
             Created Date:{" "}
             <span className="text-[#767676]">
-              {moment(projectData?.createdAt).format('LL') || "No Date"}
+              {moment(projectData?.createdAt).format("LL") || "No Date"}
             </span>
           </p>
         </div>
-
       </div>
 
       {/* Tab Menu */}
-      <div className="flex justify-center gap-9 h-[50px] mt-[80px]">
+      <div className="flex justify-around gap-9 h-[50px] w-full px-32 mt-10">
         <button
-          className={`w-[360px] ${activeTab === "task" ? "bg-[#FFE066] border-[#ffea98]" : "bg-[#00000026] "
-            } rounded-2xl border-4 text-[#333333] text-[18px] font-semibold`}
+          className={`w-full max-w-[448px] hover:bg-[#FFE066]/50 hover:border-[#ffea98]/50 duration-200 transition-colors ${
+            activeTab === "task"
+              ? "bg-[#FFE066] border-[#ffea98]"
+              : "bg-[#00000026] "
+          } rounded-2xl border-4 text-[#333333] text-[18px] font-semibold`}
           onClick={() => setActiveTab("task")}
         >
           Task
         </button>
         <button
-          className={`w-[360px] ${activeTab === "dashboard" ? "bg-[#FFE066] border-[#ffea98]" : "bg-[#00000026] "
-            } rounded-2xl border-4 text-[#333333] text-[18px] font-semibold`}
+          className={`w-full max-w-[448px] hover:bg-[#FFE066]/50 hover:border-[#ffea98]/50 duration-200 transition-colors ${
+            activeTab === "dashboard"
+              ? "bg-[#FFE066] border-[#ffea98]"
+              : "bg-[#00000026] "
+          } rounded-2xl border-4 text-[#333333] text-[18px] font-semibold`}
           onClick={() => setActiveTab("dashboard")}
         >
           Dashboard
         </button>
 
         <button
-          className={`w-[360px] ${activeTab === "schedule" ? "bg-[#FFE066] border-[#ffea98]" : "bg-[#00000026] "
-            } rounded-2xl border-4 text-[#333333] text-[18px] font-semibold`}
+          className={`w-full max-w-[448px] hover:bg-[#FFE066]/50 hover:border-[#ffea98]/50 duration-200 transition-colors ${
+            activeTab === "schedule"
+              ? "bg-[#FFE066] border-[#ffea98]"
+              : "bg-[#00000026] "
+          } rounded-2xl border-4 text-[#333333] text-[18px] font-semibold`}
           onClick={() => setActiveTab("schedule")}
         >
           Schedule
         </button>
-
       </div>
     </div>
   );
