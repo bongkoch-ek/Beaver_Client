@@ -49,7 +49,7 @@ import { SelectIcon } from "@radix-ui/react-select";
 import { toast } from "react-toastify";
 
 export function EditTaskModal(props) {
-  const { item, taskId, projectId } = props
+  const { item, taskId, projectId, isEditing, setIsEditing } = props
   const token = useUserStore(state => state.token)
   const actionGetTask = useDashboardStore(state => state.actionGetTask)
   const taskById = useDashboardStore(state => state.taskById)
@@ -68,7 +68,6 @@ export function EditTaskModal(props) {
   const [dueDate, setDueDate] = useState(new Date(item.dueDate));
   const [startDate, setStartDate] = useState(new Date(item.startDate));
   const [taskName, setTaskName] = useState(taskById.title);
-  const [isEditing, setIsEditing] = useState(false);
   const [url, setUrl] = useState("");
   const [txt, setTxt] = useState("");
   const [isFocused, setIsFocused] = useState(false);
@@ -159,6 +158,7 @@ export function EditTaskModal(props) {
     setStartDate(new Date())
     setInput((prv) => ({ ...prv, dueDate: null }))
   }
+
 
   return (
     <div className="max-w-full w-full max-h-full p-6 bg-white flex flex-col gap-5 m-auto overflow-y-auto ">

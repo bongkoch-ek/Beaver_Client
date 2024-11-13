@@ -2,36 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import Task from "./Task";
 import { motion } from "framer-motion";
 import DropTaskIndicator from "./DropTaskIndicator";
-import io from "socket.io-client";
 import useDashboardStore from "../stores/dashboardStore";
-import { PlusIcon, ThreePointIcon } from "../icons";
-import { ArrowDownIcon, PencilIcon, Trash2Icon } from "lucide-react";
+import { ArrowDownIcon, Check, X } from "lucide-react";
 import PrimaryButton from "./common/PrimaryButton";
 import SecondaryButton from "./common/SecondaryButton";
 import useUserStore from "../stores/userStore";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@radix-ui/react-popover";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@radix-ui/react-alert-dialog";
-import { AlertDialogHeader } from "@/components/ui/alert-dialog";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-  DialogClose,
-  DialogTitle,
-} from "@radix-ui/react-dialog";
+import { Dialog } from "@radix-ui/react-dialog";
 import DeleteStatusModal from "./DeleteStatusModal";
+import { Input } from "@/components/ui/input";
 
 export default function StatusColums({
   item,
@@ -54,12 +32,14 @@ export default function StatusColums({
     (state) => state.actionDeleteColumn
   );
   const actionCreateTask = useDashboardStore((state) => state.actionCreateTask);
+  const actionEditColumn = useDashboardStore((state) => state.actionEditColumn);
   const actionMoveTask = useDashboardStore((state) => state.actionMoveTask);
   const token = useUserStore((state) => state.token);
-  const filteredTaskCard = taskCard.filter((item) => item.status === status);
+  const filteredTaskCard = taskCard.filter((task) => task.listId === item.id);
   const [isActive, setIsActive] = useState(false);
   const containerRef = useRef(null);
-  const [isScroll, setIsScroll] = useState(false);
+  const [isScrollDown, setIsScrollDown] = useState(false);
+  const [isScrollUp, setIsScrollUp] = useState(false);
   const [isOverflow, setIsOverflow] = useState(false);
   const [isCreate, setIsCreate] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
@@ -72,23 +52,47 @@ export default function StatusColums({
     listId: item.id,
   };
 
+  const checkOverFlow = () => {
+    if (filteredTaskCard?.length > 4) {
+      setIsOverflow(true);
+    } else {
+      setIsOverflow(false);
+    }
+  };
+
+  const hdlScroll = () => {
+    const container = containerRef.current;
+    if (container) {
+      const scrollTop = container.scrollTop;
+      const maxScroll = container.scrollHeight - container.clientHeight;
+
+      // Scrolling down
+      if (scrollTop > 0 && scrollTop < maxScroll) {
+        setIsScrollDown(false);
+        setIsScrollUp(true);
+      }
+      // At top
+      else if (scrollTop === 0) {
+        setIsScrollDown(true);
+        setIsScrollUp(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    checkOverFlow();
+  }, []);
+
+  useEffect(() => {
+    checkOverFlow();
+  }, [filteredTaskCard]);
+
   useEffect(() => {
     const container = containerRef.current;
-
-    const hdlScroll = () => {
-      if (container) {
-        const scrollTop = container.scrollTop;
-        const scrollHeight = container.scrollHeight;
-        const clientHeight = container.clientHeight;
-
-        setIsScroll(scrollTop > 0);
-        setIsOverflow(scrollHeight > clientHeight);
-      }
-    };
-
+    hdlScroll();
     if (container) {
       container.addEventListener("scroll", hdlScroll);
-      setIsOverflow(container.scrollHeight > container.clientHeight); 
+      setIsOverflow(container.scrollHeight > container.clientHeight);
     }
 
     return () => {
@@ -96,8 +100,8 @@ export default function StatusColums({
         container.removeEventListener("scroll", hdlScroll);
       }
     };
-  }, [taskCard]); 
-console.log(status, "status")
+  }, []);
+
   useEffect(() => {
     socket.on("move_task", (data) => {
       setTaskCard((prv) =>
@@ -160,9 +164,8 @@ console.log(status, "status")
   };
 
   const getIndicator = () => {
-    return Array.from(document.querySelectorAll(`[data-column="${status}"]`));
+    return Array.from(document.querySelectorAll(`[data-column="${item.id}"]`));
   };
-
   const hdlDragLeave = (e) => {
     clearIndicator();
     setIsActive(false);
@@ -211,6 +214,7 @@ console.log(status, "status")
       console.log("Updated task:", updatedTask?.listId);
 
       await actionMoveTask(token, Number(taskId), updatedTask?.listId);
+      await actionGetProjectById(project?.id, token);
       await socket.emit("cardDragging", taskToTransfer);
     }
   };
@@ -254,6 +258,35 @@ console.log(status, "status")
     }
   };
 
+  const [isEditedColumn, setIsEditedColumn] = useState(false);
+  const [text, setText] = useState(item.title);
+
+  const data = {
+    title: text,
+  };
+
+  const [error, setError] = useState("");
+
+  const hdlSaveNewNameColumn = async (e) => {
+    e.preventDefault();
+    if (!text.trim()) {
+      setError("Please Type input");
+      return;
+    }
+
+    if (text) {
+      setError("");
+    }
+    await actionEditColumn(data, token, item.id);
+    await actionGetProjectById(project?.id, token);
+    setIsEditedColumn(false);
+  };
+
+  const hdlCancelNewNameColumn = () => {
+    setIsEditedColumn(false);
+    setError("");
+  };
+
   const sliceStr = (title) => {
     if (title?.length > 12) {
       return title?.slice(0, 12) + "...";
@@ -278,7 +311,7 @@ console.log(status, "status")
         >
           <div className="self-stretch h-full flex-col justify-start items-start gap-6 flex">
             <div className="w-full flex justify-center">
-              {!isCreate && status =="TODO" &&(
+              {!isCreate && status == "TODO" && (
                 <button
                   onClick={hdlTypeNewTask}
                   className="text-center text-[#333333] text-base font-normal hover:bg-[#00000026] hover:text-white hover:font-semibold w-full p-0.5 rounded-md leading-relaxed"
@@ -301,8 +334,49 @@ console.log(status, "status")
                   )}
                 </div>
                 <div className="grow justify-between min-w-full px-4 text-black text-xl font-semibold leading-[33px] flex">
-                  <span className="flex justify-between w-full">
-                    {sliceStr(title)} ({filteredTaskCard?.length})
+                  <div className="flex justify-between w-full">
+                    {isEditedColumn ? (
+                      <div>
+                        <div
+                          className={`flex items-center w-full gap-2 border border-blue-300 rounded px-1 py-1 ${
+                            error && "mb-2"
+                          }`}
+                        >
+                          <div>
+                            <Input
+                              name="title"
+                              type="text"
+                              defaultValue={item.title}
+                              onChange={(e) => setText(e.target.value)}
+                              className="border-none outline-none w-full relative"
+                              autoFocus
+                            />
+                            {error && (
+                              <span className="text-red-500 text-[12px] absolute">
+                                {error}
+                              </span>
+                            )}
+                          </div>
+                          <button
+                            onClick={hdlSaveNewNameColumn}
+                            className="w-7 h-7 p-2 bg-[#43a047]/20 rounded-[360px] justify-center items-center gap-2 inline-flex"
+                          >
+                            <Check className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={hdlCancelNewNameColumn}
+                            className="w-7 h-7 p-2 bg-[#e53935]/20 rounded-[360px] justify-center items-center gap-2 inline-flex"
+                          >
+                            <X className="text-red-500" size={24} />
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <span>
+                        {sliceStr(title)} ({filteredTaskCard?.length})
+                      </span>
+                    )}
+
                     <div onClick={(e) => e.stopPropagation()}>
                       {/* <Dialog> */}
                       <DeleteStatusModal
@@ -310,10 +384,12 @@ console.log(status, "status")
                         item={item}
                         isDisabled={isDisabled}
                         setIsOverflow={setIsDisabled}
+                        setIsEditedColumn={setIsEditedColumn}
+                        isEditedColumn={isEditedColumn}
                       />
                       {/* </Dialog> */}
                     </div>
-                  </span>
+                  </div>
                 </div>
                 <div className="w-6 h-6 relative" />
               </div>
@@ -348,24 +424,25 @@ console.log(status, "status")
                 <div className="relative">
                   {filteredTaskCard.map((item) => (
                     <div key={item.id}>
-                      <DropTaskIndicator
-                        beforeId={item.id}
-                        column={item.status}
+                      <DropTaskIndicator beforeId={item.id} column={item.id} />
+                      <Task
+                        item={item}
+                        hdlDragStart={hdlDragStart}
+                        projectId={project.id}
                       />
-                      <Task item={item} hdlDragStart={hdlDragStart} projectId={project.id}/>
                     </div>
                   ))}
-                  <DropTaskIndicator column={status} />
+                  <DropTaskIndicator column={item.id} />
                 </div>
                 {isOverflow && (
                   <>
                     {/* Top blur layer */}
-                    {isScroll && (
-                      <div className="absolute top-0 left-0 w-full h-12 bg-gradient-to-b z-10 from-[#F5F5F5] via-[#F5F5F5] to-transparent pointer-events-none"></div>
+                    {isScrollUp && (
+                      <div className="absolute top-10 left-0 w-full h-12 bg-gradient-to-b z-10 from-[#F5F5F5] via-[#F5F5F5] to-transparent pointer-events-none"></div>
                     )}
 
                     {/* Bottom blur layer */}
-                    {!isScroll && (
+                    {isScrollDown && (
                       <div className="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-[#F5F5F5] via-[#F5F5F5] to-transparent pointer-events-none">
                         <button className="bg-[#F5F5F5]/40 rounded-[16px] absolute bottom-3 left-1/2 transform -translate-x-1/2 flex justify-center items-center p-2 hover:bg-slate-200">
                           <ArrowDownIcon className="w-[20px] h-[20px] " />
