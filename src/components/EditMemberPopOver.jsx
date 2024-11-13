@@ -67,6 +67,9 @@ const EditMemberPopOver = () => {
   }, [searchQuery, project?.id, token, actionGetProjectById]);
 
   const handleDeleteMember = async (userId) => {
+    console.log("Deleting member with ID:", userId);
+    console.log("Project ID:", project.id);
+    
     try {
       // ดึงข้อมูลโปรเจกต์ล่าสุด
       const currentProject = await actionGetProjectById(project.id, token);

@@ -31,6 +31,7 @@ const useDashboardStore = create(
       isLoading: false,
       currentUser: null,
       error: null,
+      selectedMember: null,
 
       actionClearTaskId: async () => {
         set({ taskById: [] });
@@ -438,7 +439,8 @@ const useDashboardStore = create(
           toast.error("Failed to update member status");
           throw err;
         }
-      }
+      },
+      setSelectedMember: (memberId) => set({ selectedMember: memberId }),
     }),
 
     {

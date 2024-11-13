@@ -7,6 +7,7 @@ import useDashboardStore from "../stores/dashboardStore";
 
 export default function TaskLane() {
   const project = useDashboardStore((state) => state.project);
+  const selectedMember = useDashboardStore((state) => state.selectedMember);
 
   const newProject = project?.list;
 
@@ -96,14 +97,19 @@ export default function TaskLane() {
     return statusOrder[a.status] - statusOrder[b.status];
   });
 
+  const filteredTasks = taskCard?.filter(task => {
+    if (!selectedMember) return true; // แสดงทั้งหมดถ้าไม่ได้เลือกสมาชิก
+    return task.userId === selectedMember;
+  });
+
   return (
-    <div className="self-stretch justify-start items-start gap-4 inline-flex max-w-">
+    <div className="self-stretch justify-start items-start gap-4 inline-flex">
       {sortedList?.map((item) => (
         <StatusColums
           key={item?.id}
           item={item}
           title={item?.title}
-          taskCard={taskCard}
+          taskCard={filteredTasks}
           setTaskCard={setTaskCard}
           hdlTaskMove={hdlTaskMove}
           status={item?.status}
