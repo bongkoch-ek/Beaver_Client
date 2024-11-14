@@ -38,7 +38,7 @@ const useDashboardStore = create(
         set({ taskById: [] });
       },
       actionCreateProject: async (projectData, token) => {
-        set({ loading: true, error: null });
+        set({ isLoading: true, error: null });
         try {
           const response = await axios.post(
             "http://localhost:8888/user/create-project",
@@ -54,12 +54,12 @@ const useDashboardStore = create(
           set((state) => ({
             project: newProject,
             images: newProject.images, 
-            loading: false,
+            isLoading: false,
           }));
           return response.data;
         } catch (error) {
           set({
-            loading: false,
+            isLoading: false,
             error: error.response?.data || "Something went wrong",
           });
           throw error;
@@ -67,7 +67,7 @@ const useDashboardStore = create(
       },
 
       actionGetUserProjects: async (token) => {
-        set({ loading: true, error: null });
+        set({ isLoading: true, error: null });
         try {
           const response = await axios.get(
             `http://localhost:8888/dashboard/project`,
@@ -78,11 +78,11 @@ const useDashboardStore = create(
             }
           );
           console.log(response.data);
-          set({ loading: false, projects: response.data });
+          set({ isLoading: false, projects: response.data });
           return response;
         } catch (error) {
           set({
-            loading: false,
+            isLoading: false,
             error: error.response?.data || "Something went wrong",
           });
           throw error;
@@ -166,7 +166,7 @@ const useDashboardStore = create(
         }
       },
       actionCreateColumn: async (data, token) => {
-        set({ loading: true, error: null });
+        set({ isLoading: true, error: null });
         try {
           const response = await axios.post(
             "http://localhost:8888/dashboard/create-list",
@@ -181,13 +181,13 @@ const useDashboardStore = create(
 
           set((state) => ({
             projects: [...state.column, newColumn],
-            loading: false,
+            isLoading: false,
           }));
 
           return response.data;
         } catch (error) {
           set({
-            loading: false,
+            isLoading: false,
             error: error.response?.data || "Something went wrong",
           });
           throw error;
@@ -195,7 +195,7 @@ const useDashboardStore = create(
       },
 
       actionEditColumn: async (data, token, listId) => {
-        set({ loading: true, error: null });
+        set({ isLoading: true, error: null });
         try {
           const response = await axios.patch(
             `http://localhost:8888/dashboard/list/${listId}`,
@@ -217,7 +217,7 @@ const useDashboardStore = create(
           return response.data;
         } catch (error) {
           set({
-            loading: false,
+            isLoading: false,
             error: error.response?.data || "Something went wrong",
           });
           throw error;
@@ -225,7 +225,7 @@ const useDashboardStore = create(
       },
 
       actionDeleteColumn: async (token, listId) => {
-        set({ loading: true, error: null });
+        set({ isLoading: true, error: null });
         try {
           const response = await deleteList(token, listId);
           set((state) => ({
@@ -233,7 +233,7 @@ const useDashboardStore = create(
           }));
         } catch (error) {
           set({
-            loading: false,
+            isLoading: false,
             error: error.response?.data || "Something went wrong",
           });
           throw error;
@@ -241,7 +241,7 @@ const useDashboardStore = create(
       },
 
       actionGetTodayTask: async (token) => {
-        set({ loading: true, error: null });
+        set({ isLoading: true, error: null });
         try {
           const response = await axios.get(
             `http://localhost:8888/dashboard/today-task`,
@@ -251,11 +251,11 @@ const useDashboardStore = create(
               },
             }
           );
-          set({ loading: false, task: response.data });
+          set({ isLoading: false, task: response.data });
           return response;
         } catch (error) {
           set({
-            loading: false,
+            isLoading: false,
             error: error.response?.data || "Something went wrong",
           });
           throw error;
@@ -300,7 +300,7 @@ const useDashboardStore = create(
 
       actionGetActivityLog: async (token) => {
         try {
-          set({ loading: true, error: null });
+          set({ isLoading: true, error: null });
           const response = await axios.get(
             "http://localhost:8888/dashboard/activitylog",
             {
@@ -309,7 +309,7 @@ const useDashboardStore = create(
               },
             }
           );
-          set({ loading: false, activityLogs: response.data.data.activityLog });
+          set({ isLoading: false, activityLogs: response.data.data.activityLog });
           return response.data;
         } catch (error) {
           throw error;
@@ -336,7 +336,7 @@ const useDashboardStore = create(
 
       actionMoveTask: async (token, taskId, listId) => {
         try {
-          set({ loading: true, error: null });
+          set({ isLoading: true, error: null });
           const response = await updateTask(token, taskId, { listId });
           set((state) => ({
             task: state.task.map((item) =>
@@ -352,7 +352,7 @@ const useDashboardStore = create(
       },
       actionGetTask: async (taskId, token) => {
         try {
-          set({ loading: true, error: null });
+          set({ isLoading: true, error: null });
           const response = await axios.get(
             `http://localhost:8888/dashboard/task/${taskId}`,
             {
@@ -361,7 +361,7 @@ const useDashboardStore = create(
               },
             }
           );
-          set({ loading: false, taskById: response.data });
+          set({ isLoading: false, taskById: response.data });
           return response.data;
         } catch (error) {
           throw error;
