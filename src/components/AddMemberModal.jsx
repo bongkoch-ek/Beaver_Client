@@ -22,12 +22,16 @@ const AddMemberModal = () => {
   const { projectId } = useParams();
   const token = useUserStore((state) => state.token);
   const [isOpen, setIsOpen] = useState(false);
-  const actionSearchFilters = useDashboardStore((state) => state.actionSearchFilters);
-  const users = useDashboardStore((state) => state.users); 
+  const actionSearchFilters = useDashboardStore(
+    (state) => state.actionSearchFilters
+  );
+  const project = useDashboardStore((state) => state.project);
+  const users = useDashboardStore((state) => state.users);
   const formRef = useRef(null);
   const [text, setText] = useState("");
   const [form, setForm] = useState({
     projectId: Number(projectId),
+    projectName: project.projectName,
     email: "",
     role: "MEMBER",
     userId: null,
@@ -40,12 +44,12 @@ const AddMemberModal = () => {
       if (text) {
         const results = await actionSearchFilters(token, { query: text });
         console.log("Search Results:", results);
-        setSearchResults(results || []); 
+        setSearchResults(results || []);
       } else {
         setSearchResults([]);
       }
     }, 300);
-  
+
     return () => clearTimeout(delay);
   }, [text, token, actionSearchFilters]);
 
@@ -55,9 +59,9 @@ const AddMemberModal = () => {
       email: selectedUser.email,
       userId: selectedUser.id,
     }));
-    setText(selectedUser.email); 
-    setSearchResults([]); 
-    console.log("Selected User:", selectedUser); 
+    setText(selectedUser.email);
+    setSearchResults([]);
+    console.log("Selected User:", selectedUser);
   };
 
   const handleSubmit = async (e) => {
@@ -65,7 +69,7 @@ const AddMemberModal = () => {
 
     if (!form.email.trim() || !form.userId) {
       setError("Email and User ID are required");
-      console.log("Form Error - Missing email or userId", form); 
+      console.log("Form Error - Missing email or userId", form);
       return;
     }
 
@@ -82,8 +86,8 @@ const AddMemberModal = () => {
       await Promise.all([addMemberPromise, sendEmailPromise]);
 
       toast.success(`Member added and invitation sent to ${form.email}`);
-      resetForm(); 
-
+      resetForm();
+      setIsOpen(false);
     } catch (error) {
       console.error("Error adding member or sending email:", error);
       setError("Failed to add member or send email. Please try again.");
@@ -94,6 +98,7 @@ const AddMemberModal = () => {
   const resetForm = () => {
     setForm({
       projectId: Number(projectId),
+      projectName: project.projectName,
       email: "",
       role: "MEMBER",
       userId: null,
@@ -106,9 +111,10 @@ const AddMemberModal = () => {
   const handleChange = (e) => {
     setText(e.target.value);
     setForm((prev) => ({ ...prev, email: "", userId: null }));
-    setError(""); 
+    setError("");
   };
 
+  console.log(form, "YEahhh")
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
@@ -118,14 +124,22 @@ const AddMemberModal = () => {
       </DialogTrigger>
 
       <DialogContent className="max-w-[480px] h-[400px]">
-        <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-6 p-6">
+        <form
+          ref={formRef}
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-6 p-6"
+        >
           <div className="flex justify-between items-center">
             <h2 className="text-2xl font-normal">Add new member</h2>
           </div>
 
           <div className="space-y-6">
             <div>
-              <label className={`text-sm ${error ? "text-red-500" : "text-[#333333]"}`}>
+              <label
+                className={`text-sm ${
+                  error ? "text-red-500" : "text-[#333333]"
+                }`}
+              >
                 Email
               </label>
               <Input
@@ -134,7 +148,23 @@ const AddMemberModal = () => {
                 placeholder="Type email for new team member"
                 value={text}
                 onChange={handleChange}
-                className={`mt-1 focus:border-[#5DB9F8] ${error ? "border-red-500" : ""}`}
+                className={`mt-1 focus:border-[#5DB9F8] ${
+                  error ? "border-red-500" : ""
+                }`}
+              />
+              <Input
+                name="projectName"
+                type="text"
+                value={form.projectName}
+                onChange={handleChange}
+                className="opacity-0 hidden"
+              />
+              <Input
+                name="projectId"
+                type="text"
+                value={form.projectId}
+                onChange={handleChange}
+                className="opacity-0 hidden"
               />
               {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
               {Array.isArray(searchResults) && searchResults.length > 0 && (
@@ -157,16 +187,30 @@ const AddMemberModal = () => {
               <Select
                 value={form.role}
                 name="role"
-                onValueChange={(value) => setForm((prev) => ({ ...prev, role: value }))}
+                onValueChange={(value) =>
+                  setForm((prev) => ({ ...prev, role: value }))
+                }
               >
                 <SelectTrigger className="mt-1">
                   <SelectValue placeholder="Select role" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel className="font-normal text-[14px]">Select role</SelectLabel>
-                    <SelectItem value="MEMBER" className="font-normal text-[14px]">Member</SelectItem>
-                    <SelectItem value="OWNER" className="font-normal text-[14px]">Owner</SelectItem>
+                    <SelectLabel className="font-normal text-[14px]">
+                      Select role
+                    </SelectLabel>
+                    <SelectItem
+                      value="MEMBER"
+                      className="font-normal text-[14px]"
+                    >
+                      Member
+                    </SelectItem>
+                    <SelectItem
+                      value="OWNER"
+                      className="font-normal text-[14px]"
+                    >
+                      Owner
+                    </SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>

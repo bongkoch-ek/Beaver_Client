@@ -32,6 +32,7 @@ const useDashboardStore = create(
       isLoading: false,
       currentUser: null,
       error: null,
+      selectedMember: null,
 
       actionClearTaskId: async () => {
         set({ taskById: [] });
@@ -440,7 +441,6 @@ const useDashboardStore = create(
           throw err;
         }
       },
-
       actionComment: async (form, token) => {
         set({ isLoading: true });
 
@@ -478,7 +478,6 @@ const useDashboardStore = create(
           throw err;
         }
       },
-      
     }),
 
     {
