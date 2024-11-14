@@ -57,7 +57,7 @@ export default function Task({ item, hdlDragStart, projectId }) {
   const [taskId, setTaskId] = useState(0);
 
   console.log(item, "item");
-  const assigneeNames = item.assignee.map((item) => item);
+  const assigneeNames = item.assignee?.map((item) => item);
   const display = assigneeNames[0]; // This will be an array of display names
   console.log(display?.user?.displayName, "sdsdsd");
   const actualName = display?.user?.displayName?.charAt(0);
