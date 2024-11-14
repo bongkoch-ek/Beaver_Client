@@ -47,6 +47,7 @@ import useUserStore from "../stores/userStore";
 import useDashboardStore from "../stores/dashboardStore";
 import { SelectIcon } from "@radix-ui/react-select";
 import { toast } from "react-toastify";
+import moment from "moment";
 
 export function EditTaskModal(props) {
   const { item, taskId, projectId, isEditing, setIsEditing } = props
@@ -57,13 +58,10 @@ export function EditTaskModal(props) {
   const actionGetProjectById = useDashboardStore(state => state.actionGetProjectById)
   const actionCreateLink = useDashboardStore(state => state.actionCreateLink)
   const actionDeleteLink = useDashboardStore(state => state.actionDeleteLink)
-
-  useEffect(() => {
-    async function fetch() {
-      await actionGetTask(taskId, token)
-    }
-    fetch()
-  }, []);
+  const actionComment = useDashboardStore(state => state.actionComment)
+  const actionGetCommentByTaskId = useDashboardStore(state => state.actionGetCommentByTaskId)
+  const comments = useDashboardStore(state => state.comments)
+  const socket = useDashboardStore((state) => state.socket);
 
   const [dueDate, setDueDate] = useState(new Date(item.dueDate));
   const [startDate, setStartDate] = useState(new Date(item.startDate));
@@ -72,8 +70,6 @@ export function EditTaskModal(props) {
   const [txt, setTxt] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [isFocusedComment, setIsFocusedComment] = useState(false);
-  const [postedUrls, setPostedUrls] = useState(taskById.webLink);
-  const [postedComments, setPostedComments] = useState([]);
   const [userPicture, setUserPicture] = useState("");
   const [input, setInput] = useState({
     title: item.title,
@@ -83,6 +79,15 @@ export function EditTaskModal(props) {
     priority: item.priority,
     listId: item.listId
   });
+
+
+  useEffect(() => {
+    async function fetch() {
+      await actionGetTask(taskId, token)
+      await actionGetCommentByTaskId(taskId, token)
+    }
+    fetch()
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -109,19 +114,18 @@ export function EditTaskModal(props) {
     setUrl("");
   };
 
-  const handlePostComment = () => {
-    if (txt.trim()) {
-      const newComment = {
-        text: txt,
-        userPicture: userPicture,
-        timestamp: new Date(),
-        userId: "current_user_id"  //รับค่า userId
-      };
+  useEffect(() => {
+    socket.on("comment_message", (data) => {
+      actionGetCommentByTaskId(taskId, token)
+    });
+  }, [socket]);
 
-      setPostedComments([...postedComments, newComment]);
-      setTxt("");
-      setIsFocusedComment(false);
-    }
+  const handlePostComment = async (e) => {
+    e.preventDefault();
+    const newComment = await actionComment({ comment: txt, taskId: taskId }, token)
+    await actionGetCommentByTaskId(taskId, token)
+    await socket.emit("comment", newComment);
+    setTxt("");
   };
 
   const handleCancelComment = () => {
@@ -137,7 +141,6 @@ export function EditTaskModal(props) {
     e.preventDefault()
     setIsEditing(false);
     setInput((prv) => ({ ...prv, title: taskName }));
-    // actionUpdateTask(taskId, input, token)
   };
 
   const hdlStartDate = (e) => {
@@ -159,13 +162,12 @@ export function EditTaskModal(props) {
     setInput((prv) => ({ ...prv, dueDate: null }))
   }
 
-
   return (
-    <div className="max-w-full w-full max-h-full p-6 bg-white flex flex-col gap-5 m-auto overflow-y-auto ">
+    <div className="max-w-full w-full max-h-full p-6 bg-white flex flex-col gap-2 m-auto overflow-y-auto ">
       <form>
-        <div className="flex flex-col space-y-8 ">
+        <div className="flex flex-col  ">
           {/* ชื่อ Task */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 pb-4">
             {isEditing ? (
               <div className="flex items-center w-full gap-2 border border-blue-300 rounded px-2 py-1">
                 <Input
@@ -322,7 +324,7 @@ export function EditTaskModal(props) {
           <UploadFile />
 
           {/* ลิงก์ URL */}
-          <div className="justify-start  flex flex-col gap-2">
+          <div className="justify-start  flex flex-col gap-2 pb-4">
             <p className="text-sm font-semibold">Link URL</p>
             <div className="flex flex-col">
               <Input
@@ -378,38 +380,27 @@ export function EditTaskModal(props) {
                   </div>
                   <ScrollBar className="" orientation="horizontal" />
                 </ScrollArea>
-
               }
-              {/* <ScrollArea className="h-[50px] w-full rounded-md ">
-                <div className="flex  flex-wrap gap-2 ">
-                  {postedUrls?.map((postedUrl, index) => (
-                    <Badge
-                      key={index}
-                      variant="outline"
-                      className="rounded-[16px] px-2 py-1 text-[#333333] font-normal bg-gray-300 hover:bg-gray-200 "
-                    >
-                      {postedUrl}
-                      <CloseIconForBadge
-                        className="w-5 h-5 ml-4 cursor-pointer"
-                        onClick={() => {
-                          const newUrls = postedUrls.filter((_, i) => i !== index);
-                          setPostedUrls(newUrls);
-                        }}
-                      />
-                    </Badge>
-                  ))}
-                </div>
-              </ScrollArea> */}
             </div>
           </div>
 
           {/* คอมเมนต์ */}
-          <div className="justify-start  flex flex-col gap-2">
+          <div className="justify-start flex flex-col gap-2">
             <p className="text-sm font-semibold">Comment</p>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 pb-3">
               <div className="flex gap-2">
-                <div className="bg-gray-500 min-w-[40px] min-h-[40px] rounded-full justify-center items-center">
-                  {/* UserPicture */}
+                <div className="bg-gray-500 min-w-[40px]  rounded-full justify-center items-center">
+                  {comments?.userPicture ? (
+                    <img
+                      src={comments?.userPicture}
+                      alt="User"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-white">
+                      U
+                    </div>
+                  )}
                 </div>
                 <Input
                   placeholder="Comment..."
@@ -442,9 +433,10 @@ export function EditTaskModal(props) {
           </div>
 
           {/* แสดงความคิดเห็นที่โพสต์แล้ว */}
-          <ScrollArea className="h-[200px] w-full mt-0 rounded-md mb-6">
-            <div className="flex flex-col gap-4 pr-4">
-              {[...postedComments].reverse().map((comment, index) => (
+          {
+            comments &&
+            <div className="flex flex-col gap-2 pr-4">
+              {comments?.map((comment, index) => (
                 <div key={index} className="flex items-center gap-3">
                   <div className="bg-gray-500 w-[40px] h-[40px] rounded-full overflow-hidden">
                     {comment.userPicture ? (
@@ -460,16 +452,18 @@ export function EditTaskModal(props) {
                     )}
                   </div>
                   <div className="flex flex-col">
-                    <p className="text-sm text-gray-600">User Name</p>
-                    <p className="text-md font-[600px] text-[#333333]">{comment.text}</p>
+                    <p className="text-sm text-gray-600">{comment.user?.displayName}</p>
+                    <p className="text-md font-[600px] text-[#333333]">{comment.comment}</p>
                     <p className="text-xs text-gray-400">
-                      {new Date(comment.timestamp).toLocaleString()}
+                      {/* {moment.parseZone(comment.createdAt).local(true).fromNow()} */}
+                      {moment.parseZone(comment.createdAt).utcOffset(-7).fromNow()}
                     </p>
                   </div>
                 </div>
               ))}
             </div>
-          </ScrollArea>
+          }
+
         </div>
       </form>
     </div>
