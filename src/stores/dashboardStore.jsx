@@ -398,13 +398,17 @@ const useDashboardStore = create(
         set({ isLoading: true });
 
         try {
-          const response = await axios.post(`http://localhost:8888/dashboard/create-weblink`, form, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          const response = await axios.post(
+            `http://localhost:8888/dashboard/create-weblink`,
+            form,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
 
-          set({ isLoading: false ,webLink : response.data});
+          set({ isLoading: false, webLink: response.data });
           return response.data;
         } catch (err) {
           set({ isLoading: false });
@@ -413,16 +417,19 @@ const useDashboardStore = create(
         }
       },
 
-      actionDeleteLink: async ( token, id) => {
+      actionDeleteLink: async (token, id) => {
         set({ isLoading: true });
         try {
-          console.log(token)
-          const response = await axios.delete(`http://localhost:8888/dashboard/weblink/${id}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          set({ isLoading: false});
+          console.log(token);
+          const response = await axios.delete(
+            `http://localhost:8888/dashboard/weblink/${id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          set({ isLoading: false });
           return response.data;
         } catch (err) {
           set({ isLoading: false });
@@ -430,7 +437,7 @@ const useDashboardStore = create(
           throw err;
         }
       },
-      
+
       actionUpdateStatusMember: async (id, token) => {
         set({ isLoading: true });
         try {
@@ -448,13 +455,17 @@ const useDashboardStore = create(
         set({ isLoading: true });
 
         try {
-          const response = await axios.post(`http://localhost:8888/dashboard/create-comment`, form, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          const response = await axios.post(
+            `http://localhost:8888/dashboard/create-comment`,
+            form,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
 
-          set({ isLoading: false});
+          set({ isLoading: false });
           return response.data;
         } catch (err) {
           set({ isLoading: false });
@@ -467,13 +478,16 @@ const useDashboardStore = create(
         set({ isLoading: true });
 
         try {
-          const response = await axios.get(`http://localhost:8888/dashboard/comment/${id}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          const response = await axios.get(
+            `http://localhost:8888/dashboard/comment/${id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
 
-          set({ isLoading: false, comments: response.data});
+          set({ isLoading: false, comments: response.data });
           return response.data;
         } catch (err) {
           set({ isLoading: false });
@@ -481,38 +495,6 @@ const useDashboardStore = create(
           throw err;
         }
       },
-      actionGetProjectMember: async (projectId, token) => {
-        try {
-          const response = await axios.get(`http://localhost:8888/dashboard/get-member/${projectId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          set({ projectMember: response.data || [] }); 
-        } catch (error) {
-          console.error("Failed to fetch project members", error);
-          set({ projectMember: [] });
-        }
-      },
-      actionAssignUserToTask: async (taskId, userId, token) => {
-        set({ isLoading: true });
-        try {
-          const result = await assignUserToTask(token, taskId, userId);
-          
-          set((state) => ({
-            taskById: {
-              ...state.taskById,
-              assignee: result.data,
-            },
-            isLoading: false,
-          }));
-
-          return result.data;
-        } catch (err) {
-          set({ isLoading: false });
-          toast.error("Failed to assign user to task");
-          throw err;
-        }
-      },
-      
     }),
 
     {
