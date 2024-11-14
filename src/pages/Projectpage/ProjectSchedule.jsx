@@ -140,10 +140,10 @@ export default function ProjectSchedule(props) {
 
     return (
         <div className="flex bg-gray-100 w-[90%] mx-auto  pt-[40px] ">
-            <div className="h-auto w-full px-10 py-16 mb-6 bg-white rounded-[64px] flex-col justify-start items-start gap-16 inline-flex">
+            <div className="h-auto w-full px-10 py-16 pt-10 mb-6 bg-white rounded-[64px] flex-col justify-start items-start gap-16 inline-flex">
                 <TaskMember />
-                <div className='flex w-full justify-center'>
-                    <div className='flex bg-white px-10'>
+                <div className='flex w-full justify-center '>
+                    <div className='flex px-10'>
                         <FullCalendar
                             plugins={[interactionPlugin, resourceTimelinePlugin]}
                             initialView="resourceTimelineMonth"

@@ -53,7 +53,7 @@ const useDashboardStore = create(
           console.log(newProject);
           set((state) => ({
             project: newProject,
-            images: newProject.images, 
+            images: newProject.images,
             loading: false,
           }));
           return response.data;
@@ -395,13 +395,17 @@ const useDashboardStore = create(
         set({ isLoading: true });
 
         try {
-          const response = await axios.post(`http://localhost:8888/dashboard/create-weblink`, form, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          const response = await axios.post(
+            `http://localhost:8888/dashboard/create-weblink`,
+            form,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
 
-          set({ isLoading: false ,webLink : response.data});
+          set({ isLoading: false, webLink: response.data });
           return response.data;
         } catch (err) {
           set({ isLoading: false });
@@ -410,16 +414,19 @@ const useDashboardStore = create(
         }
       },
 
-      actionDeleteLink: async ( token, id) => {
+      actionDeleteLink: async (token, id) => {
         set({ isLoading: true });
         try {
-          console.log(token)
-          const response = await axios.delete(`http://localhost:8888/dashboard/weblink/${id}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          set({ isLoading: false});
+          console.log(token);
+          const response = await axios.delete(
+            `http://localhost:8888/dashboard/weblink/${id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          set({ isLoading: false });
           return response.data;
         } catch (err) {
           set({ isLoading: false });
@@ -427,7 +434,7 @@ const useDashboardStore = create(
           throw err;
         }
       },
-      
+
       actionUpdateStatusMember: async (id, token) => {
         set({ isLoading: true });
         try {
@@ -445,13 +452,17 @@ const useDashboardStore = create(
         set({ isLoading: true });
 
         try {
-          const response = await axios.post(`http://localhost:8888/dashboard/create-comment`, form, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          const response = await axios.post(
+            `http://localhost:8888/dashboard/create-comment`,
+            form,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
 
-          set({ isLoading: false});
+          set({ isLoading: false });
           return response.data;
         } catch (err) {
           set({ isLoading: false });
@@ -464,19 +475,25 @@ const useDashboardStore = create(
         set({ isLoading: true });
 
         try {
-          const response = await axios.get(`http://localhost:8888/dashboard/comment/${id}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          const response = await axios.get(
+            `http://localhost:8888/dashboard/comment/${id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
 
-          set({ isLoading: false, comments: response.data});
+          set({ isLoading: false, comments: response.data });
           return response.data;
         } catch (err) {
           set({ isLoading: false });
           toast.error("Failed to get comment");
           throw err;
         }
+      },
+      setSelectedMember: (userId) => {
+        set({ selectedMember: userId });
       },
     }),
 
