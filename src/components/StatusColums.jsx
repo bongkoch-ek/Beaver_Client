@@ -399,11 +399,12 @@ export default function StatusColums({
               {isCreate && (
                 <div className="w-full mb-4">
                   <textarea
-                    placeholder="Add task"
+                    placeholder="Add task - limit 35 character"
                     value={formTask?.title}
                     name="title"
                     onChange={hdlChangeTask}
                     className="w-full leading-[23px] min-h-[100px] border text-[14px] overflow-auto scrollbar-hide focus:outline-[#5DB9F8] resize-none p-4 rounded-md"
+                    maxLength={35}
                   ></textarea>
                   <div className="flex flex-col gap-2">
                     <PrimaryButton onClick={hdlCreateTask} text="Create" />
