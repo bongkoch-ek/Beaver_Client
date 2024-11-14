@@ -16,16 +16,18 @@ export const createProject = async (formData, userId) => {
   );
 };
 
-export const updateProject = async (token, projectId, form) => {
-  const header = {
-    headers: { Authorization: `Bearer ${token}` },
+
+export const assignUserToTask = async (token, taskId, userId) => {
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+  
+    return await axios.post(
+      "http://localhost:8888/dashboard/assign-user",
+      { taskId, userId },
+      { headers }
+    );
   };
-  return await axios.patch(
-    `http://localhost:8888/dashboard/project/${projectId}`,
-    form,
-    header
-  );
-};
 
 export const createTask = async (token, form) => {
   const header = {
@@ -38,16 +40,7 @@ export const createTask = async (token, form) => {
   );
 };
 
-export const updateTask = async (token, taskId, form) => {
-  const header = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
-  return await axios.patch(
-    `http://localhost:8888/dashboard/task/${taskId}`,
-    form,
-    header
-  );
-};
+
 
 export const createList = async (token, form) => {
   const header = {
@@ -60,15 +53,7 @@ export const createList = async (token, form) => {
   );
 };
 
-export const deleteList = async (token, listId) => {
-  const header = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
-  return await axios.delete(
-    `http://localhost:8888/dashboard/list/${listId}`,
-    header
-  );
-};
+
 
 export const createComment = async (token, form) => {
   const header = {
@@ -94,6 +79,32 @@ export const addMember = async (token, memberData) => {
 
 //// READ
 
+
+export const searchFilters = async (token, arg) => {
+    try {
+      const res = await axios.post('http://localhost:8888/dashboard/search', arg, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("Backend searchFilters response:", res.data); 
+      return res; 
+    } catch (err) {
+      console.log("Error in searchFilters API call:", err);
+      throw err;
+    }
+  };
+
+export const getProjectById = async (token, projectId) => {
+    const header = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    return await axios.get(
+      `http://localhost:8888/dashboard/project/${projectId}`,
+      header
+    );
+  };
+
 export const actionGetAllComment = async (token) => {
   const header = {
     headers: { Authorization: `Bearer ${token}` },
@@ -115,6 +126,16 @@ export const getAllUser = async (token) => {
   return await axios.get("http://localhost:8888/dashboard/getuser", header);
 };
 
+export const getProjectMember = async (token, projectId) => {
+  const header = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  return await axios.get(
+    `http://localhost:8888/dashboard/get-member/${projectId}`,
+    header
+  );
+};
+
 
 //// Del
 export const deleteTask = async (token, taskId) => {
@@ -127,6 +148,15 @@ export const deleteTask = async (token, taskId) => {
   );
 };
 
+export const deleteList = async (token, listId) => {
+    const header = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    return await axios.delete(
+      `http://localhost:8888/dashboard/list/${listId}`,
+      header
+    );
+}
 export const deleteMember = async (token, data) => {
   const header = {
     headers: { Authorization: `Bearer ${token}` },
@@ -139,32 +169,6 @@ export const deleteMember = async (token, data) => {
     }
   );
 };
-
-export const getProjectById = async (token, projectId) => {
-  const header = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
-  return await axios.get(
-    `http://localhost:8888/dashboard/project/${projectId}`,
-    header
-  );
-};
-
-export const searchFilters = async (token, arg) => {
-    try {
-      const res = await axios.post('http://localhost:8888/dashboard/search', arg, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log("Backend searchFilters response:", res.data); 
-      return res; 
-    } catch (err) {
-      console.log("Error in searchFilters API call:", err);
-      throw err;
-    }
-  };
-
 
 //// Update
 
@@ -180,8 +184,29 @@ export const updateStatusMember = async (token, id) => {
   export const createImagesInTask = async (token, input,) => {
     const header = {
       headers: { Authorization: `Bearer ${token}` },
-      
+    }
+    return await axios.post('http://localhost:8888/dashboard/create-imagetask',input,header)
   };
-  
-  return await axios.post('http://localhost:8888/dashboard/create-imagetask',input,header)
-  }
+
+  export const updateProject = async (token, projectId, form) => {
+    const header = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    return await axios.patch(
+      `http://localhost:8888/dashboard/project/${projectId}`,
+      form,
+      header
+    );
+  };
+
+
+  export const updateTask = async (token, taskId, form) => {
+    const header = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    return await axios.patch(
+      `http://localhost:8888/dashboard/task/${taskId}`,
+      form,
+      header
+    );
+  };
