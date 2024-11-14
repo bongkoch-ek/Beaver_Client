@@ -64,8 +64,8 @@ const ProjectPage = () => {
         </div>
 
         {task.length > 0 ? (
-          <div className="bg-white rounded-2xl mt-[20px]">
-            <div className="flex flex-col w-full gap-1 rounded-3xl">
+          <div className="bg-white min-h-[400px] rounded-2xl mt-[20px]">
+            <div className="flex w-full gap-1 rounded-3xl">
               {task.map((el, index) => (
                 <div key={index}>
                   <div className="flex justify-between h-[150px]">
@@ -102,22 +102,29 @@ const ProjectPage = () => {
                 </div>
               ))}
 
-              <div className="flex justify-end pt-[24px] pr-16 pb-8">
-                <Link to="/project/list">See all</Link>
+              <div className="flex justify-end pt-[24px] pr-[40px] pb-8 hover:cursor-pointer">
+                <Link 
+                  to="/project/list" 
+                  className="text-[#333333] hover:scale-105 transition-transform duration-200 ease-in-out"
+                >
+                  See all
+                </Link>
               </div>
             </div>
           </div>
         ) : (
-          <div className="h-40 px-10 py-8 bg-white rounded-[32px] flex-col justify-center items-center gap-6 inline-flex">
-            <div className="text-right text-[#767676] text-lg font-normal font-['IBM Plex Sans Thai'] leading-[30px]">
+          <div className="min-h-[400px] px-10 py-8 bg-white rounded-[32px] flex-col flex items-center justify-center w-full relative">
+            <div className="text-[#767676] text-lg font-normal">
               No tasks due today.
             </div>
-       
+            <div className="flex justify-end pr-[40px] pb-8 hover:cursor-pointer absolute bottom-0 right-0">
               <Link 
-              className="flex justify-end"
-              to="/project/list">See all
+                to="/project/list" 
+                className="text-[#333333] hover:font-medium hover:scale-105 transition-transform duration-200 ease-in-out"
+              >
+                See all
               </Link>
-       
+            </div>
           </div>
         )}
 

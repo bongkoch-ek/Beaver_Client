@@ -34,10 +34,12 @@ const Navbar = () => {
         <div className=" mx-auto flex justify-between items-center px-6">
           {/* Logo */}
           <div className="flex items-center justify-between w-[350px] ">
-            <div className="flex items-center gap-2">
-              <BeaverLogo className="w-10 h-10 rounded-full" />
-              <span className="text-[#FFE066] font-bold text-xl">Beaver</span>
-            </div>
+            <Link to="/">
+              <div className="flex items-center gap-2 cursor-pointer">
+                <BeaverLogo className="w-10 h-10 rounded-full" />
+                <span className="text-[#FFE066] font-bold text-xl">Beaver</span>
+              </div>
+            </Link>
 
             <NavLink
               to="/"

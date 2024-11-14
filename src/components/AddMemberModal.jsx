@@ -114,7 +114,6 @@ const AddMemberModal = () => {
     setError("");
   };
 
-  console.log(form, "YEahhh")
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>

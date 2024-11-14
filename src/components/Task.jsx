@@ -54,8 +54,14 @@ export default function Task({ item, hdlDragStart, projectId }) {
   const actionClearTaskId = useDashboardStore(
     (state) => state.actionClearTaskId
   );
-
   const [taskId, setTaskId] = useState(0);
+
+  console.log(item, "item");
+  const assigneeNames = item.assignee.map((item) => item);
+  const display = assigneeNames[0]; // This will be an array of display names
+  console.log(display?.user?.displayName, "sdsdsd");
+  const actualName = display?.user?.displayName?.charAt(0);
+  console.log(actualName, "Yeah");
 
   const handleDelete = (e) => {
     e.stopPropagation();
@@ -254,9 +260,9 @@ export default function Task({ item, hdlDragStart, projectId }) {
                   )}
 
                   {!isEditText && (
-                    <div className="w-[34px] h-[34px] px-2 py-1.5 bg-[#ffe066] rounded-2xl justify-center items-center gap-4 flex">
-                      <div className="self-stretch text-center text-[#333333] text-base leading-relaxed">
-                        U
+                    <div className="w-[34px] h-[34px] flex items-center justify-center bg-white rounded-full outline outline-4 outline-[#ffe066]">
+                      <div className="text-center text-[#333333] font-semibold text-base leading-relaxed">
+                        {actualName || "U"}
                       </div>
                     </div>
                   )}

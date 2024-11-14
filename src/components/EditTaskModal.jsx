@@ -62,7 +62,11 @@ export function EditTaskModal(props) {
   const actionGetCommentByTaskId = useDashboardStore(state => state.actionGetCommentByTaskId)
   const comments = useDashboardStore(state => state.comments)
   const socket = useDashboardStore((state) => state.socket);
-
+  const project = useDashboardStore((state) => state.project);
+  const actionGetProjectMember = useDashboardStore((state) => state.actionGetProjectMember);
+  const actionAssignUserToTask = useDashboardStore((state) => state.actionAssignUserToTask);
+  const projectMember = useDashboardStore((state) => state.projectMember);
+  
   const [dueDate, setDueDate] = useState(new Date(item.dueDate));
   const [startDate, setStartDate] = useState(new Date(item.startDate));
   const [taskName, setTaskName] = useState(taskById.title);
@@ -71,6 +75,7 @@ export function EditTaskModal(props) {
   const [isFocused, setIsFocused] = useState(false);
   const [isFocusedComment, setIsFocusedComment] = useState(false);
   const [userPicture, setUserPicture] = useState("");
+  const [selectedAssignee, setSelectedAssignee] = useState(taskById?.assignee?.userId);
   const [input, setInput] = useState({
     title: item.title,
     description: item.description,
@@ -81,23 +86,34 @@ export function EditTaskModal(props) {
     images : item.images,
     taskId : taskId
   });
+  console.log("check project",project)
 
 
+ 
   useEffect(() => {
     async function fetch() {
-      await actionGetTask(taskId, token)
-      await actionGetCommentByTaskId(taskId, token)
+      await actionGetTask(taskId, token);
+      await actionGetCommentByTaskId(taskId, token);
+      await actionGetProjectMember(projectId, token);
+      console.log("Fetched project members:", projectMember);
     }
-    fetch()
+    fetch();
   }, []);
 
   useEffect(() => {
     async function fetchData() {
-      await actionUpdateTask(taskId, input, token)
-      await actionGetProjectById(projectId, token)
+      await actionUpdateTask(taskId, input, token);
+      await actionGetProjectById(projectId, token);
     }
-    fetchData()
-  }, [input])
+    fetchData();
+  }, [input]);
+
+  const handleAssigneeChange = async (userId) => {
+    setSelectedAssignee(userId);
+    await actionAssignUserToTask(taskId, userId, token);
+    await actionGetTask(taskId, token);
+    toast.success("Assignee updated successfully!");
+  };
 
   const hdlPriorityChange = async (e) => {
     setInput((prv) => ({ ...prv, priority: e }));
@@ -233,10 +249,25 @@ export function EditTaskModal(props) {
               </div>
 
               {/* ผู้รับผิดชอบ */}
-              <div className="flex gap-4 items-center">
-                <p className="text-[#333333] text-sm font-semibold">Assignee:</p>
-                <p className="text-[#767676] text-sm">Username1</p>
-              </div>
+              <div className="flex flex-col gap-2">
+          <p className="text-[#333333] text-sm font-semibold">Assignee:</p>
+          <Select onValueChange={handleAssigneeChange} value={selectedAssignee}>
+            <SelectTrigger className="w-[180px] rounded-full">
+              <SelectValue placeholder="Select Assignee" />
+            </SelectTrigger>
+            <SelectContent>
+              {Array.isArray(projectMember) && projectMember.length > 0 ? (
+                projectMember.map((member) => (
+                  <SelectItem key={member.id} value={member.id}>
+                    {member.displayName} ({member.email})
+                  </SelectItem>
+                ))
+              ) : (
+                <SelectItem disabled>No members available</SelectItem>
+              )}
+            </SelectContent>
+          </Select>
+        </div>
 
               {/* วันเริ่มต้นงาน */}
               <div className="flex gap-4 items-center">
