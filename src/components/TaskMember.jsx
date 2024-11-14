@@ -10,9 +10,6 @@ export default function TaskMember() {
   const [showAllMembers, setShowAllMembers] = useState(false);
   const test = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   
-  console.log("Project data:", project);
-  console.log("Group members:", project?.groupProject);
-  
   const toggleShowMembers = () => {
     setShowAllMembers(!showAllMembers);
     

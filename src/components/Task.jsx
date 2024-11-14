@@ -20,7 +20,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Check, PencilIcon, Trash2Icon, X } from "lucide-react";
+import {
+  Check,
+  ChevronsDown,
+  ChevronsUp,
+  Equal,
+  PencilIcon,
+  Trash2Icon,
+  X,
+} from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -66,9 +74,9 @@ export default function Task({ item, hdlDragStart, projectId }) {
   const hdlOnOpen = async (e) => {
     actionClearTaskId();
     setTaskId(item.id);
-    // await actionGetTask(taskId, token)
   };
 
+  const [isHover, setIsHover] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isEditText, setIsEditText] = useState(false);
   const [error, setError] = useState("");
@@ -104,8 +112,11 @@ export default function Task({ item, hdlDragStart, projectId }) {
         <motion.div
           key={item.id}
           layout
+          disabled={isEditText}
           draggable="true"
           onDragStart={(e) => hdlDragStart(e, item)}
+          onMouseEnter={() => setIsHover(true)}
+          onMouseLeave={() => setIsHover(false)}
           className={`  w-full  self-stretch h-full p-4 ${
             isEditText
               ? "bg-[#cde9fd]/50 cursor-text my-2"
@@ -145,7 +156,7 @@ export default function Task({ item, hdlDragStart, projectId }) {
           ) : (
             <DialogTrigger asChild>
               <div
-                className="flex flex-col w-full gap-5"
+                className="flex flex-col w-full gap-6"
                 onClick={(e) => hdlTaskClick(e)}
               >
                 <div className="self-stretch justify-between items-center gap-2 inline-flex">
@@ -154,7 +165,11 @@ export default function Task({ item, hdlDragStart, projectId }) {
                   </div>
                   <div onClick={(e) => e.stopPropagation()}>
                     <Popover>
-                      <PopoverTrigger asChild>
+                      <PopoverTrigger
+                        style={{ opacity: isHover ? 1 : 0 }}
+                        className="transition-opacity duration-200"
+                        asChild
+                      >
                         <button className="flex w-[28px] h-[28px] mb-1 hover:bg-slate-300 rounded-full cursor-pointer">
                           <ThreePointIconWithBG />
                         </button>
@@ -216,11 +231,24 @@ export default function Task({ item, hdlDragStart, projectId }) {
                 </div>
                 <div className="self-stretch justify-between items-center inline-flex">
                   {!isEditText && (
-                    <div className="px-1.5 py-0.5 bg-white rounded-2xl justify-center items-center gap-0.5 flex">
-                      <div className="text-center text-[#e53935] text-sm font-semibold leading-[23px]">
-                        High
-                      </div>
-                    </div>
+                    <>
+                      {item.priority === "HIGH" ? (
+                        <div className="flex items-center justify-center text-[#e53935] bg-white pl-0.5 px-1.5 py-0.5 rounded-2xl">
+                          <ChevronsUp className="h-5" />{" "}
+                          <p className="text-sm font-semibold">High</p>
+                        </div>
+                      ) : item.priority === "MEDIUM" ? (
+                        <div className="flex items-center justify-center text-[#fdc730] bg-white pl-0.5 px-1.5 py-0.5 rounded-2xl">
+                          <Equal className="h-5" />{" "}
+                          <p className="text-sm font-semibold">Medium</p>
+                        </div>
+                      ) : item.priority === "LOW" ? (
+                        <div className="flex items-center justify-center text-[#5db9f8] bg-white pl-0.5 px-1.5 py-0.5 rounded-2xl">
+                          <ChevronsDown className="h-5" />{" "}
+                          <p className="text-sm font-semibold">Low</p>
+                        </div>
+                      ) : null}
+                    </>
                   )}
 
                   {!isEditText && (
