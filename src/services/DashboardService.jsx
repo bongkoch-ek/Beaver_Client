@@ -127,6 +127,19 @@ export const deleteTask = async (token, taskId) => {
   );
 };
 
+export const deleteMember = async (token, data) => {
+  const header = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  return await axios.delete(
+    `http://localhost:8888/dashboard/member`, 
+    { 
+      headers: { Authorization: `Bearer ${token}` },
+      data: data // ส่ง data ในรูปแบบ { projectId, userId }
+    }
+  );
+};
+
 export const getProjectById = async (token, projectId) => {
   const header = {
     headers: { Authorization: `Bearer ${token}` },
@@ -152,21 +165,6 @@ export const searchFilters = async (token, arg) => {
     }
   };
 
-  export const deleteMember = async (token, data) => {
-    const { projectId, userId } = data;
-    return await axios.delete(
-      `http://localhost:8888/dashboard/member`, 
-      {
-        headers: { 
-          Authorization: `Bearer ${token}` 
-        },
-        data: {
-          projectId,
-          userId
-        }
-      }
-    );
-  };
 
 //// Update
 
