@@ -8,9 +8,8 @@ import useDashboardStore from '@/src/stores/dashboardStore';
 export default function ProjectSchedule(props) {
 
     const project = useDashboardStore(state => state.project)
-    const data = []
-
     const today = new Date().toISOString().split('T')[0]
+
     //#region set prop
     let done = []
     let inProgress = []
@@ -64,41 +63,7 @@ export default function ProjectSchedule(props) {
                 })
             })
         }
-        // done.push(
-        //     {
-        //         id: el.id,
-        //         title: el.title,
-        //         eventBackgroundColor: "#43A047",
-        //         eventTextColor: "#FFFFFF",
-        //         eventBorderColor: "#43A047"
-        //     })
-        // else if (el.status === 'INPROGRESS')
-        //     inProgress.push({
-        //         id: el.id,
-        //         title: el.title,
-        //         eventBackgroundColor: "#5DB9F8",
-        //         eventTextColor: "#FFFFFF",
-        //         eventBorderColor: "#5DB9F8"
-        //     })
-        // else if (el.status === 'LATE')
-        //     late.push({
-        //         id: el.id,
-        //         title: el.title,
-        //         eventBackgroundColor: "#E53935",
-        //         eventTextColor: "#FFFFFF",
-        //         eventBorderColor: "#E53935"
-        //     })
-
-        // event.push({
-        //         id: el.id,
-        //         resourceId: el.id,
-        //         title: el.title,
-        //         start: el.startDate,
-        //         end: el.column.status === 'LATE'? today : el.dueDate
-        //     })
-        //     console.log("data" ,el)
     })
-
 
     const resources = [
         {
@@ -141,7 +106,6 @@ export default function ProjectSchedule(props) {
     return (
         <div className="flex bg-gray-100 w-[90%] mx-auto  pt-[40px] ">
             <div className="h-auto w-full px-10 py-16 mb-6 bg-white rounded-[64px] flex-col justify-start items-start gap-16 inline-flex">
-                <TaskMember />
                 <div className='flex w-full justify-center'>
                     <div className='flex bg-white px-10'>
                         <FullCalendar

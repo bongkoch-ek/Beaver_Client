@@ -54,8 +54,14 @@ export default function Task({ item, hdlDragStart, projectId }) {
   const actionClearTaskId = useDashboardStore(
     (state) => state.actionClearTaskId
   );
-
   const [taskId, setTaskId] = useState(0);
+
+  console.log(item, "item");
+  const assigneeNames = item.assignee.map((item) => item);
+  const display = assigneeNames[0]; // This will be an array of display names
+  console.log(display?.user?.displayName, "sdsdsd");
+  const actualName = display?.user?.displayName?.charAt(0);
+  console.log(actualName, "Yeah");
 
   const handleDelete = (e) => {
     e.stopPropagation();
@@ -117,7 +123,7 @@ export default function Task({ item, hdlDragStart, projectId }) {
           onDragStart={(e) => hdlDragStart(e, item)}
           onMouseEnter={() => setIsHover(true)}
           onMouseLeave={() => setIsHover(false)}
-          className={`  w-full  self-stretch h-full p-4 ${
+          className={`  w-full  self-stretch p-4 ${
             isEditText
               ? "bg-[#cde9fd]/50 cursor-text my-2"
               : "bg-[#cde9fd] hover:opacity-70 transition-opacity duration-200 active:cursor-grabbing cursor-grab"
@@ -129,10 +135,10 @@ export default function Task({ item, hdlDragStart, projectId }) {
                 name="title"
                 type="text"
                 defaultValue={item.title}
-                // onChange={(e) => setFormEditTask(e.target.value)}
                 onChange={(e) => setText(e.target.value)}
-                className="border-none outline-none shadow-none min-w-full min-h-full font-semibold text-[16px]"
+                className="border-none outline-none shadow-none  font-semibold text-[16px]"
                 autoFocus
+                maxlength={35}
               />
               {error && <span className="text-[#E53935] text-sm">{error}</span>}
               <div className="flex items-center flex-col gap-1 w-full">
@@ -159,11 +165,13 @@ export default function Task({ item, hdlDragStart, projectId }) {
                 className="flex flex-col w-full gap-6"
                 onClick={(e) => hdlTaskClick(e)}
               >
-                <div className="self-stretch justify-between items-center gap-2 inline-flex">
-                  <div className="grow shrink basis-0 text-black text-sm font-normal font-['IBM Plex Sans Thai'] leading-[23px] cursor-pointer">
-                    <p>{item.title}</p>
+                <div className="self-stretch justify-between items-center gap-2 flex w-full">
+                  <div className=" text-black text-sm font-normal leading-[23px] cursor-pointer w-5/6">
+                  <article class="truncate w-full">
+                    <p className="">{item.title}</p>
+                  </article>
                   </div>
-                  <div onClick={(e) => e.stopPropagation()}>
+                  <div onClick={(e) => e.stopPropagation()} className="w-1/6">
                     <Popover>
                       <PopoverTrigger
                         style={{ opacity: isHover ? 1 : 0 }}
@@ -252,9 +260,9 @@ export default function Task({ item, hdlDragStart, projectId }) {
                   )}
 
                   {!isEditText && (
-                    <div className="w-[34px] h-[34px] px-2 py-1.5 bg-[#ffe066] rounded-2xl justify-center items-center gap-4 flex">
-                      <div className="self-stretch text-center text-[#333333] text-base leading-relaxed">
-                        U
+                    <div className="w-[34px] h-[34px] flex items-center justify-center bg-white rounded-full outline outline-4 outline-[#ffe066]">
+                      <div className="text-center text-[#333333] font-semibold text-base leading-relaxed">
+                        {actualName || "U"}
                       </div>
                     </div>
                   )}
