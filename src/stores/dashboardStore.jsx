@@ -10,6 +10,7 @@ import {
   updateProject,
   updateStatusMember,
   getProjectMember,
+  getTaskAssignee,
   updateTask,
   deleteTask,
   assignUserToTask
@@ -36,6 +37,7 @@ const useDashboardStore = create(
       currentUser: null,
       error: null,
       selectedMember: null,
+      assignee: null,
 
       actionClearTaskId: async () => {
         set({ taskById: [] });
@@ -496,6 +498,52 @@ const useDashboardStore = create(
           throw err;
         }
       },
+      actionGetProjectMember: async (projectId, token) => {
+        try {
+          const response = await axios.get(`http://localhost:8888/dashboard/get-member/${projectId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          set({ projectMember: response.data || [] }); 
+        } catch (error) {
+          console.error("Failed to fetch project members", error);
+          set({ projectMember: [] });
+        }
+      },
+      actionAssignUserToTask: async (taskId, userId, token) => {
+        set({ isLoading: true });
+        try {
+          const result = await assignUserToTask(token, taskId, userId);
+          
+          set((state) => ({
+            taskById: {
+              ...state.taskById,
+              assignee: result.data,
+            },
+            isLoading: false,
+          }));
+        console.log("check result :" ,result.data)
+          return result.data;
+        } catch (err) {
+          set({ isLoading: false });
+          toast.error("Failed to assign user to task");
+          throw err;
+        }
+      },
+      actionGetTaskAssignee: async (taskId, token) => {
+        set({ isLoading: true });
+        try {
+          const response = await getTaskAssignee(token, taskId);
+          set({ assignee: response.data, isLoading: false });
+          console.log("Check get task assig:",response.data)
+          return response.data;
+        } catch (error) {
+          console.error("Failed to fetch assignee data", error);
+          set({ isLoading: false });
+          toast.error("Failed to fetch assignee");
+          throw error;
+        }
+      },
+      
     }),
 
     {

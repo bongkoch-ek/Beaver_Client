@@ -136,6 +136,15 @@ export const getProjectMember = async (token, projectId) => {
   );
 };
 
+export const getTaskAssignee = async (token, taskId) => {
+    const header = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    return await axios.get(
+      `http://localhost:8888/dashboard/get-assignee/${taskId}`,
+      header
+    );
+  };
 
 //// Del
 export const deleteTask = async (token, taskId) => {
