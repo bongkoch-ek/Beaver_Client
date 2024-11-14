@@ -8,11 +8,16 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 export default function TaskMember() {
   const project = useDashboardStore((state) => state.project);
   const [showAllMembers, setShowAllMembers] = useState(false);
-  const test = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const [selectedMember, setSelectedMember] = useState(null);
   
   const toggleShowMembers = () => {
     setShowAllMembers(!showAllMembers);
     
+  };
+
+  const handleMemberClick = (memberId) => {
+    setSelectedMember(memberId === selectedMember ? null : memberId);
+    console.log("Selected member:", selectedMember);
   };
 
   return (
@@ -45,8 +50,10 @@ export default function TaskMember() {
                 {project?.groupProject?.map((member, index) => (
                   <div 
                     key={index} 
-                    className="px-2 py-1.5 bg-black/20 rounded-2xl justify-center items-center gap-2 flex
-                      opacity-0 animate-fadeIn whitespace-nowrap"
+                    onClick={() => handleMemberClick(member.user?.id)}
+                    className={`px-2 py-1.5 rounded-2xl justify-center items-center gap-2 flex
+                      opacity-0 animate-fadeIn whitespace-nowrap cursor-pointer
+                      ${selectedMember === member.user?.id ? 'bg-[#FFE066]' : 'bg-black/20'}`}
                     style={{
                       animationDelay: `${index * 110}ms`,
                       animationFillMode: 'forwards'

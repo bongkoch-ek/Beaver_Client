@@ -6,6 +6,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 export default function TaskLane() {
   const project = useDashboardStore((state) => state.project);
+  const selectedMember = useDashboardStore((state) => state.selectedMember);
 
   const newProject = project?.list;
 
@@ -93,6 +94,11 @@ export default function TaskLane() {
       DONE: 3,
     };
     return statusOrder[a.status] - statusOrder[b.status];
+  });
+
+  const filteredTasks = taskCard?.filter(task => {
+    if (!selectedMember) return true; // แสดงทั้งหมดถ้าไม่ได้เลือกสมาชิก
+    return task.userId === selectedMember;
   });
 
   return (
