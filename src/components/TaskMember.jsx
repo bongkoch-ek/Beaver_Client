@@ -20,6 +20,7 @@ export default function TaskMember() {
 
   const handleMemberClick = (memberId) => {
     setSelectedMember(memberId === selectedMember ? null : memberId);
+    console.log("Selected member:", selectedMember);
   };
 
   return (

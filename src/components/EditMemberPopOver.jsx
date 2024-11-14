@@ -67,34 +67,20 @@ const EditMemberPopOver = () => {
   }, [searchQuery, project?.id, token, actionGetProjectById]);
 
   const handleDeleteMember = async (userId) => {
-    console.log("Deleting member with ID:", userId);
-    console.log("Project ID:", project.id);
-    
     try {
-      // ดึงข้อมูลโปรเจกต์ล่าสุด
-      const currentProject = await actionGetProjectById(project.id, token);
-      
-      if (!currentProject || !currentProject.id) {
-        throw new Error("Project not found");
-      }
-
-      // ตรวจสอบว่าผู้ใช้เป็นสมาชิกของโปรเจกต์จริงๆ
-      const memberExists = currentProject.groupProject?.some(
-        member => member.user?.id === userId
-      );
-
-      if (!memberExists) {
-        throw new Error("Member not found in project");
+      // ตรวจสอบว่ามี project id และ user id
+      if (!project?.id || !userId) {
+        throw new Error("Missing project ID or user ID");
       }
 
       // เรียกใช้ API เพื่อลบสมาชิก
       await deleteMember(token, {
-        projectId: currentProject.id,
+        projectId: project.id,
         userId: userId
       });
 
-      // อัพเดทข้อมูลหลังจากลบ
-      const updatedProject = await actionGetProjectById(currentProject.id, token);
+      // อัพเดทข้อมูลโปรเจกต์หลังจากลบ
+      const updatedProject = await actionGetProjectById(project.id, token);
       
       // อัพเดท search results
       const updatedMembers = updatedProject.groupProject || [];
@@ -104,12 +90,11 @@ const EditMemberPopOver = () => {
       );
       
       setSearchResults(filteredMembers);
-
-      toast.success("member deleted");
+      toast.success("Member deleted successfully");
 
     } catch (err) {
-      console.error("Delete member failed:", err);
-      toast.error("delete member failed");
+      console.error("Error deleting member:", err);
+      toast.error("Failed to delete member");
     }
   };
 
