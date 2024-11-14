@@ -9,8 +9,10 @@ import {
   deleteList,
   updateProject,
   updateStatusMember,
+  getProjectMember,
   updateTask,
   deleteTask,
+  assignUserToTask
 } from "../services/DashboardService";
 import io from "socket.io-client";
 
@@ -27,6 +29,7 @@ const useDashboardStore = create(
       list: [],
       users: [],
       activityLogs: [],
+      projectMember: [],
       webLink: [],
       comments: [],
       isLoading: false,
@@ -475,6 +478,37 @@ const useDashboardStore = create(
         } catch (err) {
           set({ isLoading: false });
           toast.error("Failed to get comment");
+          throw err;
+        }
+      },
+      actionGetProjectMember: async (projectId, token) => {
+        try {
+          const response = await axios.get(`http://localhost:8888/dashboard/get-member/${projectId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          set({ projectMember: response.data || [] }); 
+        } catch (error) {
+          console.error("Failed to fetch project members", error);
+          set({ projectMember: [] });
+        }
+      },
+      actionAssignUserToTask: async (taskId, userId, token) => {
+        set({ isLoading: true });
+        try {
+          const result = await assignUserToTask(token, taskId, userId);
+          
+          set((state) => ({
+            taskById: {
+              ...state.taskById,
+              assignee: result.data,
+            },
+            isLoading: false,
+          }));
+
+          return result.data;
+        } catch (err) {
+          set({ isLoading: false });
+          toast.error("Failed to assign user to task");
           throw err;
         }
       },
