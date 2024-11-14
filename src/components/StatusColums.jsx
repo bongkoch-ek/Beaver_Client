@@ -35,8 +35,10 @@ export default function StatusColums({
   const actionCreateTask = useDashboardStore((state) => state.actionCreateTask);
   const actionEditColumn = useDashboardStore((state) => state.actionEditColumn);
   const actionMoveTask = useDashboardStore((state) => state.actionMoveTask);
+  const selectedMember = useDashboardStore((state) => state.selectedMember);
   const token = useUserStore((state) => state.token);
-  const filteredTaskCard = taskCard.filter((task) => task.listId === item.id);
+  const filteredTaskCard = taskCard.filter((task) => task.listId === item.id && (!selectedMember || task.assignee.some((assignee) => assignee.userId === selectedMember)));
+  
   const [isActive, setIsActive] = useState(false);
   const containerRef = useRef(null);
   const [isScrollDown, setIsScrollDown] = useState(false);
@@ -140,7 +142,7 @@ export default function StatusColums({
   };
 
   const getNearestIndicator = (e, indicator) => {
-    const DISTANCE_OFFSET = 50;
+    const DISTANCE_OFFSET = 25;
 
     const result = indicator.reduce(
       (closest, child) => {
@@ -208,11 +210,10 @@ export default function StatusColums({
 
         newTask.splice(insertAtIndex, 0, taskToTransfer);
       }
-      console.log("insert:", newTask);
 
       setTaskCard(newTask);
       const updatedTask = newTask.find((item) => item.id === Number(taskId));
-      console.log("Updated task:", updatedTask?.listId);
+      console.log(`Updated ${taskId} task to:`, updatedTask?.listId);
 
       await actionMoveTask(token, Number(taskId), updatedTask?.listId);
       await actionGetProjectById(project?.id, token);
@@ -304,7 +305,7 @@ export default function StatusColums({
           onDrop={hdlDragEnd}
           onDragOver={hdlDragOver}
           onDragLeave={hdlDragLeave}
-          className={`w-[264px] min-h-[218px] max-h-[676px] overflow-hidden px-4 py-4 ${
+          className={`w-[264px] min-h-[218px] max-h-[676px] overflow-hidden px-4 py-2 ${
             isCreate && "pt-0"
           } bg-[#F5F5F5] duration-200 transition-colors ${
             isActive && "border bg-[#f5f5f550] border-[#DDE6F0]"
@@ -399,11 +400,12 @@ export default function StatusColums({
               {isCreate && (
                 <div className="w-full mb-4">
                   <textarea
-                    placeholder="Add task"
+                    placeholder="Add task - limit 35 character"
                     value={formTask?.title}
                     name="title"
                     onChange={hdlChangeTask}
                     className="w-full leading-[23px] min-h-[100px] border text-[14px] overflow-auto scrollbar-hide focus:outline-[#5DB9F8] resize-none p-4 rounded-md"
+                    maxLength={35}
                   ></textarea>
                   <div className="flex flex-col gap-2">
                     <PrimaryButton onClick={hdlCreateTask} text="Create" />
@@ -423,7 +425,7 @@ export default function StatusColums({
                 ref={containerRef}
               >
                 <div className="relative">
-                  {filteredTaskCard.length === 0 && !isCreate ? (
+                  {(filteredTaskCard.length === 0 ) && !isCreate ? (
                     <NoTask />
                   ) : (
                     filteredTaskCard.map((item) => (

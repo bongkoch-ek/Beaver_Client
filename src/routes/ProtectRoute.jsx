@@ -13,6 +13,7 @@ const ProtectRoute = ({ element }) => {
   useEffect(() => {
     try {
         if(user && token){
+            console.log(token)
             currentUser(token).then((res) => {
                 setOk(true)
             })

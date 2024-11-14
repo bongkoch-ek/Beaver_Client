@@ -183,11 +183,11 @@ export const deleteMember = async (token, data) => {
 
 export const updateStatusMember = async (token, id) => {  
     return await axios.patch(
-      `http://localhost:8888/dashboard/status-member/${id}`, 
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+      `http://localhost:8888/dashboard/status-member/${id}`,{}, {
+        headers: { 
+          Authorization: `Bearer ${token}` 
+        },
+      });
   };
 
   export const createImagesInTask = async (token, input,) => {

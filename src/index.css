@@ -16,6 +16,28 @@ html {
   scrollbar-width: none; /* Firefox */
 }
 
+/* For WebKit browsers (Chrome, Safari) */
+.scrollbar-white::-webkit-scrollbar {
+  width: 8px; /* Adjust scrollbar width */
+  height: 8px; /* Adjust scrollbar height */
+}
+
+.scrollbar-white::-webkit-scrollbar-thumb {
+  background-color: #ffffff; /* Set scrollbar thumb color to white */
+  border-radius: 4px; /* Optional: round edges */
+}
+
+.scrollbar-white::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1); /* Set track color for visibility */
+}
+
+/* For Firefox */
+.scrollbar-white {
+  scrollbar-color: #ffffff rgba(0, 0, 0, 0.1); /* Set thumb and track color */
+  scrollbar-width: thin; /* Optionally use a thin scrollbar */
+}
+
+
 .blur-layer {
   backdrop-filter: blur(10px); /* Adjust the blur amount */
   background: rgba(255, 255, 255, 0.6); /* Optional: Add some opacity */
@@ -99,6 +121,22 @@ html {
 }
 .fc-event-time {
   display: none; 
+}
+
+.fc-button.fc-today-button ,
+.fc-button.fc-prev-button, 
+.fc-button.fc-next-button {
+  background-color: #FFE066; 
+  color: #333333;
+  border-color: #FFE066; 
+  border-radius: 16px;
+}
+
+.fc-button.fc-today-button:hover ,
+.fc-button.fc-prev-button:hover,
+.fc-button.fc-next-button:hover {
+  background-color: #E8CC5D; 
+  border-color: #E8CC5D; 
 }
 
 .tooltip {

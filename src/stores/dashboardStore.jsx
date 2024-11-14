@@ -72,7 +72,7 @@ const useDashboardStore = create(
       },
 
       actionGetUserProjects: async (token) => {
-        set({ loading: true, error: null });
+        set({ isLoading: true, error: null });
         try {
           const response = await axios.get(
             `http://localhost:8888/dashboard/project`,
@@ -400,13 +400,17 @@ const useDashboardStore = create(
         set({ isLoading: true });
 
         try {
-          const response = await axios.post(`http://localhost:8888/dashboard/create-weblink`, form, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          const response = await axios.post(
+            `http://localhost:8888/dashboard/create-weblink`,
+            form,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
 
-          set({ isLoading: false ,webLink : response.data});
+          set({ isLoading: false, webLink: response.data });
           return response.data;
         } catch (err) {
           set({ isLoading: false });
@@ -415,16 +419,19 @@ const useDashboardStore = create(
         }
       },
 
-      actionDeleteLink: async ( token, id) => {
+      actionDeleteLink: async (token, id) => {
         set({ isLoading: true });
         try {
-          console.log(token)
-          const response = await axios.delete(`http://localhost:8888/dashboard/weblink/${id}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          set({ isLoading: false});
+          console.log(token);
+          const response = await axios.delete(
+            `http://localhost:8888/dashboard/weblink/${id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          set({ isLoading: false });
           return response.data;
         } catch (err) {
           set({ isLoading: false });
@@ -433,7 +440,7 @@ const useDashboardStore = create(
         }
       },
       
-      actionUpdateStatusMember: async (id, token) => {
+      actionUpdateStatusMember: async (token, id) => {
         set({ isLoading: true });
         try {
           const result = await updateStatusMember(token, id);
@@ -442,7 +449,8 @@ const useDashboardStore = create(
           return result.data;
         } catch (err) {
           set({ isLoading: false });
-          toast.error("Failed to update member status");
+          // console.log(err.response.data.err)
+          toast.error(err.response.data.err);
           throw err;
         }
       },
@@ -450,13 +458,17 @@ const useDashboardStore = create(
         set({ isLoading: true });
 
         try {
-          const response = await axios.post(`http://localhost:8888/dashboard/create-comment`, form, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          const response = await axios.post(
+            `http://localhost:8888/dashboard/create-comment`,
+            form,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
 
-          set({ isLoading: false});
+          set({ isLoading: false });
           return response.data;
         } catch (err) {
           set({ isLoading: false });
@@ -469,13 +481,16 @@ const useDashboardStore = create(
         set({ isLoading: true });
 
         try {
-          const response = await axios.get(`http://localhost:8888/dashboard/comment/${id}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          const response = await axios.get(
+            `http://localhost:8888/dashboard/comment/${id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
 
-          set({ isLoading: false, comments: response.data});
+          set({ isLoading: false, comments: response.data });
           return response.data;
         } catch (err) {
           set({ isLoading: false });
