@@ -170,16 +170,20 @@ export const searchFilters = async (token, arg) => {
 
 //// Update
 
-export const updateStatusMember = async (token, id, status) => {
-    const header = {
-      headers: { Authorization: `Bearer ${token}` },
-    };
-    const data = { status }; 
-  
+export const updateStatusMember = async (token, id) => {  
     return await axios.patch(
       `http://localhost:8888/dashboard/status-member/${id}`, 
-      data,
-      header
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
     );
   };
 
+  export const createImagesInTask = async (token, input,) => {
+    const header = {
+      headers: { Authorization: `Bearer ${token}` },
+      
+  };
+  
+  return await axios.post('http://localhost:8888/dashboard/create-imagetask',input,header)
+  }

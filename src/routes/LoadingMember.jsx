@@ -16,7 +16,8 @@ const LoadingMember = ({ id }) => {
         if (currentCount === 1) {
           clearInterval(interval);
           setRedirect(true);
-          actionUpdateStatusMember(token, id);
+          console.log(id)
+          actionUpdateStatusMember(id, token);
         }
         return currentCount - 1;
       });
