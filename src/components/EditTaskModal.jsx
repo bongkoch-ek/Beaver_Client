@@ -70,7 +70,6 @@ export function EditTaskModal(props) {
   const [txt, setTxt] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [isFocusedComment, setIsFocusedComment] = useState(false);
-  const [postedComments, setPostedComments] = useState([]);
   const [userPicture, setUserPicture] = useState("");
   const [input, setInput] = useState({
     title: item.title,
@@ -86,8 +85,6 @@ export function EditTaskModal(props) {
     async function fetch() {
       await actionGetTask(taskId, token)
       await actionGetCommentByTaskId(taskId, token)
-
-      setPostedComments(comments)
     }
     fetch()
   }, []);
@@ -117,28 +114,9 @@ export function EditTaskModal(props) {
     setUrl("");
   };
 
-  // const handlePostComment = () => {
-  //   if (txt.trim()) {
-  //     const newComment = {
-  //       text: txt,
-  //       userPicture: userPicture,
-  //       timestamp: new Date(),
-  //       userId: "current_user_id"  //รับค่า userId
-  //     };
-
-  //     setPostedComments([...postedComments, newComment]);
-  //     setTxt("");
-  //     setIsFocusedComment(false);
-  //   }
-  // };
-
   useEffect(() => {
     socket.on("comment_message", (data) => {
-      setPostedComments([
-        ...postedComments,
-        data
-      ])
-      // postedComments.push(data)
+      actionGetCommentByTaskId(taskId, token)
     });
   }, [socket]);
 
@@ -146,11 +124,6 @@ export function EditTaskModal(props) {
     e.preventDefault();
     const newComment = await actionComment({ comment: txt, taskId: taskId }, token)
     await actionGetCommentByTaskId(taskId, token)
-    setPostedComments(comments)
-    // setPostedComments([
-    //   ...postedComments,
-    //   newComment
-    // ])
     await socket.emit("comment", newComment);
     setTxt("");
   };
@@ -168,7 +141,6 @@ export function EditTaskModal(props) {
     e.preventDefault()
     setIsEditing(false);
     setInput((prv) => ({ ...prv, title: taskName }));
-    // actionUpdateTask(taskId, input, token)
   };
 
   const hdlStartDate = (e) => {
@@ -190,7 +162,6 @@ export function EditTaskModal(props) {
     setInput((prv) => ({ ...prv, dueDate: null }))
   }
 
-  console.log("comment", postedComments)
   return (
     <div className="max-w-full w-full max-h-full p-6 bg-white flex flex-col gap-2 m-auto overflow-y-auto ">
       <form>
@@ -419,9 +390,9 @@ export function EditTaskModal(props) {
             <div className="flex flex-col gap-2 pb-3">
               <div className="flex gap-2">
                 <div className="bg-gray-500 min-w-[40px]  rounded-full justify-center items-center">
-                  {postedComments?.userPicture ? (
+                  {comments?.userPicture ? (
                     <img
-                      src={postedComments?.userPicture}
+                      src={comments?.userPicture}
                       alt="User"
                       className="w-full h-full object-cover"
                     />
@@ -463,9 +434,9 @@ export function EditTaskModal(props) {
 
           {/* แสดงความคิดเห็นที่โพสต์แล้ว */}
           {
-            postedComments &&
+            comments &&
             <div className="flex flex-col gap-2 pr-4">
-              {postedComments?.map((comment, index) => (
+              {comments?.map((comment, index) => (
                 <div key={index} className="flex items-center gap-3">
                   <div className="bg-gray-500 w-[40px] h-[40px] rounded-full overflow-hidden">
                     {comment.userPicture ? (
