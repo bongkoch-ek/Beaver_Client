@@ -428,10 +428,10 @@ const useDashboardStore = create(
         }
       },
       
-      actionUpdateStatusMember: async (id, status, token) => {
+      actionUpdateStatusMember: async (id, token) => {
         set({ isLoading: true });
         try {
-          const result = await updateStatusMember(token, id, status);
+          const result = await updateStatusMember(token, id);
           set({ isLoading: false });
           toast.success("Member status updated successfully!");
           return result.data;

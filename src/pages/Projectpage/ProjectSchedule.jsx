@@ -3,52 +3,100 @@ import FullCalendar from '@fullcalendar/react'
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import interactionPlugin from "@fullcalendar/interaction"
 import TaskMember from '@/src/components/TaskMember';
+import useDashboardStore from '@/src/stores/dashboardStore';
 
 export default function ProjectSchedule(props) {
 
+    const project = useDashboardStore(state => state.project)
     const data = []
 
     const today = new Date().toISOString().split('T')[0]
-    console.log(today)
     //#region set prop
     let done = []
     let inProgress = []
     let late = []
     let event = []
-    data.map((el) => {
-        if (el.column.status === 'DONE')
-            done.push(
-                {
+    project.list.map((el) => {
+        if (el.status === 'INPROGRESS') {
+            el.task.map(el => {
+                if (el.dueDate && new Date(el.dueDate) < new Date(today)) {
+                    late.push({
+                        id: el.id,
+                        title: el.title,
+                        eventBackgroundColor: "#E53935",
+                        eventTextColor: "#FFFFFF",
+                        eventBorderColor: "#E53935"
+                    })
+                }
+                else {
+                    inProgress.push({
+                        id: el.id,
+                        title: el.title,
+                        eventBackgroundColor: "#5DB9F8",
+                        eventTextColor: "#FFFFFF",
+                        eventBorderColor: "#5DB9F8"
+                    })
+                }
+                event.push({
+                    id: el.id,
+                    resourceId: el.id,
+                    title: el.title,
+                    start: el.startDate || el.createdAt,
+                    end: el.dueDate || today
+                })
+            })
+        }
+        else if (el.status === 'DONE') {
+            el.task.map(el => {
+                done.push({
                     id: el.id,
                     title: el.title,
                     eventBackgroundColor: "#43A047",
                     eventTextColor: "#FFFFFF",
                     eventBorderColor: "#43A047"
                 })
-        else if (el.column.status === 'INPROGRESS')
-            inProgress.push({
-                id: el.id,
-                title: el.title,
-                eventBackgroundColor: "#5DB9F8",
-                eventTextColor: "#FFFFFF",
-                eventBorderColor: "#5DB9F8"
+                event.push({
+                    id: el.id,
+                    resourceId: el.id,
+                    title: el.title,
+                    start: el.startDate || el.createdAt,
+                    end: el.dueDate || el.updatedAt
+                })
             })
-        else if (el.column.status === 'LATE')
-            late.push({
-                id: el.id,
-                title: el.title,
-                eventBackgroundColor: "#E53935",
-                eventTextColor: "#FFFFFF",
-                eventBorderColor: "#E53935"
-            })
+        }
+        // done.push(
+        //     {
+        //         id: el.id,
+        //         title: el.title,
+        //         eventBackgroundColor: "#43A047",
+        //         eventTextColor: "#FFFFFF",
+        //         eventBorderColor: "#43A047"
+        //     })
+        // else if (el.status === 'INPROGRESS')
+        //     inProgress.push({
+        //         id: el.id,
+        //         title: el.title,
+        //         eventBackgroundColor: "#5DB9F8",
+        //         eventTextColor: "#FFFFFF",
+        //         eventBorderColor: "#5DB9F8"
+        //     })
+        // else if (el.status === 'LATE')
+        //     late.push({
+        //         id: el.id,
+        //         title: el.title,
+        //         eventBackgroundColor: "#E53935",
+        //         eventTextColor: "#FFFFFF",
+        //         eventBorderColor: "#E53935"
+        //     })
 
-        event.push({
-            id: el.id,
-            resourceId: el.id,
-            title: el.title,
-            start: el.startDate,
-            end: el.column.status === 'LATE'? today : el.dueDate
-        })
+        // event.push({
+        //         id: el.id,
+        //         resourceId: el.id,
+        //         title: el.title,
+        //         start: el.startDate,
+        //         end: el.column.status === 'LATE'? today : el.dueDate
+        //     })
+        //     console.log("data" ,el)
     })
 
 
@@ -93,7 +141,7 @@ export default function ProjectSchedule(props) {
     return (
         <div className="flex bg-gray-100 w-[90%] mx-auto  pt-[40px] ">
             <div className="h-auto w-full px-10 py-16 mb-6 bg-white rounded-[64px] flex-col justify-start items-start gap-16 inline-flex">
-                <TaskMember/>
+                <TaskMember />
                 <div className='flex w-full justify-center'>
                     <div className='flex bg-white px-10'>
                         <FullCalendar
@@ -107,7 +155,7 @@ export default function ProjectSchedule(props) {
                             eventMouseEnter={handleEventMouseEnter}
                             eventMouseLeave={handleEventMouseLeave}
                             height="auto"
-                            expandRows= {true}
+                            expandRows={true}
                             viewHeight={"auto"}
                             eventClassNames="centered-event"
                         />
