@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import Task from "./Task";
 import StatusColums from "./StatusColums";
 import AddNewStatus from "./AddNewStatus";
-import useUserStore from "../stores/userStore";
 import useDashboardStore from "../stores/dashboardStore";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 export default function TaskLane() {
   const project = useDashboardStore((state) => state.project);
@@ -14,7 +13,7 @@ export default function TaskLane() {
   // useEffect(() => {
   //   actionGetProjectById(1,token)
   // })
-// console.log(project , "projecttt")
+  // console.log(project , "projecttt")
   // DATA FOR TESTING FEATURE DRAG AND DROP
   // const DEFAULT_TASKS = [
   //   // To do
@@ -92,7 +91,7 @@ export default function TaskLane() {
     const statusOrder = {
       TODO: 1,
       INPROGRESS: 2,
-      DONE: 3
+      DONE: 3,
     };
     return statusOrder[a.status] - statusOrder[b.status];
   });
@@ -103,21 +102,26 @@ export default function TaskLane() {
   });
 
   return (
-    <div className="self-stretch justify-start items-start gap-4 inline-flex">
-      {sortedList?.map((item) => (
-        <StatusColums
-          key={item?.id}
-          item={item}
-          title={item?.title}
-          taskCard={filteredTasks}
-          setTaskCard={setTaskCard}
-          hdlTaskMove={hdlTaskMove}
-          status={item?.status}
-          allList={allList}
-          setAllList={setAllList}
-        />
-      ))}
-      <AddNewStatus setAllList={setAllList} />
-    </div>
+    <>
+      <ScrollArea className="w-full min-h-[672px] max-w-[1800px] rounded-md overflow-x-auto">
+        <div className="justify-start items-start gap-4 flex">
+          {sortedList?.map((item) => (
+            <StatusColums
+              key={item?.id}
+              item={item}
+              title={item?.title}
+              taskCard={taskCard}
+              setTaskCard={setTaskCard}
+              hdlTaskMove={hdlTaskMove}
+              status={item?.status}
+              allList={allList}
+              setAllList={setAllList}
+            />
+          ))}
+          <AddNewStatus setAllList={setAllList} />
+        </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
+    </>
   );
 }
