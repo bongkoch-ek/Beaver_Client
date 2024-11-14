@@ -156,40 +156,36 @@ export const deleteList = async (token, listId) => {
       `http://localhost:8888/dashboard/list/${listId}`,
       header
     );
+}
+export const deleteMember = async (token, data) => {
+  const header = {
+    headers: { Authorization: `Bearer ${token}` },
   };
+  return await axios.delete(
+    `http://localhost:8888/dashboard/member`, 
+    { 
+      headers: { Authorization: `Bearer ${token}` },
+      data: data // ส่ง data ในรูปแบบ { projectId, userId }
+    }
+  );
+};
 
+//// Update
 
-
-
-  export const deleteMember = async (token, data) => {
-    const { projectId, userId } = data;
-    return await axios.delete(
-      `http://localhost:8888/dashboard/member`, 
+export const updateStatusMember = async (token, id) => {  
+    return await axios.patch(
+      `http://localhost:8888/dashboard/status-member/${id}`, 
       {
-        headers: { 
-          Authorization: `Bearer ${token}` 
-        },
-        data: {
-          projectId,
-          userId
-        }
+        headers: { Authorization: `Bearer ${token}` },
       }
     );
   };
 
-//// Update
-
-export const updateStatusMember = async (token, id, status) => {
+  export const createImagesInTask = async (token, input,) => {
     const header = {
       headers: { Authorization: `Bearer ${token}` },
-    };
-    const data = { status }; 
-  
-    return await axios.patch(
-      `http://localhost:8888/dashboard/status-member/${id}`, 
-      data,
-      header
-    );
+    }
+    return await axios.post('http://localhost:8888/dashboard/create-imagetask',input,header)
   };
 
   export const updateProject = async (token, projectId, form) => {

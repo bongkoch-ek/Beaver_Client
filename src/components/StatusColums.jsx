@@ -10,6 +10,7 @@ import useUserStore from "../stores/userStore";
 import { Dialog } from "@radix-ui/react-dialog";
 import DeleteStatusModal from "./DeleteStatusModal";
 import { Input } from "@/components/ui/input";
+import NoTask from "./NoTask";
 
 export default function StatusColums({
   item,
@@ -303,7 +304,7 @@ export default function StatusColums({
           onDrop={hdlDragEnd}
           onDragOver={hdlDragOver}
           onDragLeave={hdlDragLeave}
-          className={`w-[264px] max-h-[676px] overflow-hidden px-4 py-4 ${
+          className={`w-[264px] min-h-[218px] max-h-[676px] overflow-hidden px-4 py-4 ${
             isCreate && "pt-0"
           } bg-[#F5F5F5] duration-200 transition-colors ${
             isActive && "border bg-[#f5f5f550] border-[#DDE6F0]"
@@ -320,7 +321,7 @@ export default function StatusColums({
                 </button>
               )}
             </div>
-            <div className="self-stretch flex-col justify-start items-start gap-1 flex">
+            <div className="self-stretch flex-col justify-start items-start gap-2 flex">
               <div className="w-full justify-start items-center gap-2 flex">
                 <div key={item.id} className="w-4 h-4 relative">
                   {item.status === "LATE" ? (
@@ -333,7 +334,7 @@ export default function StatusColums({
                     <div className="w-4 h-4 left-0 top-0 absolute bg-[#91959A] rounded-lg" />
                   )}
                 </div>
-                <div className="grow justify-between min-w-full px-4 text-black text-xl font-semibold leading-[33px] flex">
+                <div className=" justify-between min-w-full px-4 text-black text-xl font-semibold leading-[33px] flex">
                   <div className="flex justify-between w-full">
                     {isEditedColumn ? (
                       <div>
@@ -422,16 +423,23 @@ export default function StatusColums({
                 ref={containerRef}
               >
                 <div className="relative">
-                  {filteredTaskCard.map((item) => (
-                    <div key={item.id}>
-                      <DropTaskIndicator beforeId={item.id} column={item.id} />
-                      <Task
-                        item={item}
-                        hdlDragStart={hdlDragStart}
-                        projectId={project.id}
-                      />
-                    </div>
-                  ))}
+                  {filteredTaskCard.length === 0 && !isCreate ? (
+                    <NoTask />
+                  ) : (
+                    filteredTaskCard.map((item) => (
+                      <div key={item.id}>
+                        <DropTaskIndicator
+                          beforeId={item.id}
+                          column={item.id}
+                        />
+                        <Task
+                          item={item}
+                          hdlDragStart={hdlDragStart}
+                          projectId={project.id}
+                        />
+                      </div>
+                    ))
+                  )}
                   <DropTaskIndicator column={item.id} />
                 </div>
                 {isOverflow && (

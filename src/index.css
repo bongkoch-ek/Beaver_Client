@@ -94,14 +94,11 @@ html {
 
 .fc-event {
   border-radius: 5px; 
-  /* margin-top: 8px; */
-  /* height: 100%; */
-   /* padding-top: 6px; */
-  /* padding-bottom: 6px; */ 
-  /* display: flex;
-  justify-content: center; */
   margin: auto;
   background-color: aqua;
+}
+.fc-event-time {
+  display: none; 
 }
 
 .tooltip {
@@ -121,6 +118,4 @@ html {
   justify-content: center; 
   align-items: center; 
   height: 100%; 
-
- /* padding: 1px 0px; */
 }
