@@ -123,6 +123,22 @@ html {
   display: none; 
 }
 
+.fc-button.fc-today-button ,
+.fc-button.fc-prev-button, 
+.fc-button.fc-next-button {
+  background-color: #FFE066; 
+  color: #333333;
+  border-color: #FFE066; 
+  border-radius: 16px;
+}
+
+.fc-button.fc-today-button:hover ,
+.fc-button.fc-prev-button:hover,
+.fc-button.fc-next-button:hover {
+  background-color: #E8CC5D; 
+  border-color: #E8CC5D; 
+}
+
 .tooltip {
   background-color: #333;
   color: #fff;            

@@ -197,6 +197,7 @@ export function EditTaskModal(props) {
                     onChange={(e) => setTaskName(e.target.value)}
                     className="border-none outline-none w-full"
                     autoFocus
+                    maxlength={35}
                   />
                   <button
                     onClick={hdlSave}

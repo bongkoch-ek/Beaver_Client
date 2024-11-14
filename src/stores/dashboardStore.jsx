@@ -437,8 +437,8 @@ const useDashboardStore = create(
           throw err;
         }
       },
-
-      actionUpdateStatusMember: async (id, token) => {
+      
+      actionUpdateStatusMember: async (token, id) => {
         set({ isLoading: true });
         try {
           const result = await updateStatusMember(token, id);
@@ -447,7 +447,8 @@ const useDashboardStore = create(
           return result.data;
         } catch (err) {
           set({ isLoading: false });
-          toast.error("Failed to update member status");
+          // console.log(err.response.data.err)
+          toast.error(err.response.data.err);
           throw err;
         }
       },
