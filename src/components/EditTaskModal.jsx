@@ -66,6 +66,8 @@ export function EditTaskModal(props) {
   const actionGetProjectMember = useDashboardStore((state) => state.actionGetProjectMember);
   const actionAssignUserToTask = useDashboardStore((state) => state.actionAssignUserToTask);
   const projectMember = useDashboardStore((state) => state.projectMember);
+  const actionGetTaskAssignee = useDashboardStore((state) => state.actionGetTaskAssignee);
+  const assignee = useDashboardStore((state) => state.assignee);
   
   const [dueDate, setDueDate] = useState(new Date(item.dueDate));
   const [startDate, setStartDate] = useState(new Date(item.startDate));
@@ -87,14 +89,14 @@ export function EditTaskModal(props) {
     taskId : taskId
   });
   console.log("check project",project)
-
-
+  console.log("check taskId", taskById.assignee);
  
   useEffect(() => {
     async function fetch() {
       await actionGetTask(taskId, token);
       await actionGetCommentByTaskId(taskId, token);
       await actionGetProjectMember(projectId, token);
+      
       console.log("Fetched project members:", projectMember);
     }
     fetch();
@@ -109,9 +111,10 @@ export function EditTaskModal(props) {
   }, [input]);
 
   const handleAssigneeChange = async (userId) => {
-    setSelectedAssignee(userId);
-    await actionAssignUserToTask(taskId, userId, token);
+    setSelectedAssignee(userId); 
+    await actionAssignUserToTask(taskId, userId, token); 
     await actionGetTask(taskId, token);
+    await actionGetTaskAssignee(taskId, token);
     toast.success("Assignee updated successfully!");
   };
 
@@ -247,9 +250,10 @@ export function EditTaskModal(props) {
                 </Select>
               </div>
 
-              {/* ผู้รับผิดชอบ */}
-              <div className="flex flex-col gap-2">
-          <p className="text-[#333333] text-sm font-semibold">Assignee:</p>
+                   {/* Assignee section */}
+      <div className="flex flex-col gap-2">
+        <p className="text-[#333333] text-sm font-semibold">Assignee:</p>
+        {!assignee ? (
           <Select onValueChange={handleAssigneeChange} value={selectedAssignee}>
             <SelectTrigger className="w-[180px] rounded-full">
               <SelectValue placeholder="Select Assignee" />
@@ -266,7 +270,16 @@ export function EditTaskModal(props) {
               )}
             </SelectContent>
           </Select>
-        </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            
+            <span>{taskId  && taskById?.assignee[0]?.user?.displayName }</span>
+            <Button onClick={() => setSelectedAssignee(null)} variant="outline" size="sm">
+              Change
+            </Button>
+          </div>
+        )}
+      </div>
 
               {/* วันเริ่มต้นงาน */}
               <div className="flex gap-4 items-center">
