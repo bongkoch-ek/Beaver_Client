@@ -56,12 +56,9 @@ export default function Task({ item, hdlDragStart, projectId }) {
   );
   const [taskId, setTaskId] = useState(0);
 
-  console.log(item, "item");
-  const assigneeNames = item.assignee?.map((item) => item);
-  const display = assigneeNames[0]; // This will be an array of display names
-  console.log(display?.user?.displayName, "sdsdsd");
-  const actualName = display?.user?.displayName?.charAt(0);
-  console.log(actualName, "Yeah");
+  const assigneeNames = item?.assignee?.map((item) => item) || [];
+  const display = assigneeNames.length > 0 ? assigneeNames[0] : null;
+  const actualName = display?.user?.displayName?.charAt(0) || "U";
 
   const handleDelete = (e) => {
     e.stopPropagation();
@@ -123,7 +120,7 @@ export default function Task({ item, hdlDragStart, projectId }) {
           onDragStart={(e) => hdlDragStart(e, item)}
           onMouseEnter={() => setIsHover(true)}
           onMouseLeave={() => setIsHover(false)}
-          className={`  w-full  self-stretch p-4 ${
+          className={`  w-full min-h-[120px] self-stretch p-4 ${
             isEditText
               ? "bg-[#cde9fd]/50 cursor-text my-2"
               : "bg-[#cde9fd] hover:opacity-70 transition-opacity duration-200 active:cursor-grabbing cursor-grab"
@@ -167,9 +164,9 @@ export default function Task({ item, hdlDragStart, projectId }) {
               >
                 <div className="self-stretch justify-between items-center gap-2 flex w-full">
                   <div className=" text-black text-sm font-normal leading-[23px] cursor-pointer w-5/6">
-                  <article class="truncate w-full">
-                    <p className="">{item.title}</p>
-                  </article>
+                    <article class="truncate w-full">
+                      <p className="">{item.title}</p>
+                    </article>
                   </div>
                   <div onClick={(e) => e.stopPropagation()} className="w-1/6">
                     <Popover>
@@ -259,10 +256,10 @@ export default function Task({ item, hdlDragStart, projectId }) {
                     </>
                   )}
 
-                  {!isEditText && (
+                  {!isEditText && assigneeNames.length > 0 && (
                     <div className="w-[34px] h-[34px] flex items-center justify-center bg-white rounded-full outline outline-4 outline-[#ffe066]">
                       <div className="text-center text-[#333333] font-semibold text-base leading-relaxed">
-                        {actualName || "U"}
+                        <p>{actualName || "U"}</p>
                       </div>
                     </div>
                   )}
