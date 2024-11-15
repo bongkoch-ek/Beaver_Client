@@ -13,7 +13,7 @@ import {
   getTaskAssignee,
   updateTask,
   deleteTask,
-  assignUserToTask
+  assignUserToTask,
 } from "../services/DashboardService";
 import io from "socket.io-client";
 
@@ -58,7 +58,7 @@ const useDashboardStore = create(
           console.log(newProject);
           set((state) => ({
             project: newProject,
-            images: newProject.images, 
+            images: newProject.images,
             isLoading: false,
           }));
           return response.data;
@@ -314,7 +314,10 @@ const useDashboardStore = create(
               },
             }
           );
-          set({ isLoading: false, activityLogs: response.data.data.activityLog });
+          set({
+            isLoading: false,
+            activityLogs: response.data.data.activityLog,
+          });
           return response.data;
         } catch (error) {
           throw error;
@@ -439,7 +442,7 @@ const useDashboardStore = create(
           throw err;
         }
       },
-      
+
       actionUpdateStatusMember: async (token, id) => {
         set({ isLoading: true });
         try {
@@ -500,10 +503,13 @@ const useDashboardStore = create(
       },
       actionGetProjectMember: async (projectId, token) => {
         try {
-          const response = await axios.get(`http://localhost:8888/dashboard/get-member/${projectId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          set({ projectMember: response.data || [] }); 
+          const response = await axios.get(
+            `http://localhost:8888/dashboard/get-member/${projectId}`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+          set({ projectMember: response.data || [] });
         } catch (error) {
           console.error("Failed to fetch project members", error);
           set({ projectMember: [] });
@@ -513,7 +519,7 @@ const useDashboardStore = create(
         set({ isLoading: true });
         try {
           const result = await assignUserToTask(token, taskId, userId);
-          
+
           set((state) => ({
             taskById: {
               ...state.taskById,
@@ -521,7 +527,7 @@ const useDashboardStore = create(
             },
             isLoading: false,
           }));
-        console.log("check result :" ,result.data)
+          console.log("check result :", result.data);
           return result.data;
         } catch (err) {
           set({ isLoading: false });
@@ -534,7 +540,7 @@ const useDashboardStore = create(
         try {
           const response = await getTaskAssignee(token, taskId);
           set({ assignee: response.data, isLoading: false });
-          console.log("Check get task assig:",response.data)
+          console.log("Check get task assig:", response.data);
           return response.data;
         } catch (error) {
           console.error("Failed to fetch assignee data", error);
@@ -543,7 +549,9 @@ const useDashboardStore = create(
           throw error;
         }
       },
-      
+      setSelectedMember: (userId) => {
+        set({ selectedMember: userId });
+      },
     }),
 
     {

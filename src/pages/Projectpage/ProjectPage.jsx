@@ -7,6 +7,7 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { ChevronRight } from "lucide-react";
 
 const ProjectPage = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,6 +29,8 @@ const ProjectPage = () => {
     fetchData();
   }, []);
 
+  const projectName = task.map((item) => item?.list?.project?.projectName);
+  const actualProjectName = projectName[0];
   return (
     <div className="bg-gray-100">
       <div className="flex text-gray-600 text-[16px] ml-[65px]">
@@ -64,53 +67,43 @@ const ProjectPage = () => {
         </div>
 
         {task.length > 0 ? (
-          <div className="bg-white min-h-[400px] rounded-2xl mt-[20px]">
-            <div className="flex w-full gap-1 rounded-3xl">
-              {task.map((el, index) => (
-                <div key={index}>
-                  <div className="flex justify-between h-[150px]">
-                    <div className="flex flex-col text-[16px] justify-center gap-[16px] pl-[40px]">
-                      <div>
-                        <p>{el.title}</p>
-                      </div>
+          <div className="bg-white min-h-[160px] h-full rounded-2xl mt-[20px] px-[40px] py-[32px]">
+            {task.map((el, index) => (
+              <div key={index} className="flex items-center justify-between ">
+                <div className="flex flex-col text-[16px] justify-center gap-[12px] ">
+                  <p className="text-black font-semibold text-[20px]">
+                    {actualProjectName || "Project_Name"}
+                  </p>
 
-                      <div className="flex flex-col gap-[10px]">
-                        <p className="text-[14px]">
-                          Status:{" "}
-                          <span className="text-[#767676]"> {el.priority}</span>
-                        </p>
-                        <p className="text-[14px]">
-                          Due Date:{" "}
-                          <span className="text-[#767676]">
-                            {moment(el.dueDate).format("DD/MM/YYYY")}
-                          </span>
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center pr-[40px]">
-                      <Link to={`/project/${el.list?.projectId}`}>
-                        <button className="px-4 py-2 bg-[#ffe066] hover:bg-[#e8cc5d] hover:duration-200 text-[#333333] rounded-md">
-                          Go to Project
-                        </button>
-                      </Link>
-                    </div>
+                  <div className="flex gap-[10px]">
+                    <p>Task : </p>
+                    <p className="text-[#767676]">{el.title}</p>
                   </div>
-                  {index + 1 !== task.length && (
-                    <hr className="border mx-[65px]" />
-                  )}
-                </div>
-              ))}
 
-              <div className="flex justify-end pt-[24px] pr-[40px] pb-8 hover:cursor-pointer">
-                <Link 
-                  to="/project/list" 
-                  className="text-[#333333] hover:scale-105 transition-transform duration-200 ease-in-out"
-                >
-                  See all
+                  <div className="flex flex-col gap-[10px]">
+                    <p className="text-[14px]">
+                      Status:{" "}
+                      <span className="text-[#767676]"> {el.priority}</span>
+                    </p>
+                    <p className="text-[14px]">
+                      Due Date:{" "}
+                      <span className="text-[#767676]">
+                        {moment(el.dueDate).format("DD/MM/YYYY")}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+                <Link to={`/project/${el.list?.projectId}`}>
+                  <button className="px-4 py-2 flex gap-2 font-semibold bg-[#ffe066] hover:bg-[#e8cc5d] hover:duration-200 text-[#333333] rounded-md">
+                    Go to Project
+                    <ChevronRight />
+                  </button>
                 </Link>
+                {index + 1 !== task.length && (
+                  <hr className="border mx-[65px]" />
+                )}
               </div>
-            </div>
+            ))}
           </div>
         ) : (
           <div className="min-h-[400px] px-10 py-8 bg-white rounded-[32px] flex-col flex items-center justify-center w-full relative">
@@ -118,8 +111,8 @@ const ProjectPage = () => {
               No tasks due today.
             </div>
             <div className="flex justify-end pr-[40px] pb-8 hover:cursor-pointer absolute bottom-0 right-0">
-              <Link 
-                to="/project/list" 
+              <Link
+                to="/project/list"
                 className="text-[#333333] hover:font-medium hover:scale-105 transition-transform duration-200 ease-in-out"
               >
                 See all
@@ -143,10 +136,10 @@ const ProjectPage = () => {
               </div>
             ) : (
               <div className="w-full h-40 px-10 py-8 bg-white rounded-[32px] flex-col justify-center items-center gap-6 inline-flex">
-              <div className="text-right text-[#767676] text-lg font-normal leading-[30px]">
-                No recent activity.
+                <div className="text-right text-[#767676] text-lg font-normal leading-[30px]">
+                  No recent activity.
+                </div>
               </div>
-            </div>
             )}
           </div>
 
@@ -160,5 +153,3 @@ const ProjectPage = () => {
 };
 
 export default ProjectPage;
-
-

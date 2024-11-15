@@ -14,7 +14,7 @@ export default function TaskLane({
 }) {
   return (
     <>
-      <div className="rounded-[32px] w-full max-w-[1880px] bg-[#B4DFFC]/80 ">
+      <div className="rounded-[32px] w-full bg-[#B4DFFC]/80 ">
         <ScrollArea className="  min-h-[704px] overflow-x-auto px-7 py-10 scrollbar-white">
           <div className="justify-start items-start gap-4 flex rounded-[32px]  ">
             {sortedList?.map((item) => (
