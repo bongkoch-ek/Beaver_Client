@@ -18,7 +18,7 @@ const UploadFileProject = ({ input, setInput }) => {
     const files = e.target.files;
     if (files) {
       let allFiles = input.images;
-      for (let i = 0; i < files.length; i++) {
+      for (let i = 0; i < files?.length; i++) {
         const file = files[i];
         if (!file.type.startsWith("image/")) {
           toast.error(`File ${file.name} is not an image.`);
@@ -81,7 +81,7 @@ const UploadFileProject = ({ input, setInput }) => {
       <div className="bg-gray-300 w-[120px] h-[120px] flex justify-center items-center rounded-md overflow-hidden">
         {isLoading ? (
           <Loader className="w-8 h-8 animate-spin" />
-        ) : input.images.length > 0 ? (
+        ) : input.images?.length > 0 ? (
           <div className="relative w-full h-full">
             <img
               src={input.images[0].url}

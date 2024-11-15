@@ -8,6 +8,7 @@ import SecondaryButton from "../components/common/SecondaryButton";
 import useUserStore from "../stores/userStore";
 import { toast } from "react-toastify";
 import BackgroundImage from "../components/BackgroundImage";
+import LoadingPage from "./LoadingPage";
 
 const Profile = () => {
   const user = useUserStore((state) => state.user);
@@ -16,13 +17,26 @@ const Profile = () => {
   );
   const token = useUserStore((state) => state.token);
 
-  const [editedForm, setEditedForm] = useState({
-    bio: "",
-    firstname: "",
-    lastname: "",
-    displayname: "",
-    phone: "",
-  });
+  const [loading, setLoading] = useState(false);
+  const [previewImage, setPreviewImage] = useState(null);
+  const [image, setImage] = useState(null);
+
+  const hdlPreviewImage = (e) => {
+    if (isDisabled) return;
+    setLoading(true);
+    try {
+      const file = e?.target?.files[0];
+      if (file) {
+        const previewURL = URL.createObjectURL(file);
+        console.log(previewURL);
+        setPreviewImage(previewURL);
+        setImage(file);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error("Error updating preview image:", error);
+    }
+  };
 
   const [isDisabled, setIsDisabled] = useState(true);
   const [errors, setErrors] = useState({});
@@ -35,13 +49,21 @@ const Profile = () => {
 
       setEditedForm({
         bio: user.bio || "",
-        firstname,
-        lastname,
+        firstname: firstname,
+        lastname: lastname,
         displayname: user.displayName || "",
         phone: user.phone || "",
       });
     }
   }, [user]);
+
+  const [editedForm, setEditedForm] = useState({
+    bio: user.bio,
+    firstname: user.fullname.split(" ")[0],
+    lastname: user.fullname.split(" ")[1],
+    displayname: user.displayName,
+    phone: user.phone,
+  });
 
   const validateForm = () => {
     const newErrors = {};
@@ -66,7 +88,18 @@ const Profile = () => {
     }
 
     try {
-      const result = await actionUpdateProfile(token, editedForm);
+      setLoading(true);
+      const form = new FormData();
+      form.append("bio", editedForm?.bio);
+      form.append("displayName", editedForm?.displayname);
+      form.append("firstname", editedForm?.firstname);
+      form.append("lastname", editedForm?.lastname);
+      form.append("phone", editedForm?.phone);
+      if (image) {
+        form.append("profileImage", image);
+      }
+
+      const result = await actionUpdateProfile(token, form);
       toast.success("Update profile successfully");
 
       if (result.user) {
@@ -82,6 +115,7 @@ const Profile = () => {
           phone: result.user.phone || "",
         });
       }
+      setLoading(false);
       setIsDisabled(true);
     } catch (error) {
       toast.error("Failed to update profile");
@@ -95,27 +129,68 @@ const Profile = () => {
   const hdlClickCancel = () => {
     setEditedForm({
       bio: user.bio || "",
-      firstname: "",
-      lastname: "",
+      firstname: user.fullname.split(" ")[0],
+      lastname: user.fullname.split(" ")[1],
       displayname: user.displayName || "",
       phone: user.phone || "",
     });
+    setPreviewImage(null);
+    setImage(null);
     setIsDisabled(true);
   };
 
+
   return (
-    <div className="bg-[#F5F5F5] min-h-screen py-10">
-      <div className="mx-[110px] rounded-[32px] pb-10 bg-white">
+    <div
+      className={`${loading && "h-screen p-0 absolute top1/2 left-1/2"} bg-[#F5F5F5] min-h-screen py-10`}
+    >
+      {loading && <LoadingPage />}
+      <div
+        className={`${
+          loading && "opacity-0"
+        } mx-[110px] rounded-[32px] pb-10 bg-white`}
+      >
         <div className="relative">
-          <BackgroundImage isDisabled={isDisabled} />
+          <BackgroundImage />
           <div className="absolute inset-0 flex justify-center items-start top-1/2 group">
             <div className="relative">
-              <ProfileImage isDisabled={isDisabled} />
+              {previewImage !== null ? (
+                <img
+                  src={previewImage}
+                  className="bg-cover bg-center rounded-full w-[160px] h-[160px] bg-white border"
+                  alt="Preview"
+                />
+              ) : (
+                <ProfileImage
+                  isDisabled={isDisabled}
+                  previewImage={previewImage}
+                />
+              )}
+
               <div
-                className={`absolute bottom-5 right-3 ${isDisabled && "opacity-0"
-                  } group-hover:opacity-0 transition-opacity duration-200`}
+                className={`absolute bottom-5 right-3 ${
+                  isDisabled && "opacity-0"
+                } group-hover:opacity-0 transition-opacity duration-200`}
               >
-                <IconButton Icon={() => <Plus color="#333333" size={16} />} />
+                <label className="relative">
+                  <IconButton
+                    onClick={(e) => e.stopPropagation()}
+                    onChange={(e) => hdlPreviewImage(e)}
+                    Icon={() => <Plus color="#333333" size={16} />}
+                  />
+                  <input
+                    type="file"
+                    id="previewImage"
+                    name="previewImage"
+                    disabled={isDisabled}
+                    onClick={(e) => e.stopPropagation()}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      hdlPreviewImage(e);
+                    }}
+                    className="opacity-0 absolute -top-[150%] -inset-24 right-1/2"
+                  />
+                </label>
               </div>
             </div>
           </div>
@@ -131,9 +206,10 @@ const Profile = () => {
               value={editedForm.bio}
               name="bio"
               placeholder="Describe about yourself ..."
-              className={`resize-none min-h-[120px] px-4 py-4 justify-start items-start gap-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#5DB9F8] ${isDisabled &&
+              className={`resize-none min-h-[120px] px-4 py-4 justify-start items-start gap-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#5DB9F8] ${
+                isDisabled &&
                 "bg-gray-100 text-gray-500 border-gray-300 border-none "
-                } font-semibold placeholder:font-normal`}
+              } font-semibold placeholder:font-normal`}
             ></textarea>
           </label>
         </div>
