@@ -106,7 +106,7 @@ const ProjectPage = () => {
             ))}
           </div>
         ) : (
-          <div className="min-h-[400px] px-10 py-8 bg-white rounded-[32px] flex-col flex items-center justify-center w-full relative">
+          <div className="min-h-[300px] px-10 py-8 bg-white rounded-[32px] flex-col flex items-center justify-center w-full relative">
             <div className="text-[#767676] text-lg font-normal">
               No tasks due today.
             </div>
@@ -127,9 +127,9 @@ const ProjectPage = () => {
         </p>
 
         <ScrollArea className="w-full overflow-x-auto">
-          <div className="bg-slate-100 rounded-[32px] flex flex-col  justify-center items-center  ">
+          <div className="bg-slate-100 rounded-[32px] flex flex-col  justify-center items-start  ">
             {activityLogs.length > 0 ? (
-              <div className="flex flex-row flex-nowrap gap-6">
+              <div className="flex flex-row flex-nowrap gap-6 ">
                 {activityLogs.map((el, index) => (
                   <ProjectCard key={index} project={el} />
                 ))}
