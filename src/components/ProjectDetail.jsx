@@ -13,6 +13,7 @@ const ProjectDetail = (props) => {
   const actionGetProjectById = useDashboardStore(
     (state) => state.actionGetProjectById
   );
+  const actionCreateActivityLog = useDashboardStore(state => state.actionCreateActivityLog)
   const [projectData, setProjectData] = useState({});
 
   const fetchInitialProjectData = async () => {
@@ -41,6 +42,10 @@ const ProjectDetail = (props) => {
   useEffect(() => {
     fetchInitialProjectData();
   }, [projectId]);
+
+  useEffect(() => {
+    actionCreateActivityLog(projectId, token)
+  }, [])
 
   return (
     <div>

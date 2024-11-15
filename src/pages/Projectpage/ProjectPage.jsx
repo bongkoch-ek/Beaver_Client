@@ -127,9 +127,9 @@ const ProjectPage = () => {
         </p>
 
         <ScrollArea className="w-full overflow-x-auto">
-          <div className="bg-slate-100 rounded-[32px] flex flex-col  justify-center items-center  ">
+          <div className="bg-slate-100 rounded-[32px] flex flex-col  justify-center items-start  ">
             {activityLogs.length > 0 ? (
-              <div className="flex flex-row flex-nowrap gap-6">
+              <div className="flex flex-row flex-nowrap gap-6 ">
                 {activityLogs.map((el, index) => (
                   <ProjectCard key={index} project={el} />
                 ))}
