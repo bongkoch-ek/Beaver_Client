@@ -29,7 +29,6 @@ const ProjectPage = () => {
     fetchData();
   }, []);
 
-  console.log(task)
   const projectName = task.map((item) => item?.list?.project?.projectName);
   const actualProjectName = projectName[0];
   return (
