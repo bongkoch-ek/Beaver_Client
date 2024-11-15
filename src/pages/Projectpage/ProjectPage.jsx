@@ -106,7 +106,7 @@ const ProjectPage = () => {
             ))}
           </div>
         ) : (
-          <div className="min-h-[400px] px-10 py-8 bg-white rounded-[32px] flex-col flex items-center justify-center w-full relative">
+          <div className="min-h-[300px] px-10 py-8 bg-white rounded-[32px] flex-col flex items-center justify-center w-full relative">
             <div className="text-[#767676] text-lg font-normal">
               No tasks due today.
             </div>
