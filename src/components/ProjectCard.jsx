@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { ProjectImg2 } from "../icons";
+import { ProjectImg, ProjectImg2 } from "../icons";
 import { Link } from "react-router-dom";
 
 export default function ProjectCard(props) {
@@ -16,21 +16,37 @@ export default function ProjectCard(props) {
     }
   }
 
+  console.log(project)
+
+
+
+
+
+
   const inprogress = project.project.list?.filter(item => item.status === "INPROGRESS").map(item => item.task).flat().filter(item => !item.dueDate || (new Date(item.dueDate) > new Date(today))).length;
   const done = project.project.list?.filter(item => item.status === "DONE").map(item => item.task).flat().length;
   const late = project.project.list?.filter(item => item.status === "INPROGRESS").map(item => item.task).flat().filter(item => item.dueDate && (new Date(item.dueDate) < new Date(today))).length  
 
   return (
     <Link to={`/project/${project.project?.id}`}>
-      <div className='bg-white border rounded-xl p-4 w-60 h-64 hover:shadow-md hover:-translate-y-1 transition-all duration-200 cursor-pointer'>
-        <div className='flex gap-2 pb-3'>
-          <div className='w-7 h-7'>
-            <ProjectImg2 className="" />
-          </div>
-          <p className='font-semibold text-xl whitespace-nowrap overflow-hidden text-ellipsis w-[80%]'>
-            {sliceStr(project.project?.projectName || '')}
-          </p>
-        </div>
+      <div className='bg-white border rounded-xl p-4 w-60 h-70 hover:shadow-md hover:-translate-y-1 transition-all duration-200 cursor-pointer'>
+
+      <div className="flex gap-4 pb-3 items-center">
+  <div className="w-8 h-8">
+    <img
+      src={
+        project.project.images[project.project.images.length - 1]?.secure_url ||
+        "https://www.svgrepo.com/show/439273/project-fugu.svg"
+      }
+      alt="Project"
+      className="w-full h-full rounded-lg object-cover"
+    />
+  </div>
+  
+  <p className="font-semibold text-xl whitespace-nowrap overflow-hidden text-ellipsis flex-1">
+    {sliceStr(project.project?.projectName || '')}
+  </p>
+</div>
 
         <div className='flex flex-col gap-3 h-32'>
           <div className='flex justify-between items-center'>

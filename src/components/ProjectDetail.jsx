@@ -47,6 +47,19 @@ const ProjectDetail = (props) => {
     actionCreateActivityLog(projectId, token)
   }, [])
 
+
+
+  function getLastImageUrl(projectData) {
+    if (projectData.images && projectData.images.length > 0) {
+        return projectData.images[projectData.images.length - 1].url; 
+    }
+    return null;
+}
+
+const lastImageUrl = getLastImageUrl(projectData);
+console.log(lastImageUrl);
+
+
   return (
     <div>
       <div className="flex text-gray-600 text-[16px] ml-[65px]">
@@ -62,9 +75,9 @@ const ProjectDetail = (props) => {
       <div className="flex flex-col mx-auto gap-[40px] p-8 w-[95%]">
         <div className="flex items-center gap-4">
           <div className="flex items-center">
-            {projectData?.projectImage ? (
+            { lastImageUrl ? (
               <img
-                src={projectData.projectImage}
+                src={lastImageUrl}
                 alt="Project"
                 className="w-12 h-12 rounded-lg object-cover"
               />
