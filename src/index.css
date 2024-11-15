@@ -43,6 +43,34 @@ html {
   background: rgba(255, 255, 255, 0.6); /* Optional: Add some opacity */
 }
 
+.fc-event {
+  border-radius: 5px; 
+  margin: auto;
+}
+.fc-event-time {
+  display: none; 
+}
+.fc-button:focus, .fc-button:active {
+  outline: none; 
+  box-shadow: none; 
+  background-color: #E8CC5D;
+}
+
+.fc-button.fc-today-button ,
+.fc-button.fc-prev-button, 
+.fc-button.fc-next-button {
+  background-color: #FFE066; 
+  color: #333333;
+  border-color: #FFE066; 
+  border-radius: 16px;
+}
+
+.fc-button.fc-today-button:hover ,
+.fc-button.fc-prev-button:hover,
+.fc-button.fc-next-button:hover {
+  background-color: #E8CC5D; 
+  border-color: #E8CC5D; 
+}
 
 @tailwind base;
 @tailwind components;
@@ -114,30 +142,6 @@ html {
   }
 }
 
-.fc-event {
-  border-radius: 5px; 
-  margin: auto;
-  background-color: aqua;
-}
-.fc-event-time {
-  display: none; 
-}
-
-.fc-button.fc-today-button ,
-.fc-button.fc-prev-button, 
-.fc-button.fc-next-button {
-  background-color: #FFE066; 
-  color: #333333;
-  border-color: #FFE066; 
-  border-radius: 16px;
-}
-
-.fc-button.fc-today-button:hover ,
-.fc-button.fc-prev-button:hover,
-.fc-button.fc-next-button:hover {
-  background-color: #E8CC5D; 
-  border-color: #E8CC5D; 
-}
 
 .tooltip {
   background-color: #333;
