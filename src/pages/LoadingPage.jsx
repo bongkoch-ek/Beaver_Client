@@ -1,5 +1,5 @@
 import React from "react";
-import beaverLoading from "../icons/beaver-loading.gif";
+import beaverLoading from "../icons/beaver-loading-unscreen.gif";
 
 const LoadingPage = () => {
   return (

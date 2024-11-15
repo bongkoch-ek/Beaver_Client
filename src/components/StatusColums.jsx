@@ -37,8 +37,13 @@ export default function StatusColums({
   const actionMoveTask = useDashboardStore((state) => state.actionMoveTask);
   const selectedMember = useDashboardStore((state) => state.selectedMember);
   const token = useUserStore((state) => state.token);
-  const filteredTaskCard = taskCard.filter((task) => task.listId === item.id && (!selectedMember || task.assignee.some((assignee) => assignee.userId === selectedMember)));
-  
+  const filteredTaskCard = taskCard.filter(
+    (task) =>
+      task.listId === item.id &&
+      (!selectedMember ||
+        task.assignee.some((assignee) => assignee.userId === selectedMember))
+  );
+
   const [isActive, setIsActive] = useState(false);
   const containerRef = useRef(null);
   const [isScrollDown, setIsScrollDown] = useState(false);
@@ -130,7 +135,9 @@ export default function StatusColums({
     clearIndicator(indicator);
 
     const result = getNearestIndicator(e, indicator);
-    result.element.style.opacity = "1";
+    if (result.element) {
+      result.element.style.opacity = "1";
+    }
   };
 
   const clearIndicator = (element) => {
@@ -142,33 +149,27 @@ export default function StatusColums({
   };
 
   const getNearestIndicator = (e, indicator) => {
-    const DISTANCE_OFFSET = 25;
-
-    const result = indicator.reduce(
-      (closest, child) => {
-        const box = child.getBoundingClientRect();
-
-        const offset = e.clientY - (box.top + DISTANCE_OFFSET);
-
-        if (offset < 0 && offset > closest.offset) {
-          return { offset: offset, element: child };
-        } else {
-          return closest;
-        }
-      },
-      {
-        // Initial State
-        offset: Number.NEGATIVE_INFINITY,
-        element: indicator[indicator.length - 1],
+    const mouseY = e.clientY;
+    
+    return indicator.reduce((closest, child) => {
+      const box = child.getBoundingClientRect();
+      const offset = mouseY - box.top;
+      
+      if (offset < 0 && offset > closest.offset) {
+        return { offset, element: child };
       }
-    );
-
-    return result;
+      return closest;
+    }, {
+      offset: Number.NEGATIVE_INFINITY,
+      element: null
+    });
   };
+  
 
   const getIndicator = () => {
     return Array.from(document.querySelectorAll(`[data-column="${item.id}"]`));
   };
+
   const hdlDragLeave = (e) => {
     clearIndicator();
     setIsActive(false);
@@ -305,7 +306,7 @@ export default function StatusColums({
           onDrop={hdlDragEnd}
           onDragOver={hdlDragOver}
           onDragLeave={hdlDragLeave}
-          className={`w-[264px] min-h-[218px] max-h-[676px] overflow-hidden px-4 py-2 ${
+          className={`w-[264px]  min-h-[218px] max-h-[676px] overflow-hidden px-4 py-2 ${
             isCreate && "pt-0"
           } bg-[#F5F5F5] duration-200 transition-colors ${
             isActive && "border bg-[#f5f5f550] border-[#DDE6F0]"
@@ -385,6 +386,7 @@ export default function StatusColums({
                         hdlDeleteList={hdlDeleteList}
                         item={item}
                         isDisabled={isDisabled}
+                        setIsDisabled={setIsDisabled}
                         setIsOverflow={setIsDisabled}
                         setIsEditedColumn={setIsEditedColumn}
                         isEditedColumn={isEditedColumn}
@@ -425,7 +427,7 @@ export default function StatusColums({
                 ref={containerRef}
               >
                 <div className="relative">
-                  {(filteredTaskCard.length === 0 ) && !isCreate ? (
+                  {filteredTaskCard.length === 0 && !isCreate ? (
                     <NoTask />
                   ) : (
                     filteredTaskCard.map((item) => (
