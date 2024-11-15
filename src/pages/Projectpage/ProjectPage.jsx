@@ -67,40 +67,43 @@ const ProjectPage = () => {
         </div>
 
         {task.length > 0 ? (
-          <div className="bg-white min-h-[160px] h-full rounded-2xl mt-[20px] px-[40px] py-[32px]">
+          <div className="bg-white min-h-[160px] h-full rounded-2xl mt-[20px] px-[40px] py-[32px] w-full">
             {task.map((el, index) => (
-              <div key={index} className="flex items-center justify-between ">
-                <div className="flex flex-col text-[16px] justify-center gap-[12px] ">
-                  <p className="text-black font-semibold text-[20px]">
-                    {actualProjectName || "Project_Name"}
-                  </p>
-
-                  <div className="flex gap-[10px]">
-                    <p>Task : </p>
-                    <p className="text-[#767676]">{el.title}</p>
-                  </div>
-
-                  <div className="flex flex-col gap-[10px]">
-                    <p className="text-[14px]">
-                      Status:{" "}
-                      <span className="text-[#767676]"> {el.priority}</span>
+              <div key={index} className="flex flex-col justify-between w-full pt-3">
+                <div className="flex justify-between items-center">
+                  <div className="flex flex-col text-[16px] justify-center gap-[12px] ">
+                    <p className="text-black font-semibold text-[20px]">
+                      {actualProjectName || "Project_Name"}
                     </p>
-                    <p className="text-[14px]">
-                      Due Date:{" "}
-                      <span className="text-[#767676]">
-                        {moment(el.dueDate).format("DD/MM/YYYY")}
-                      </span>
-                    </p>
+
+                    <div className="flex gap-[10px]">
+                      <p>Task : </p>
+                      <p className="text-[#767676]">{el.title}</p>
+                    </div>
+
+                    <div className="flex flex-col gap-[10px]">
+                      <p className="text-[14px]">
+                        Status:{" "}
+                        <span className="text-[#767676]"> {el.priority}</span>
+                      </p>
+                      <p className="text-[14px]">
+                        Due Date:{" "}
+                        <span className="text-[#767676]">
+                          {moment(el.dueDate).format("DD/MM/YYYY")}
+                        </span>
+                      </p>
+                    </div>
                   </div>
+                  <Link to={`/project/${el.list?.projectId}`}>
+                    <button className="px-4 py-2 flex gap-2 font-semibold bg-[#ffe066] hover:bg-[#e8cc5d] hover:duration-200 text-[#333333] rounded-md ">
+                      Go to Project
+                      <ChevronRight />
+                    </button>
+                  </Link>
                 </div>
-                <Link to={`/project/${el.list?.projectId}`}>
-                  <button className="px-4 py-2 flex gap-2 font-semibold bg-[#ffe066] hover:bg-[#e8cc5d] hover:duration-200 text-[#333333] rounded-md">
-                    Go to Project
-                    <ChevronRight />
-                  </button>
-                </Link>
+
                 {index + 1 !== task.length && (
-                  <hr className="border mx-[65px]" />
+                  <hr className="border mx-[65px] mt-[28px]" />
                 )}
               </div>
             ))}
@@ -122,9 +125,18 @@ const ProjectPage = () => {
         )}
 
         {/* Recently Section */}
-        <p className="text-black text-2xl font-normal leading-9 mt-[40px] mb-[20px]">
-          Recently
-        </p>
+        <div className="flex justify-between items-baseline">
+
+          <p className="text-black text-2xl font-normal leading-9 mt-[40px] mb-[20px]">
+            Recently
+          </p>
+          <Link
+            to="/project/list"
+            className="text-[#333333] hover:font-medium hover:scale-105 transition-transform duration-200 ease-in-out"
+          >
+            See all
+          </Link>
+        </div>
 
         <ScrollArea className="w-full overflow-x-auto">
           <div className="bg-slate-100 rounded-[32px] flex flex-col  justify-center items-start  ">

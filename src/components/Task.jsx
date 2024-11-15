@@ -27,6 +27,7 @@ import {
   Equal,
   PencilIcon,
   Trash2Icon,
+  TriangleAlert,
   X,
 } from "lucide-react";
 import {
@@ -59,6 +60,7 @@ export default function Task({ item, hdlDragStart, projectId }) {
   const assigneeNames = item?.assignee?.map((item) => item) || [];
   const display = assigneeNames.length > 0 ? assigneeNames[0] : null;
   const actualName = display?.user?.displayName?.charAt(0) || "U";
+  const today = new Date().toISOString().split('T')[0]
 
   const handleDelete = (e) => {
     e.stopPropagation();
@@ -106,9 +108,9 @@ export default function Task({ item, hdlDragStart, projectId }) {
     await actionUpdateTask(id, formEditTask, token);
     await setIsEditText(false);
     await actionGetProjectById(project?.id, token);
-    console.log(formEditTask);
   };
 
+  // console.log(item)
   return (
     <>
       <Dialog onOpenChange={hdlOnOpen} disabled={isEditText}>
@@ -120,11 +122,10 @@ export default function Task({ item, hdlDragStart, projectId }) {
           onDragStart={(e) => hdlDragStart(e, item)}
           onMouseEnter={() => setIsHover(true)}
           onMouseLeave={() => setIsHover(false)}
-          className={`  w-full min-h-[120px] self-stretch p-4 ${
-            isEditText
-              ? "bg-[#cde9fd]/50 cursor-text my-2"
-              : "bg-[#cde9fd] hover:opacity-70 transition-opacity duration-200 active:cursor-grabbing cursor-grab"
-          }  rounded-lg flex-col justify-start items-start gap-5 flex`}
+          className={`  w-full min-h-[120px] self-stretch p-4 ${isEditText
+            ? "bg-[#cde9fd]/50 cursor-text my-2"
+            : "bg-[#cde9fd] hover:opacity-70 transition-opacity duration-200 active:cursor-grabbing cursor-grab"
+            }  rounded-lg flex-col justify-start items-start gap-5 flex`}
         >
           {isEditText ? (
             <div className="flex flex-col gap-4">
@@ -163,9 +164,21 @@ export default function Task({ item, hdlDragStart, projectId }) {
                 onClick={(e) => hdlTaskClick(e)}
               >
                 <div className="self-stretch justify-between items-center gap-2 flex w-full">
-                  <div className=" text-black text-sm font-normal leading-[23px] cursor-pointer w-5/6">
+                  <div className=" text-black text-sm font-normal leading-[23px] cursor-pointer w-5/6 flex gap-1">
+                    {
+                      item.status !== "DONE" &&
+                      item.dueDate &&
+                      (
+                        new Date(item.dueDate) < new Date(today)
+                        &&
+                        <div className=" h-7 w-7 bg-white rounded-full flex justify-center px-1 items-center">
+                          <TriangleAlert className="text-red-500 mt-[-2px]" />
+                        </div>
+                      )
+                    }
+
                     <article class="truncate w-full">
-                      <p className="">{item.title}</p>
+                      <p className="font-medium">{item.title}</p>
                     </article>
                   </div>
                   <div onClick={(e) => e.stopPropagation()} className="w-1/6">
