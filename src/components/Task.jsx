@@ -120,7 +120,7 @@ export default function Task({ item, hdlDragStart, projectId }) {
           onDragStart={(e) => hdlDragStart(e, item)}
           onMouseEnter={() => setIsHover(true)}
           onMouseLeave={() => setIsHover(false)}
-          className={`  w-full min-h-[120px] self-stretch p-4 ${
+          className={` relative  w-full min-h-[120px] self-stretch my-0.5 p-4 ${
             isEditText
               ? "bg-[#cde9fd]/50 cursor-text my-2"
               : "bg-[#cde9fd] hover:opacity-70 transition-opacity duration-200 active:cursor-grabbing cursor-grab"
