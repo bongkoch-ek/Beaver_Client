@@ -16,7 +16,6 @@ export default function TaskMember() {
     setSelectedMember(memberId ? memberId : null);
   };
 
-  console.log("Selected member (userId):", selectedMember);
 
   return (
     <div className="h-auto px-7 py-10 flex-col justify-start items-start gap-10 flex w-full #B4DFFC rounded-[32px]">
