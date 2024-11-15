@@ -198,7 +198,7 @@ export function EditTaskModal(props) {
     setInput((prv) => ({ ...prv, dueDate: null }));
   };
 
-  console.log(taskById, "sdasdsad");
+  console.log(input, "sdasdsad");
 
   return (
     <ScrollArea className=" w-full max-h-full p-6 bg-white flex flex-col gap-2 m-auto overflow-y-auto ">
@@ -401,6 +401,7 @@ export function EditTaskModal(props) {
                       selected={dueDate}
                       onSelect={hdlDueDate}
                       initialFocus
+                      timeZone="+07:00"
                     />
                   </PopoverContent>
                 </Popover>

@@ -16,13 +16,6 @@ export default function ProjectCard(props) {
     }
   }
 
-  console.log(project)
-
-
-
-
-
-
   const inprogress = project.project.list?.filter(item => item.status === "INPROGRESS").map(item => item.task).flat().filter(item => !item.dueDate || (new Date(item.dueDate) > new Date(today))).length;
   const done = project.project.list?.filter(item => item.status === "DONE").map(item => item.task).flat().length;
   const late = project.project.list?.filter(item => item.status === "INPROGRESS").map(item => item.task).flat().filter(item => item.dueDate && (new Date(item.dueDate) < new Date(today))).length  
