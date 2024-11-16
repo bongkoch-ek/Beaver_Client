@@ -149,22 +149,27 @@ export default function StatusColums({
   };
 
   const getNearestIndicator = (e, indicator) => {
-    const mouseY = e.clientY;
-    
-    return indicator.reduce((closest, child) => {
-      const box = child.getBoundingClientRect();
-      const offset = mouseY - box.top;
-      
-      if (offset < 0 && offset > closest.offset) {
-        return { offset, element: child };
+    const DISTANCE_OFFSET = 50;
+
+    const el = indicator.reduce(
+      (closest, child) => {
+        const box = child.getBoundingClientRect();
+
+        const offset = e.clientY - (box.top + DISTANCE_OFFSET);
+        if (offset < 0 && offset > closest.offset) {
+          return { offset: offset, element: child };
+        } else {
+          return closest;
+        }
+      },
+      {
+        offset: Number.NEGATIVE_INFINITY,
+        element: indicator[indicator.length - 1],
       }
-      return closest;
-    }, {
-      offset: Number.NEGATIVE_INFINITY,
-      element: null
-    });
+    );
+
+    return el;
   };
-  
 
   const getIndicator = () => {
     return Array.from(document.querySelectorAll(`[data-column="${item.id}"]`));
@@ -195,10 +200,18 @@ export default function StatusColums({
         return item.id === Number(taskId);
       });
 
+      console.log(taskToTransfer, "taskToTranfer");
+
       if (!taskToTransfer) return;
+
+      if (taskToTransfer?.listId === item.id) {
+        console.error("Task is already in the same list");
+        return;
+      }
       taskToTransfer = { ...taskToTransfer, status: status, listId: item.id };
 
       newTask = newTask.filter((item) => item.id !== Number(taskId));
+      console.log(newTask, "newTask");
 
       const moveToBack = before === "-1";
       if (moveToBack) {
@@ -214,6 +227,7 @@ export default function StatusColums({
 
       setTaskCard(newTask);
       const updatedTask = newTask.find((item) => item.id === Number(taskId));
+      console.log(updatedTask, "Update");
       console.log(`Updated ${taskId} task to:`, updatedTask?.listId);
 
       await actionMoveTask(token, Number(taskId), updatedTask?.listId);
@@ -434,7 +448,7 @@ export default function StatusColums({
                       <div key={item.id}>
                         <DropTaskIndicator
                           beforeId={item.id}
-                          column={item.id}
+                          column={item.listId}
                         />
                         <Task
                           item={item}
@@ -444,7 +458,7 @@ export default function StatusColums({
                       </div>
                     ))
                   )}
-                  <DropTaskIndicator column={item.id} />
+                  <DropTaskIndicator beforeId={null} column={item.id} />
                 </div>
                 {isOverflow && (
                   <>
