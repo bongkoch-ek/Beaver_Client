@@ -57,7 +57,7 @@ const ProjectDetail = (props) => {
 }
 
 const lastImageUrl = getLastImageUrl(projectData);
-console.log(lastImageUrl);
+// console.log(lastImageUrl);
 
 
   return (
