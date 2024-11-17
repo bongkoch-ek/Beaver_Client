@@ -70,6 +70,7 @@ export function EditTaskModal(props) {
   const actionGetProjectMember = useDashboardStore(
     (state) => state.actionGetProjectMember
   );
+
   const actionAssignUserToTask = useDashboardStore(
     (state) => state.actionAssignUserToTask
   );
@@ -78,6 +79,10 @@ export function EditTaskModal(props) {
     (state) => state.actionGetTaskAssignee
   );
   const assignee = useDashboardStore((state) => state.assignee);
+  const actionChangeAssignee = useDashboardStore(
+    (state) => state.actionChangeAssignee
+  );
+  const removeAssignee = useDashboardStore((state) => state.removeAssignee);
   const today = new Date().toISOString().split('T')[0]
   const [dueDate, setDueDate] = useState(new Date(item.dueDate));
   const [startDate, setStartDate] = useState(new Date(item.startDate));
@@ -87,9 +92,10 @@ export function EditTaskModal(props) {
   const [isFocused, setIsFocused] = useState(false);
   const [isFocusedComment, setIsFocusedComment] = useState(false);
   const [userPicture, setUserPicture] = useState("");
-  const [selectedAssignee, setSelectedAssignee] = useState(
-    taskById?.assignee?.userId
-  );
+  const [selectedAssignee, setSelectedAssignee] = useState({
+    userId: taskById?.assignee?.userId || null,
+    displayName: taskById?.assignee?.user?.displayName || null,
+  });
   const [input, setInput] = useState({
     title: item.title,
     description: item.description,
@@ -101,33 +107,71 @@ export function EditTaskModal(props) {
     taskId: taskId,
   });
   console.log("check project", project);
-  console.log("check taskId", taskById.assignee);
+  console.log("check taskId", taskId);
+  console.log("check assignee", assignee);
 
   useEffect(() => {
     async function fetch() {
-      await actionGetTask(taskId, token);
+      const task = await actionGetTask(taskId, token);
+      if (task?.assignee?.user) {
+        setSelectedAssignee({
+          userId: task.assignee.user.id,
+          displayName: task.assignee.user.displayName,
+        });
+      } else {
+        setSelectedAssignee({ userId: null, displayName: null });
+      }
       await actionGetCommentByTaskId(taskId, token);
       await actionGetProjectMember(projectId, token);
-
       console.log("Fetched project members:", projectMember);
     }
     fetch();
-  }, []);
+  }, [taskId, token, projectId]);
 
   useEffect(() => {
     async function fetchData() {
       await actionUpdateTask(taskId, input, token);
       await actionGetProjectById(projectId, token);
+      await actionGetTaskAssignee(taskId, token);
     }
     fetchData();
   }, [input]);
 
-  const handleAssigneeChange = async (userId) => {
-    setSelectedAssignee(userId);
-    await actionAssignUserToTask(taskId, userId, token);
-    await actionGetTask(taskId, token);
-    await actionGetTaskAssignee(taskId, token);
-    toast.success("Assignee updated successfully!");
+  console.log("check task : ", taskById);
+
+  const handleAssigneeChange = async (userId, displayName) => {
+    const selectedMember = projectMember.find((member) => member.id === userId);
+
+    if (selectedMember) {
+      setSelectedAssignee({
+        userId: selectedMember.id,
+        displayName: selectedMember.displayName,
+      });
+
+      try {
+        await actionAssignUserToTask(
+          taskId,
+          selectedMember.id,
+          token,
+          selectedMember.displayName
+        );
+
+        await actionGetTaskAssignee(taskId, token);
+
+        toast.success("Assignee updated successfully!");
+      } catch (error) {
+        toast.error("Failed to assign user.");
+      }
+    } 
+  };
+
+  const handleRemoveAssignee = async (taskId, userId) => {
+    try {
+      await removeAssignee(taskId, userId, token);
+      console.log("Assignee removed successfully");
+    } catch (error) {
+      console.error("Failed to remove assignee:", error);
+    }
   };
 
   const hdlPriorityChange = async (e) => {
@@ -284,13 +328,40 @@ export function EditTaskModal(props) {
               </Select>
             </div>
 
-            {/* Assignee section */}
-            <div className="flex items-center gap-2">
+            {/* Assignee Section */}
+            <div className="flex item-center gap-2">
               <p className="text-[#333333] text-sm font-semibold">Assignee:</p>
-              {!assignee ? (
+              {Array.isArray(taskById?.assignee) &&
+              taskById.assignee.length > 0 ? (
+                <div className="flex flex-col gap-2">
+                  <ul>
+                    {taskById.assignee.map((assignee) => (
+                      <li
+                        key={assignee.userId}
+                        className="flex items-center gap-2"
+                      >
+                        <span>{assignee.user?.displayName}</span>
+                        <button
+                          className="text-red-500 text-sm"
+                          onClick={() =>
+                            handleRemoveAssignee(taskById.id, assignee.userId)
+                          }
+                        >
+                          Remove
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : (
                 <Select
-                  onValueChange={handleAssigneeChange}
-                  value={selectedAssignee}
+                  onValueChange={(userId) => {
+                    const selectedMember = projectMember.find(
+                      (member) => member.id === userId
+                    );
+                    handleAssigneeChange(userId, selectedMember?.displayName);
+                  }}
+                  value={selectedAssignee?.userId || ""}
                 >
                   <SelectTrigger className="w-[180px] rounded-full">
                     <SelectValue placeholder="Select Assignee" />
@@ -311,7 +382,7 @@ export function EditTaskModal(props) {
               ) : (
                 <div className="flex items-center gap-2">
                   <span>
-                    {taskId && taskById?.assignee?.user?.displayName}
+                    {taskId && taskById?.assignee[0]?.user?.displayName}
                   </span>
                   <Button
                     onClick={() => setSelectedAssignee(null)}
