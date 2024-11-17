@@ -7,22 +7,29 @@ import { VectorIcon, EditIcon } from '../icons';
 import useDashboardStore from '../stores/dashboardStore';
 import UploadFileProject from './UploadFileProject';
 import useUserStore from '../stores/userStore';
-import { toast } from "react-toastify";
-
-const initialState = {
-  projectName: "",
-  images: []
-};
 
 const EditImageProjectModal = ({ projectId, currentName, onUpdate }) => {
   const token = useUserStore((state) => state.token);
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState({
-    projectName: currentName || "",
+    projectName: "",
     images: []
   });
   const [error, setError] = useState("");
   const actionUpdateProject = useDashboardStore((state) => state.actionUpdateProject);
+
+  // Load project data from localStorage on mount
+  useEffect(() => {
+    const savedProject = JSON.parse(localStorage.getItem(`project-${projectId}`));
+    if (savedProject) {
+      setInput(savedProject);
+    } else {
+      setInput({
+        projectName: currentName || "",
+        images: []
+      });
+    }
+  }, [projectId, currentName]);
 
   const openModal = () => setIsOpen(true);
   const closeModal = () => {
@@ -36,26 +43,28 @@ const EditImageProjectModal = ({ projectId, currentName, onUpdate }) => {
       setError('Project name is required');
       return;
     }
-  
+
     try {
       const projectData = {
         projectName: input.projectName,
         images: input.images,
       };
-  
-      const res = await actionUpdateProject(token, projectId, projectData);
 
+      // Save to backend
+      await actionUpdateProject(token, projectId, projectData);
+
+      // Save updated data to localStorage
+      localStorage.setItem(`project-${projectId}`, JSON.stringify(projectData));
 
       if (onUpdate) onUpdate();
-      
+
       closeModal();
-      setInput(initialState);
     } catch (err) {
       console.log(err);
       setError('Failed to update project. Please try again.');
     }
   };
-  
+
   const handleInputChange = (e) => {
     setInput({
       ...input,

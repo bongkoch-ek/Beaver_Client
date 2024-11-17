@@ -14,6 +14,7 @@ import Profile from "../pages/Profile";
 import ProjectListPage from "../pages/Projectpage/ProjectListPage";
 import ProtectRoute from "./ProtectRoute";
 import LoadingMember from "./LoadingMember";
+import LoadingErrorPage from "./LoadingErrorPage";
 
 const router = createBrowserRouter([
   {
@@ -24,10 +25,9 @@ const router = createBrowserRouter([
       { path: "login", element: <Login /> },
       { path: "profile", element: <Profile /> },
       { path: "register", element: <Register /> },
-      { path: "*", element: <ErrorPage /> },
+      { path: "*", element: <LoadingErrorPage /> },
     ],
-  },
-  {
+  },   {
     path: "/project",
     element: <ProtectRoute element={<ProjectLayout />} />,
     children: [

@@ -37,8 +37,13 @@ export default function StatusColums({
   const actionMoveTask = useDashboardStore((state) => state.actionMoveTask);
   const selectedMember = useDashboardStore((state) => state.selectedMember);
   const token = useUserStore((state) => state.token);
-  const filteredTaskCard = taskCard.filter((task) => task.listId === item.id && (!selectedMember || task.assignee.some((assignee) => assignee.userId === selectedMember)));
-  
+  const filteredTaskCard = taskCard.filter(
+    (task) =>
+      task.listId === item.id &&
+      (!selectedMember ||
+        task.assignee.some((assignee) => assignee.userId === selectedMember))
+  );
+
   const [isActive, setIsActive] = useState(false);
   const containerRef = useRef(null);
   const [isScrollDown, setIsScrollDown] = useState(false);
@@ -130,7 +135,9 @@ export default function StatusColums({
     clearIndicator(indicator);
 
     const result = getNearestIndicator(e, indicator);
-    result.element.style.opacity = "1";
+    if (result.element) {
+      result.element.style.opacity = "1";
+    }
   };
 
   const clearIndicator = (element) => {
@@ -142,14 +149,13 @@ export default function StatusColums({
   };
 
   const getNearestIndicator = (e, indicator) => {
-    const DISTANCE_OFFSET = 25;
+    const DISTANCE_OFFSET = 50;
 
-    const result = indicator.reduce(
+    const el = indicator.reduce(
       (closest, child) => {
         const box = child.getBoundingClientRect();
 
         const offset = e.clientY - (box.top + DISTANCE_OFFSET);
-
         if (offset < 0 && offset > closest.offset) {
           return { offset: offset, element: child };
         } else {
@@ -157,18 +163,18 @@ export default function StatusColums({
         }
       },
       {
-        // Initial State
         offset: Number.NEGATIVE_INFINITY,
         element: indicator[indicator.length - 1],
       }
     );
 
-    return result;
+    return el;
   };
 
   const getIndicator = () => {
     return Array.from(document.querySelectorAll(`[data-column="${item.id}"]`));
   };
+
   const hdlDragLeave = (e) => {
     clearIndicator();
     setIsActive(false);
@@ -194,10 +200,18 @@ export default function StatusColums({
         return item.id === Number(taskId);
       });
 
+      console.log(taskToTransfer, "taskToTranfer");
+
       if (!taskToTransfer) return;
+
+      if (taskToTransfer?.listId === item.id) {
+        console.error("Task is already in the same list");
+        return;
+      }
       taskToTransfer = { ...taskToTransfer, status: status, listId: item.id };
 
       newTask = newTask.filter((item) => item.id !== Number(taskId));
+      console.log(newTask, "newTask");
 
       const moveToBack = before === "-1";
       if (moveToBack) {
@@ -213,6 +227,7 @@ export default function StatusColums({
 
       setTaskCard(newTask);
       const updatedTask = newTask.find((item) => item.id === Number(taskId));
+      console.log(updatedTask, "Update");
       console.log(`Updated ${taskId} task to:`, updatedTask?.listId);
 
       await actionMoveTask(token, Number(taskId), updatedTask?.listId);
@@ -305,7 +320,7 @@ export default function StatusColums({
           onDrop={hdlDragEnd}
           onDragOver={hdlDragOver}
           onDragLeave={hdlDragLeave}
-          className={`w-[264px] min-h-[218px] max-h-[676px] overflow-hidden px-4 py-2 ${
+          className={`w-[264px]  min-h-[218px] max-h-[676px] overflow-hidden px-4 py-2 ${
             isCreate && "pt-0"
           } bg-[#F5F5F5] duration-200 transition-colors ${
             isActive && "border bg-[#f5f5f550] border-[#DDE6F0]"
@@ -385,6 +400,7 @@ export default function StatusColums({
                         hdlDeleteList={hdlDeleteList}
                         item={item}
                         isDisabled={isDisabled}
+                        setIsDisabled={setIsDisabled}
                         setIsOverflow={setIsDisabled}
                         setIsEditedColumn={setIsEditedColumn}
                         isEditedColumn={isEditedColumn}
@@ -425,14 +441,14 @@ export default function StatusColums({
                 ref={containerRef}
               >
                 <div className="relative">
-                  {(filteredTaskCard.length === 0 ) && !isCreate ? (
+                  {filteredTaskCard.length === 0 && !isCreate ? (
                     <NoTask />
                   ) : (
                     filteredTaskCard.map((item) => (
                       <div key={item.id}>
                         <DropTaskIndicator
                           beforeId={item.id}
-                          column={item.id}
+                          column={item.listId}
                         />
                         <Task
                           item={item}
@@ -442,7 +458,7 @@ export default function StatusColums({
                       </div>
                     ))
                   )}
-                  <DropTaskIndicator column={item.id} />
+                  <DropTaskIndicator beforeId={null} column={item.id} />
                 </div>
                 {isOverflow && (
                   <>

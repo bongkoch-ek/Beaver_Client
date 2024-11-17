@@ -83,7 +83,7 @@ export function EditTaskModal(props) {
     (state) => state.actionChangeAssignee
   );
   const removeAssignee = useDashboardStore((state) => state.removeAssignee);
-
+  const today = new Date().toISOString().split('T')[0]
   const [dueDate, setDueDate] = useState(new Date(item.dueDate));
   const [startDate, setStartDate] = useState(new Date(item.startDate));
   const [taskName, setTaskName] = useState(taskById.title);
@@ -242,7 +242,6 @@ export function EditTaskModal(props) {
     setInput((prv) => ({ ...prv, dueDate: null }));
   };
 
-  console.log(taskById, "sdasdsad");
 
   return (
     <ScrollArea className=" w-full max-h-full p-6 bg-white flex flex-col gap-2 m-auto overflow-y-auto ">
@@ -395,7 +394,7 @@ export function EditTaskModal(props) {
                       variant="outline"
                       className={cn(
                         "flex items-center py-1 bg-white shadow rounded-2xl",
-                        !item.startDate && "text-gray-500"
+                        !item.startDate && "text-gray-500" 
                       )}
                     >
                       {!item.startDate && (
@@ -435,7 +434,7 @@ export function EditTaskModal(props) {
                       variant="outline"
                       className={cn(
                         "flex items-center py-1 bg-white shadow rounded-2xl",
-                        !item.dueDate && "text-gray-500"
+                        !item.dueDate && "text-gray-500", (item.status != "DONE" && item.dueDate && new Date(item.dueDate) < new Date(today)) && "text-red-500 hover:text-red-600"
                       )}
                     >
                       {!item.dueDate && (
@@ -448,7 +447,7 @@ export function EditTaskModal(props) {
                       )}
                       {item.dueDate && (
                         <div onClick={hdlDelDueDate}>
-                          <CircleX className=" text-gray-600 " />
+                          <CircleX className={`text-gray-600 ${ (item.status != "DONE" && item.dueDate && new Date(item.dueDate) < new Date(today)) && "text-red-500 hover:text-red-600"}`} />
                         </div>
                       )}
                     </Button>
@@ -459,6 +458,7 @@ export function EditTaskModal(props) {
                       selected={dueDate}
                       onSelect={hdlDueDate}
                       initialFocus
+                      timeZone="+07:00"
                     />
                   </PopoverContent>
                 </Popover>
