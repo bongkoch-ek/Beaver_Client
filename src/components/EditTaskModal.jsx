@@ -311,7 +311,7 @@ export function EditTaskModal(props) {
               ) : (
                 <div className="flex items-center gap-2">
                   <span>
-                    {taskId && taskById?.assignee[0]?.user?.displayName}
+                    {taskId && taskById?.assignee?.user?.displayName}
                   </span>
                   <Button
                     onClick={() => setSelectedAssignee(null)}

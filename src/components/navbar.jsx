@@ -22,6 +22,8 @@ const Navbar = () => {
 
   const navigate = useNavigate();
 
+  console.log("test",user)
+
   const hdlLogout = () => {
     actionLogout();
     navigate("/login");
@@ -71,12 +73,12 @@ const Navbar = () => {
                   <NavigationMenuItem>
                     <NavigationMenuTrigger className="flex gap-2 items-center">
                       <img
-                        src={profileIcon}
+                        src={user.profileImage || profileIcon}
                         alt="profile"
                         width="24px"
                         className="rounded-full w-[24px] h-[24px]"
                       />
-                      {user.fullname}
+                      {user.displayName || user.displayname || user.fullname }
                     </NavigationMenuTrigger>
                     <NavigationMenuContent className="flex flex-col gap-2 p-4 ">
                       <NavigationMenuLink className="w-32 cursor-pointer text-[#767676] hover:font-semibold">
