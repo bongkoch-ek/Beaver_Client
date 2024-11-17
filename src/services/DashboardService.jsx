@@ -17,16 +17,23 @@ export const createProject = async (formData, userId) => {
 };
 
 
-export const assignUserToTask = async (token, taskId, userId) => {
+
+export const assignUserToTask = async (token, taskId, userId, userName) => {
     const headers = {
       Authorization: `Bearer ${token}`,
     };
   
-    return await axios.post(
-      "http://localhost:8888/dashboard/assign-user",
-      { taskId, userId },
-      { headers }
-    );
+    try {
+      const response = await axios.post(
+        "http://localhost:8888/dashboard/assign-user",
+        { taskId, userId, userName },
+        { headers }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error assigning user to task:", error);
+      throw error;
+    }
   };
 
 export const createTask = async (token, form) => {
@@ -219,3 +226,15 @@ export const updateStatusMember = async (token, id) => {
       header
     );
   };
+
+
+  export const updateAssignee = async (token, taskId , userId) => {
+    const header = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+      return await axios.patch(
+        `http://localhost:8888/dashboard/change-assignee/${taskId}`,
+        userId,
+        header
+      );
+}
