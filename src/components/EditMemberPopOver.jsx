@@ -140,8 +140,8 @@ const EditMemberPopOver = () => {
                       className="flex items-center justify-between p-3 bg-gray-50 rounded-md hover:bg-gray-100"
                     >
                       <div className="flex items-center gap-3 rounded-md">
-                        <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
-                          {member.user?.displayName?.charAt(0) || 'U'}
+                        <div className="w-[40px] h-[40px] rounded-full overflow-hidden">
+                        <img src={member.user?.profileImage || "U"} alt="" />
                         </div>
                         <div>
                           <p className="font-medium">{member.user?.displayName}</p>

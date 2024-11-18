@@ -472,7 +472,8 @@ const useDashboardStore = create(
             }
           );
 
-          set({ isLoading: false });
+          set({ isLoading: false ,  });
+          console.log("testcomment >>>>>>>>>>>",response)
           return response.data;
         } catch (err) {
           set({ isLoading: false });
@@ -495,7 +496,9 @@ const useDashboardStore = create(
           );
 
           set({ isLoading: false, comments: response.data });
+          console.log('testgetcomment>>>>>>>>>>>>>>>>',response.data)
           return response.data;
+
         } catch (err) {
           set({ isLoading: false });
           toast.error("Failed to get comment");

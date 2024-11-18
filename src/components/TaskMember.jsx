@@ -17,6 +17,8 @@ export default function TaskMember() {
   };
 
 
+
+
   return (
     <div className="h-auto px-7 py-10 flex-col justify-start items-start gap-10 flex w-full #B4DFFC rounded-[32px]">
       <div className="flex justify-center items-center gap-2 text-black text-lg font-normal leading-[30px]">
@@ -59,9 +61,9 @@ export default function TaskMember() {
                   }}
                 >
                   <div className="w-7 h-7 bg-white rounded-3xl flex-col justify-center items-center gap-2 inline-flex">
-                    <div className="self-stretch font-semibold text-center text-[#333333] text-[16px] leading-[30px]">
-                      {member.user?.displayName?.charAt(0) || "U"}
-                    </div>
+                    {/* <im className="self-stretch font-semibold text-center text-[#333333] text-[16px] leading-[30px]"> */}
+                    
+                    <img src={member.user?.profileImage || "U"} alt="" className="w-[40px] h-[40px] rounded-full overflow-hidden"/>
                   </div>
                   <p className="text-[#333333] text-lg hover:text-white hover:font-medium font-normal leading-[30px]">
                     {member.user?.displayName || "Username"}
