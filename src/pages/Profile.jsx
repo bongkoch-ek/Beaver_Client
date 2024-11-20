@@ -1,4 +1,4 @@
-import { PencilIcon, Plus, User2Icon, UserSquare } from "lucide-react";
+import { PencilIcon, Plus } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import ProfileImage from "../components/ProfileImage";
 import PrimaryButton from "../components/common/PrimaryButton";
@@ -28,7 +28,6 @@ const Profile = () => {
       const file = e?.target?.files[0];
       if (file) {
         const previewURL = URL.createObjectURL(file);
-        console.log(previewURL);
         setPreviewImage(previewURL);
         setImage(file);
         setLoading(false);
@@ -139,15 +138,18 @@ const Profile = () => {
     setIsDisabled(true);
   };
 
-
   return (
     <div
-      className={`${loading && "h-screen p-0 absolute top1/2 left-1/2"} bg-[#F5F5F5] min-h-screen py-10`}
+      className="bg-[#F5F5F5] min-h-screen py-10 relative"
     >
-      {loading && <LoadingPage />}
+      {loading && (
+        <div className="fixed inset-0 flex items-center w-full justify-center bg-gray-100 z-50">
+          <LoadingPage />
+        </div>
+      )}
       <div
         className={`${
-          loading && "opacity-0"
+          loading ? "opacity-50" : "opacity-100"
         } mx-[110px] rounded-[32px] pb-10 bg-white`}
       >
         <div className="relative">
@@ -166,7 +168,6 @@ const Profile = () => {
                   previewImage={previewImage}
                 />
               )}
-
               <div
                 className={`absolute bottom-5 right-3 ${
                   isDisabled && "opacity-0"
@@ -232,7 +233,6 @@ const Profile = () => {
             {errors.firstname && (
               <p className="text-red-500">{errors.firstname}</p>
             )}
-
             <Input
               label="Lastname"
               placeholder="Lastname"
@@ -273,7 +273,6 @@ const Profile = () => {
             />
           </div>
         </div>
-
         <div className="flex justify-center pt-10">
           <div className="w-1/6">
             {isDisabled ? (

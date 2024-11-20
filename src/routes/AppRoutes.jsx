@@ -25,6 +25,7 @@ const router = createBrowserRouter([
       { path: "login", element: <Login /> },
       { path: "profile", element: <Profile /> },
       { path: "register", element: <Register /> },
+      { path: "register", element: <Register /> },
       { path: "*", element: <LoadingErrorPage /> },
     ],
   },   {
@@ -34,7 +35,7 @@ const router = createBrowserRouter([
       { index: true, element: <ProjectPage /> },
       { path: "list", element: <ProjectListPage /> },
       { path: ":projectId", element: <ProjectDetailPage /> },
-      { path: "loading/:projectId", element: <LoadingMember /> },
+      // { path: "loading/:projectId", element: <LoadingMember /> },
     ],
   },
 ]);

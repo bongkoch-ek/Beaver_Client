@@ -40,7 +40,7 @@ import {
   CircleX,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { CloseIconForBadge } from "../icons";
+import { BeaverLogo, CloseIconForBadge } from "../icons";
 import { actionGetAllComment } from "../services/DashboardService";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import useUserStore from "../stores/userStore";
@@ -137,7 +137,8 @@ export function EditTaskModal(props) {
     fetchData();
   }, [input]);
 
-  console.log("check task : ", taskById);
+
+  console.log(comments)
 
   const handleAssigneeChange = async (userId, displayName) => {
     const selectedMember = projectMember.find((member) => member.id === userId);
@@ -328,8 +329,8 @@ export function EditTaskModal(props) {
               </Select>
             </div>
 
-            {/* Assignee Section */}
-            <div className="flex item-center gap-2">
+          {/* Assignee Section */}
+          <div className="flex item-center gap-2">
               <p className="text-[#333333] text-sm font-semibold">Assignee:</p>
               {Array.isArray(taskById?.assignee) &&
               taskById.assignee.length > 0 ? (
@@ -544,12 +545,8 @@ export function EditTaskModal(props) {
             <div className="flex flex-col gap-2 pb-3">
               <div className="flex gap-2">
                 <div className="bg-gray-500 min-w-[40px]  rounded-full justify-center items-center">
-                  {comments?.userPicture ? (
-                    <img
-                      src={comments?.userPicture}
-                      alt="User"
-                      className="w-full h-full object-cover"
-                    />
+                  {comments? (
+                    <BeaverLogo className='w-[40px] h-[40px] object-cover'/>
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-white">
                       U
@@ -592,9 +589,9 @@ export function EditTaskModal(props) {
               {comments?.map((comment, index) => (
                 <div key={index} className="flex items-center gap-3">
                   <div className="bg-gray-500 w-[40px] h-[40px] rounded-full overflow-hidden">
-                    {comment.userPicture ? (
+                    {comment.user?.profileImage ? (
                       <img
-                        src={comment.userPicture}
+                        src={comment.user?.profileImage}
                         alt="User"
                         className="w-full h-full object-cover"
                       />
