@@ -9,6 +9,7 @@ import {
   deleteList,
   updateProject,
   updateStatusMember,
+  updateAssignee,
   getProjectMember,
   getTaskAssignee,
   updateTask,
@@ -471,7 +472,8 @@ const useDashboardStore = create(
             }
           );
 
-          set({ isLoading: false });
+          set({ isLoading: false ,  });
+          console.log("testcomment >>>>>>>>>>>",response)
           return response.data;
         } catch (err) {
           set({ isLoading: false });
@@ -494,7 +496,9 @@ const useDashboardStore = create(
           );
 
           set({ isLoading: false, comments: response.data });
+          console.log('testgetcomment>>>>>>>>>>>>>>>>',response.data)
           return response.data;
+
         } catch (err) {
           set({ isLoading: false });
           toast.error("Failed to get comment");
@@ -515,26 +519,18 @@ const useDashboardStore = create(
           set({ projectMember: [] });
         }
       },
-      actionAssignUserToTask: async (taskId, userId, token) => {
-        set({ isLoading: true });
+      actionAssignUserToTask: async (taskId, userId, token, displayName) => {
         try {
-          const result = await assignUserToTask(token, taskId, userId);
-
-          set((state) => ({
-            taskById: {
-              ...state.taskById,
-              assignee: result.data,
-            },
-            isLoading: false,
-          }));
-          console.log("check result :", result.data);
-          return result.data;
-        } catch (err) {
-          set({ isLoading: false });
-          toast.error("Failed to assign user to task");
-          throw err;
+          const assignee = await assignUserToTask(token, taskId, userId, displayName);
+          set({ assignee }); 
+          console.log("Check assignee:", assignee);
+          return assignee;
+        } catch (error) {
+          console.error("Error assigning user to task:", error);
+          throw error;
         }
       },
+    
       actionGetTaskAssignee: async (taskId, token) => {
         set({ isLoading: true });
         try {
@@ -551,6 +547,51 @@ const useDashboardStore = create(
       },
       setSelectedMember: (userId) => {
         set({ selectedMember: userId });
+      },
+      actionChangeAssignee: async (taskId, userId, token) => {
+        try {
+          const response = await axios.patch(
+            `http://localhost:8888/dashboard/change-assignee/${taskId}`,
+            { userId }, 
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          set((state) => ({
+            ...state,
+            taskById: { ...state.taskById, assignee: response.data.assignee },
+          }));
+        } catch (error) {
+          console.error("Error changing assignee:", error);
+          throw error;
+        }
+      },
+      removeAssignee: async (taskId, userId , token) => {
+        try {
+          const response = await axios.post("http://localhost:8888/dashboard/remove-assignee", { taskId, userId },{
+            headers: {
+              Authorization: `Bearer ${token}`, // Include the token here
+            },
+          });
+    
+          if (response.status === 204) {
+            set((state) => ({
+              tasks: state.tasks.map((task) =>
+                task.id === taskId
+                  ? {
+                      ...task,
+                      assignee: task.assignee.filter((assignees) => assignees.userId !== userId),
+                    }
+                  : task
+              ),
+            }));
+          }
+        } catch (error) {
+          console.error("Error removing assignee:", error);
+          throw error; 
+        }
       },
     }),
 

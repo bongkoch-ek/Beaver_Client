@@ -134,7 +134,7 @@ export default function ProjectSchedule(props) {
                                 viewHeight={"auto"}
                                 eventClassNames="centered-event"
                                 buttonText={{
-                                    today: "Today"
+                                    today: "TimeLine"
                                 }}
                             />
                         </div>

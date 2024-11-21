@@ -59,7 +59,7 @@ export default function Task({ item, hdlDragStart, projectId }) {
 
   const assigneeNames = item?.assignee?.map((item) => item) || [];
   const display = assigneeNames.length > 0 ? assigneeNames[0] : null;
-  const actualName = display?.user?.displayName?.charAt(0) || "U";
+  const actualName = display?.user?.profileImage || "U";
   const today = new Date().toISOString().split('T')[0]
 
   const handleDelete = (e) => {
@@ -269,13 +269,21 @@ export default function Task({ item, hdlDragStart, projectId }) {
                     </>
                   )}
 
-                  {!isEditText && assigneeNames.length > 0 && (
-                    <div className="w-[34px] h-[34px] flex items-center justify-center bg-white rounded-full outline outline-4 outline-[#ffe066]">
-                      <div className="text-center text-[#333333] font-semibold text-base leading-relaxed">
-                        <p>{actualName || "U"}</p>
-                      </div>
-                    </div>
-                  )}
+{!isEditText && assigneeNames.length > 0 && (
+  <div className="w-[40px] h-[40px] flex items-center justify-center bg-white rounded-full shadow-md outline outline-2 outline-[#ffe066] overflow-hidden">
+    {actualName ? (
+      <img
+        src={actualName}
+        alt="Profile"
+        className="w-[40px] h-[40px] rounded-full overflow-hidden"
+      />
+    ) : (
+      <span className="text-[#333333] font-semibold text-lg leading-none">
+        U
+      </span>
+    )}
+  </div>
+)}
                 </div>
               </div>
             </DialogTrigger>
