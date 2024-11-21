@@ -202,7 +202,7 @@ export function EditTaskModal(props) {
   return (
     <ScrollArea className=" w-full max-h-full p-6 bg-white flex flex-col gap-2 m-auto overflow-y-auto ">
       <form>
-        <div className="flex flex-col gap-[32px] ">
+        <div className="flex flex-col gap-3">
           {/* ชื่อ Task */}
           <div className="flex items-center gap-2 pb-4">
             {isEditing ? (
@@ -297,7 +297,7 @@ export function EditTaskModal(props) {
                   </SelectTrigger>
                   <SelectContent>
                     {Array.isArray(projectMember) &&
-                    projectMember.length > 0 ? (
+                      projectMember.length > 0 ? (
                       projectMember.map((member) => (
                         <SelectItem key={member.id} value={member.id}>
                           {member.displayName} ({member.email})
@@ -336,7 +336,7 @@ export function EditTaskModal(props) {
                       variant="outline"
                       className={cn(
                         "flex items-center py-1 bg-white shadow rounded-2xl",
-                        !item.startDate && "text-gray-500" 
+                        !item.startDate && "text-gray-500"
                       )}
                     >
                       {!item.startDate && (
@@ -376,7 +376,7 @@ export function EditTaskModal(props) {
                       variant="outline"
                       className={cn(
                         "flex items-center py-1 bg-white shadow rounded-2xl",
-                        !item.dueDate && "text-gray-500", (item.status != "DONE" && item.dueDate && new Date(item.dueDate) < new Date(today)) && "text-red-500 hover:text-red-600"
+                        !item.dueDate && "text-gray-500", (item.status != "DONE" && item.dueDate && new Date(item.dueDate).toLocaleString() < new Date(today).toLocaleDateString()) && "text-red-500 hover:text-red-600"
                       )}
                     >
                       {!item.dueDate && (
@@ -389,7 +389,7 @@ export function EditTaskModal(props) {
                       )}
                       {item.dueDate && (
                         <div onClick={hdlDelDueDate}>
-                          <CircleX className={`text-gray-600 ${ (item.status != "DONE" && item.dueDate && new Date(item.dueDate) < new Date(today)) && "text-red-500 hover:text-red-600"}`} />
+                          <CircleX className={`text-gray-600 ${(item.status != "DONE" && item.dueDate && new Date(item.dueDate).toLocaleString() < new Date(today).toLocaleDateString()) && "text-red-500 hover:text-red-600"}`} />
                         </div>
                       )}
                     </Button>
@@ -422,7 +422,7 @@ export function EditTaskModal(props) {
           <UploadFile input={input} setInput={setInput} />
 
           {/* ลิงก์ URL */}
-          <div className="justify-start  flex flex-col gap-2 pb-4">
+          <div className="justify-start  flex flex-col gap-2 ">
             <p className="text-sm font-semibold">Link URL</p>
             <div className="flex flex-col">
               <Input
