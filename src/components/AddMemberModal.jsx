@@ -51,7 +51,7 @@ const AddMemberModal = () => {
     }, 300);
 
     return () => clearTimeout(delay);
-  }, [text, token, actionSearchFilters]);
+  }, [text]);
 
   const handleSelectUser = (selectedUser) => {
     setForm((prev) => ({
@@ -61,7 +61,6 @@ const AddMemberModal = () => {
     }));
     setText(selectedUser.email);
     setSearchResults([]);
-    console.log("Selected User:", selectedUser);
   };
 
   const handleSubmit = async (e) => {
@@ -167,7 +166,7 @@ const AddMemberModal = () => {
               />
               {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
               {Array.isArray(searchResults) && searchResults.length > 0 && (
-                <div className="border mt-2 p-2 rounded bg-white shadow-md">
+                <div className="absolute z-50 w-96 border mt-2 p-2 rounded bg-white shadow-md">
                   {searchResults.map((user) => (
                     <div
                       key={user.id}

@@ -16,9 +16,13 @@ export default function ProjectCard(props) {
     }
   }
 
-  const inprogress = project.project.list?.filter(item => item.status === "INPROGRESS").map(item => item.task).flat().filter(item => !item.dueDate || (new Date(item.dueDate) > new Date(today))).length;
+  const inprogress = project.project.list?.filter(item => item.status === "INPROGRESS").map(item => item.task).flat().filter(item => !item.dueDate || (new Date(item.dueDate).toLocaleString() > new Date(today).toLocaleDateString())).length;
   const done = project.project.list?.filter(item => item.status === "DONE").map(item => item.task).flat().length;
-  const late = project.project.list?.filter(item => item.status === "INPROGRESS").map(item => item.task).flat().filter(item => item.dueDate && (new Date(item.dueDate) < new Date(today))).length  
+  const late = project.project.list?.filter(item => item.status === "INPROGRESS").map(item => item.task).flat().filter(item => item.dueDate && (new Date(item.dueDate).toLocaleString() < new Date(today).toLocaleDateString())).length  
+
+  // console.log( project.project.list?.filter(item => item.status === "INPROGRESS").map(item => item.task).flat().filter(item => !item.dueDate || (new Date(item.dueDate).toLocaleString() < new Date(today).toLocaleDateString())))
+// console.log(new Date(project.project.list[1].task[0].dueDate).toLocaleString() > today)
+// console.log(new Date(today).toLocaleDateString())
 
   return (
     <Link to={`/project/${project.project?.id}`}>

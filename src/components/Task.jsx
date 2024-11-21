@@ -122,11 +122,10 @@ export default function Task({ item, hdlDragStart, projectId }) {
           onDragStart={(e) => hdlDragStart(e, item)}
           onMouseEnter={() => setIsHover(true)}
           onMouseLeave={() => setIsHover(false)}
-          className={` relative  w-full min-h-[120px] self-stretch my-0.5 p-4 ${
-            isEditText
+          className={` relative  w-full min-h-[120px] self-stretch my-0.5 p-4 ${isEditText
               ? "bg-[#cde9fd]/50 cursor-text my-2"
               : "bg-[#cde9fd] hover:opacity-70 transition-opacity duration-200 active:cursor-grabbing cursor-grab"
-          }  rounded-lg flex-col justify-start items-start gap-5 flex`}
+            }  rounded-lg flex-col justify-start items-start gap-5 flex`}
         >
           {isEditText ? (
             <div className="flex flex-col gap-4">
@@ -170,7 +169,7 @@ export default function Task({ item, hdlDragStart, projectId }) {
                       item.status !== "DONE" &&
                       item.dueDate &&
                       (
-                        new Date(item.dueDate) < new Date(today)
+                        new Date(item.dueDate).toLocaleString() < new Date(today).toLocaleDateString()
                         &&
                         <div className=" h-7 w-7 bg-white rounded-full flex justify-center px-1 items-center">
                           <TriangleAlert className="text-red-500 mt-[-2px]" />
@@ -178,7 +177,7 @@ export default function Task({ item, hdlDragStart, projectId }) {
                       )
                     }
 
-                    <article class="truncate w-full">
+                    <article className="truncate w-full">
                       <p className="font-medium">{item.title}</p>
                     </article>
                   </div>
